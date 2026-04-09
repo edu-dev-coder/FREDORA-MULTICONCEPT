@@ -10,6 +10,7 @@ export const homepageTable = pgTable("homepage", {
   missionStatement: text("mission_statement").notNull().default("To deliver exceptional products and services that improve lives across Nigeria and beyond, through innovation, integrity, and commitment to quality."),
   visionStatement: text("vision_statement").notNull().default("To be Africa's most trusted multi-sector company, recognized for excellence, sustainability, and positive community impact."),
   coreValues: text("core_values").array().notNull().default(["Integrity", "Excellence", "Innovation", "Community", "Sustainability"]),
+  heroImageUrl: text("hero_image_url"),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
 

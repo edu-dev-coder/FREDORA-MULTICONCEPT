@@ -25,7 +25,11 @@ export default function Home() {
           <div className="absolute inset-0 bg-slate-900/60 z-10" />
           <div 
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url('/images/hero-bg.png')" }}
+            style={{
+              backgroundImage: homepage?.heroImageUrl
+                ? `url('${homepage.heroImageUrl.startsWith("/objects/") ? `/api/storage${homepage.heroImageUrl}` : homepage.heroImageUrl}')`
+                : "url('/images/hero-bg.png')"
+            }}
           />
           
           <div className="container relative z-20 text-center text-white px-4">

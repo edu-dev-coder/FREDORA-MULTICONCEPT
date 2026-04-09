@@ -36,6 +36,8 @@ export interface Division {
   description: string;
   bannerColor: string;
   comingSoon: boolean;
+  /** @nullable */
+  imageUrl?: string | null;
   sortOrder: number;
   services: ServiceItem[];
   createdAt: string;
@@ -49,6 +51,8 @@ export interface UpdateDivisionBody {
   description?: string;
   bannerColor?: string;
   comingSoon?: boolean;
+  /** @nullable */
+  imageUrl?: string | null;
 }
 
 export interface Homepage {
@@ -59,6 +63,8 @@ export interface Homepage {
   missionStatement: string;
   visionStatement: string;
   coreValues: string[];
+  /** @nullable */
+  heroImageUrl?: string | null;
   updatedAt: string;
 }
 
@@ -69,6 +75,22 @@ export interface UpdateHomepageBody {
   missionStatement?: string;
   visionStatement?: string;
   coreValues?: string[];
+  /** @nullable */
+  heroImageUrl?: string | null;
+}
+
+export interface UploadUrlRequest {
+  /** @minLength 1 */
+  name: string;
+  /** @minimum 1 */
+  size: number;
+  /** @minLength 1 */
+  contentType: string;
+}
+
+export interface UploadUrlResponse {
+  uploadURL: string;
+  objectPath: string;
 }
 
 export interface Message {

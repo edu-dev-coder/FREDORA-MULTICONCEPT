@@ -19,7 +19,7 @@ export default function DivisionDetail() {
     return <div className="min-h-screen flex items-center justify-center text-xl text-muted-foreground">Division not found.</div>;
   }
 
-  const bgImageMap: Record<string, string> = {
+  const defaultBgImageMap: Record<string, string> = {
     'foods': '/images/foods-banner.png',
     'eduservices': '/images/eduservices-banner.png',
     'chems': '/images/chems-banner.png',
@@ -27,7 +27,10 @@ export default function DivisionDetail() {
     'transport': '/images/transport-banner.png'
   };
 
-  const bgImage = bgImageMap[slug] || '/images/hero-bg.png';
+  const rawImageUrl = division.imageUrl;
+  const bgImage = rawImageUrl
+    ? (rawImageUrl.startsWith("/objects/") ? `/api/storage${rawImageUrl}` : rawImageUrl)
+    : (defaultBgImageMap[slug] || '/images/hero-bg.png');
 
   return (
     <div className="min-h-screen flex flex-col">

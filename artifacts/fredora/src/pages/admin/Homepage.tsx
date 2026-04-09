@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Trash2 } from "lucide-react";
+import { ImageUploadInput } from "@/components/admin/ImageUploadInput";
 
 const formSchema = z.object({
   heroTitle: z.string().min(1),
@@ -20,6 +21,7 @@ const formSchema = z.object({
   missionStatement: z.string().min(1),
   visionStatement: z.string().min(1),
   coreValues: z.array(z.string()).min(1),
+  heroImageUrl: z.string().nullable(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -39,6 +41,7 @@ export default function AdminHomepage() {
       missionStatement: "",
       visionStatement: "",
       coreValues: [""],
+      heroImageUrl: null,
     },
   });
 
@@ -53,6 +56,7 @@ export default function AdminHomepage() {
         missionStatement: homepage.missionStatement,
         visionStatement: homepage.visionStatement,
         coreValues: homepage.coreValues.length ? homepage.coreValues : [""],
+        heroImageUrl: homepage.heroImageUrl ?? null,
       });
       initialized.current = true;
     }
@@ -82,6 +86,15 @@ export default function AdminHomepage() {
         <CardContent className="pt-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
+              <ImageUploadInput
+                currentImageUrl={form.watch("heroImageUrl")}
+                label="Hero Background Image"
+                onUploadComplete={(objectPath) => {
+                  form.setValue("heroImageUrl", objectPath);
+                  toast({ title: "Image uploaded — click Save Changes to apply." });
+                }}
+              />
               
               <div className="grid gap-6 md:grid-cols-2">
                 <FormField control={form.control} name="heroTitle" render={({ field }) => (

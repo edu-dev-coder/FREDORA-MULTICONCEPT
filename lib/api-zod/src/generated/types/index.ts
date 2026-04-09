@@ -20,3 +20,5 @@ export * from "./serviceItem";
 export * from "./successResponse";
 export * from "./updateDivisionBody";
 export * from "./updateHomepageBody";
+export * from "./uploadUrlRequest";
+export * from "./uploadUrlResponse";

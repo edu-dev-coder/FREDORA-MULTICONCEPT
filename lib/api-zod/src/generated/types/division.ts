@@ -16,6 +16,8 @@ export interface Division {
   description: string;
   bannerColor: string;
   comingSoon: boolean;
+  /** @nullable */
+  imageUrl?: string | null;
   sortOrder: number;
   services: ServiceItem[];
   createdAt: string;

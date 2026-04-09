@@ -13,4 +13,6 @@ export interface UpdateHomepageBody {
   missionStatement?: string;
   visionStatement?: string;
   coreValues?: string[];
+  /** @nullable */
+  heroImageUrl?: string | null;
 }

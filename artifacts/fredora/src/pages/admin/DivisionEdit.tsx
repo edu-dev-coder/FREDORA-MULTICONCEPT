@@ -14,11 +14,13 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft } from "lucide-react";
+import { ImageUploadInput } from "@/components/admin/ImageUploadInput";
 
 const formSchema = z.object({
   tagline: z.string().nullable(),
   description: z.string().min(1),
   comingSoon: z.boolean(),
+  imageUrl: z.string().nullable(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -38,6 +40,7 @@ export default function AdminDivisionEdit() {
       tagline: "",
       description: "",
       comingSoon: false,
+      imageUrl: null,
     },
   });
 
@@ -49,6 +52,7 @@ export default function AdminDivisionEdit() {
         tagline: division.tagline || "",
         description: division.description,
         comingSoon: division.comingSoon,
+        imageUrl: division.imageUrl ?? null,
       });
       initialized.current = true;
     }
@@ -83,6 +87,15 @@ export default function AdminDivisionEdit() {
         <CardContent className="pt-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
+              <ImageUploadInput
+                currentImageUrl={form.watch("imageUrl")}
+                label="Division Banner Image"
+                onUploadComplete={(objectPath) => {
+                  form.setValue("imageUrl", objectPath);
+                  toast({ title: "Image uploaded — click Save Changes to apply." });
+                }}
+              />
               
               <FormField control={form.control} name="tagline" render={({ field }) => (
                 <FormItem>

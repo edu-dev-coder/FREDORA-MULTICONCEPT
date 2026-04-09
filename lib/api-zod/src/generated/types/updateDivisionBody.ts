@@ -13,4 +13,6 @@ export interface UpdateDivisionBody {
   description?: string;
   bannerColor?: string;
   comingSoon?: boolean;
+  /** @nullable */
+  imageUrl?: string | null;
 }

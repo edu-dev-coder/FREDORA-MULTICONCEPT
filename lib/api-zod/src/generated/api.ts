@@ -26,6 +26,7 @@ export const ListDivisionsResponseItem = zod.object({
   description: zod.string(),
   bannerColor: zod.string(),
   comingSoon: zod.boolean(),
+  imageUrl: zod.string().nullish(),
   sortOrder: zod.number(),
   services: zod.array(
     zod.object({
@@ -57,6 +58,7 @@ export const GetDivisionResponse = zod.object({
   description: zod.string(),
   bannerColor: zod.string(),
   comingSoon: zod.boolean(),
+  imageUrl: zod.string().nullish(),
   sortOrder: zod.number(),
   services: zod.array(
     zod.object({
@@ -85,6 +87,7 @@ export const UpdateDivisionBody = zod.object({
   description: zod.string().optional(),
   bannerColor: zod.string().optional(),
   comingSoon: zod.boolean().optional(),
+  imageUrl: zod.string().nullish(),
 });
 
 export const UpdateDivisionResponse = zod.object({
@@ -95,6 +98,7 @@ export const UpdateDivisionResponse = zod.object({
   description: zod.string(),
   bannerColor: zod.string(),
   comingSoon: zod.boolean(),
+  imageUrl: zod.string().nullish(),
   sortOrder: zod.number(),
   services: zod.array(
     zod.object({
@@ -121,6 +125,7 @@ export const GetHomepageResponse = zod.object({
   missionStatement: zod.string(),
   visionStatement: zod.string(),
   coreValues: zod.array(zod.string()),
+  heroImageUrl: zod.string().nullish(),
   updatedAt: zod.string(),
 });
 
@@ -134,6 +139,7 @@ export const UpdateHomepageBody = zod.object({
   missionStatement: zod.string().optional(),
   visionStatement: zod.string().optional(),
   coreValues: zod.array(zod.string()).optional(),
+  heroImageUrl: zod.string().nullish(),
 });
 
 export const UpdateHomepageResponse = zod.object({
@@ -144,6 +150,7 @@ export const UpdateHomepageResponse = zod.object({
   missionStatement: zod.string(),
   visionStatement: zod.string(),
   coreValues: zod.array(zod.string()),
+  heroImageUrl: zod.string().nullish(),
   updatedAt: zod.string(),
 });
 
@@ -212,4 +219,26 @@ export const GetAdminStatsResponse = zod.object({
   totalMessages: zod.number(),
   unreadMessages: zod.number(),
   totalServices: zod.number(),
+});
+
+/**
+ * @summary Request a presigned URL for file upload
+ */
+
+export const RequestUploadUrlBody = zod.object({
+  name: zod.string().min(1),
+  size: zod.number().min(1),
+  contentType: zod.string().min(1),
+});
+
+export const RequestUploadUrlResponse = zod.object({
+  uploadURL: zod.string().url(),
+  objectPath: zod.string(),
+});
+
+/**
+ * @summary Serve an uploaded object
+ */
+export const GetStorageObjectParams = zod.object({
+  objectPath: zod.coerce.string(),
 });

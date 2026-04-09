@@ -14,5 +14,7 @@ export interface Homepage {
   missionStatement: string;
   visionStatement: string;
   coreValues: string[];
+  /** @nullable */
+  heroImageUrl?: string | null;
   updatedAt: string;
 }

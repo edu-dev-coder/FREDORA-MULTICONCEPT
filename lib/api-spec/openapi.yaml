@@ -1,15 +1,23 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Fredora Multiconcept API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: divisions
+    description: Business divisions
+  - name: homepage
+    description: Homepage content
+  - name: messages
+    description: Contact messages
+  - name: admin
+    description: Admin operations
+
 paths:
   /healthz:
     get:
@@ -24,6 +32,238 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /divisions:
+    get:
+      operationId: listDivisions
+      tags: [divisions]
+      summary: List all divisions
+      responses:
+        "200":
+          description: List of divisions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Division"
+
+  /divisions/{slug}:
+    get:
+      operationId: getDivision
+      tags: [divisions]
+      summary: Get a specific division by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Division detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Division"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    patch:
+      operationId: updateDivision
+      tags: [divisions]
+      summary: Update a division (admin)
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDivisionBody"
+      responses:
+        "200":
+          description: Updated division
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Division"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /homepage:
+    get:
+      operationId: getHomepage
+      tags: [homepage]
+      summary: Get homepage content
+      responses:
+        "200":
+          description: Homepage content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Homepage"
+
+    patch:
+      operationId: updateHomepage
+      tags: [homepage]
+      summary: Update homepage content (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateHomepageBody"
+      responses:
+        "200":
+          description: Updated homepage
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Homepage"
+
+  /messages:
+    get:
+      operationId: listMessages
+      tags: [messages]
+      summary: List contact messages (admin)
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+
+    post:
+      operationId: createMessage
+      tags: [messages]
+      summary: Submit a contact message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMessageBody"
+      responses:
+        "201":
+          description: Message created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /messages/{id}:
+    delete:
+      operationId: deleteMessage
+      tags: [messages]
+      summary: Delete a contact message (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /admin/login:
+    post:
+      operationId: adminLogin
+      tags: [admin]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminLoginBody"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminLoginResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /admin/me:
+    get:
+      operationId: getAdminMe
+      tags: [admin]
+      summary: Get current admin session
+      responses:
+        "200":
+          description: Admin session info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminSession"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /admin/logout:
+    post:
+      operationId: adminLogout
+      tags: [admin]
+      summary: Admin logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /admin/stats:
+    get:
+      operationId: getAdminStats
+      tags: [admin]
+      summary: Get admin dashboard stats
+      responses:
+        "200":
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +274,228 @@ components:
       required:
         - status
 
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+        - success
+
+    ServiceItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        divisionSlug:
+          type: string
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - divisionSlug
+        - sortOrder
+        - createdAt
+
+    Division:
+      type: object
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        name:
+          type: string
+        tagline:
+          type: ["string", "null"]
+        description:
+          type: string
+        bannerColor:
+          type: string
+        comingSoon:
+          type: boolean
+        sortOrder:
+          type: integer
+        services:
+          type: array
+          items:
+            $ref: "#/components/schemas/ServiceItem"
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - slug
+        - name
+        - description
+        - bannerColor
+        - comingSoon
+        - sortOrder
+        - services
+        - createdAt
+        - updatedAt
+
+    UpdateDivisionBody:
+      type: object
+      properties:
+        name:
+          type: string
+        tagline:
+          type: ["string", "null"]
+        description:
+          type: string
+        bannerColor:
+          type: string
+        comingSoon:
+          type: boolean
+
+    Homepage:
+      type: object
+      properties:
+        id:
+          type: integer
+        heroTitle:
+          type: string
+        heroSubtitle:
+          type: string
+        motto:
+          type: string
+        missionStatement:
+          type: string
+        visionStatement:
+          type: string
+        coreValues:
+          type: array
+          items:
+            type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - heroTitle
+        - heroSubtitle
+        - motto
+        - missionStatement
+        - visionStatement
+        - coreValues
+        - updatedAt
+
+    UpdateHomepageBody:
+      type: object
+      properties:
+        heroTitle:
+          type: string
+        heroSubtitle:
+          type: string
+        motto:
+          type: string
+        missionStatement:
+          type: string
+        visionStatement:
+          type: string
+        coreValues:
+          type: array
+          items:
+            type: string
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        message:
+          type: string
+        read:
+          type: boolean
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - email
+        - message
+        - read
+        - createdAt
+
+    CreateMessageBody:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        message:
+          type: string
+      required:
+        - name
+        - email
+        - message
+
+    AdminLoginBody:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+
+    AdminLoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        username:
+          type: string
+      required:
+        - success
+        - username
+
+    AdminSession:
+      type: object
+      properties:
+        loggedIn:
+          type: boolean
+        username:
+          type: ["string", "null"]
+      required:
+        - loggedIn
+
+    AdminStats:
+      type: object
+      properties:
+        totalDivisions:
+          type: integer
+        totalMessages:
+          type: integer
+        unreadMessages:
+          type: integer
+        totalServices:
+          type: integer
+      required:
+        - totalDivisions
+        - totalMessages
+        - unreadMessages
+        - totalServices

@@ -1,0 +1,179 @@
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useEffect, useRef } from "react";
+import { useGetHomepage, useUpdateHomepage, getGetHomepageQueryKey } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { AdminLayout } from "@/components/layout/AdminLayout";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { Plus, Trash2 } from "lucide-react";
+
+const formSchema = z.object({
+  heroTitle: z.string().min(1),
+  heroSubtitle: z.string().min(1),
+  motto: z.string().min(1),
+  missionStatement: z.string().min(1),
+  visionStatement: z.string().min(1),
+  coreValues: z.array(z.string()).min(1),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+export default function AdminHomepage() {
+  const { data: homepage, isLoading } = useGetHomepage({ query: { queryKey: getGetHomepageQueryKey() } });
+  const updateHomepage = useUpdateHomepage();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      heroTitle: "",
+      heroSubtitle: "",
+      motto: "",
+      missionStatement: "",
+      visionStatement: "",
+      coreValues: [""],
+    },
+  });
+
+  const initialized = useRef(false);
+
+  useEffect(() => {
+    if (homepage && !initialized.current) {
+      form.reset({
+        heroTitle: homepage.heroTitle,
+        heroSubtitle: homepage.heroSubtitle,
+        motto: homepage.motto,
+        missionStatement: homepage.missionStatement,
+        visionStatement: homepage.visionStatement,
+        coreValues: homepage.coreValues.length ? homepage.coreValues : [""],
+      });
+      initialized.current = true;
+    }
+  }, [homepage, form]);
+
+  function onSubmit(values: FormValues) {
+    updateHomepage.mutate({ data: values }, {
+      onSuccess: (data) => {
+        toast({ title: "Homepage updated successfully" });
+        queryClient.setQueryData(getGetHomepageQueryKey(), data);
+      },
+      onError: () => {
+        toast({ variant: "destructive", title: "Failed to update homepage" });
+      }
+    });
+  }
+
+  if (isLoading) return <AdminLayout><div>Loading...</div></AdminLayout>;
+
+  return (
+    <AdminLayout>
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-foreground">Edit Homepage</h2>
+      </div>
+
+      <Card>
+        <CardContent className="pt-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              
+              <div className="grid gap-6 md:grid-cols-2">
+                <FormField control={form.control} name="heroTitle" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Hero Title</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="motto" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Motto / Subheading</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+
+              <FormField control={form.control} name="heroSubtitle" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Hero Description (Subtitle)</FormLabel>
+                  <FormControl><Textarea {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <div className="grid gap-6 md:grid-cols-2">
+                <FormField control={form.control} name="missionStatement" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Mission Statement</FormLabel>
+                    <FormControl><Textarea className="min-h-[120px]" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="visionStatement" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Vision Statement</FormLabel>
+                    <FormControl><Textarea className="min-h-[120px]" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+
+              <div>
+                <FormLabel className="block mb-4">Core Values</FormLabel>
+                <div className="space-y-3">
+                  {form.watch("coreValues").map((_, index) => (
+                    <FormField key={index} control={form.control} name={`coreValues.${index}`} render={({ field }) => (
+                      <FormItem className="flex items-center gap-2 space-y-0">
+                        <FormControl>
+                          <Input {...field} placeholder="E.g., Integrity" />
+                        </FormControl>
+                        <Button 
+                          type="button" 
+                          variant="ghost" 
+                          size="icon"
+                          onClick={() => {
+                            const current = form.getValues("coreValues");
+                            if (current.length > 1) {
+                              form.setValue("coreValues", current.filter((_, i) => i !== index));
+                            }
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </FormItem>
+                    )} />
+                  ))}
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-2"
+                    onClick={() => {
+                      const current = form.getValues("coreValues");
+                      form.setValue("coreValues", [...current, ""]);
+                    }}
+                  >
+                    <Plus className="h-4 w-4 mr-2" /> Add Value
+                  </Button>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t flex justify-end">
+                <Button type="submit" disabled={updateHomepage.isPending}>
+                  {updateHomepage.isPending ? "Saving..." : "Save Changes"}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </AdminLayout>
+  );
+}

@@ -1,0 +1,215 @@
+Here’s a clean, solid prompt you can drop straight into Replit AI to generate the full website and admin backend.
+
+---
+
+**REPLIT PROMPT**
+
+Build a modern, responsive full-stack website for a Nigerian company called **Fredora Multiconcept**. The site should present the company’s corporate profile and its five business divisions, with a clean admin backend for managing content updates.
+
+### Tech Stack
+
+* Frontend: React (Next.js preferred)
+* Backend: Node.js with Express
+* Database: MongoDB
+* Styling: Tailwind CSS
+* Authentication: JWT-based admin login
+
+---
+
+### General Requirements
+
+* Clean, modern UI with strong branding
+* Fully responsive (mobile, tablet, desktop)
+* Fast loading and simple navigation
+* SEO-friendly structure
+* Use reusable components
+* Include animations where appropriate (subtle, not excessive)
+
+---
+
+### Website Structure
+
+#### 1. Homepage
+
+* Hero section with company name and motto: *“Giving you the best of your needs.”*
+* Short company overview
+* Highlight cards for each division:
+
+  * Fredora Foods
+  * Fredora EduServices
+  * Fredora Chems
+  * Fredora Scents
+  * Fredora Transport & Logistics
+* Call-to-action buttons (View Division, Contact Us)
+* Mission, Vision, and Core Values section
+* Footer with contact info and location (Enugu, Nigeria)
+
+---
+
+#### 2. About Page
+
+* Full corporate profile
+* Founder section (Freda Ada Okoro)
+* Company registration details
+* Mission, Vision, Core Values
+
+---
+
+#### 3. Division Pages (5 Separate Pages)
+
+Create a dedicated page for each division with structured content:
+
+##### Fredora Foods
+
+* Description
+* List of products/services:
+
+  * Natural honey packaging
+  * Zobo drink production
+  * Smoothies and fruit drinks
+  * Healthy beverages
+  * Food packaging
+  * Organic food supply
+
+##### Fredora EduServices
+
+* Description
+* Services list:
+
+  * Tutoring
+  * Coaching and mentoring
+  * Guidance and counselling
+  * Career development
+  * Recruitment and training
+  * Workshops and competitions
+
+##### Fredora Chems
+
+* Description
+* Products:
+
+  * Liquid soap
+  * Detergents
+  * Antiseptics
+  * Bleach
+  * Insecticides
+  * Car wash liquid
+  * Multi-purpose cleaners
+
+##### Fredora Scents
+
+* Description
+* Products:
+
+  * Body perfumes
+  * Oil perfumes
+  * Unisex fragrances
+  * Custom blends
+  * Gift packages
+
+##### Fredora Transport & Logistics
+
+* Description (mark as “Coming Soon” where needed)
+* Planned services:
+
+  * Procurement
+  * Delivery
+  * Errand services
+  * Business logistics
+
+Each page should include:
+
+* Header image/banner
+* Description
+* Services/products list
+* Contact or inquiry button
+
+---
+
+#### 4. Contact Page
+
+* Contact form (Name, Email, Message)
+* Business location: Enugu, Nigeria
+* Simple map embed (optional)
+
+---
+
+### Admin Dashboard (Backend)
+
+Create a secure admin panel with login.
+
+#### Features:
+
+* Admin authentication (login/logout)
+* Dashboard overview
+* Edit homepage content:
+
+  * Hero text
+  * Mission, Vision, Values
+* Manage each division:
+
+  * Update descriptions
+  * Add/edit/remove products/services
+* Manage contact messages:
+
+  * View submitted messages
+* Upload images (for banners/products)
+
+---
+
+### API Requirements
+
+Create REST APIs for:
+
+* Authentication
+* Get/update homepage content
+* CRUD operations for each division
+* Contact form submissions
+
+---
+
+### Database Design (MongoDB)
+
+Collections:
+
+* users (admin login)
+* homepage
+* divisions (one document per division)
+* services/products (linked to divisions)
+* messages (contact form)
+
+---
+
+### UI Details
+
+* Use a professional color palette (deep purple, gold accents, white background)
+* Rounded cards, soft shadows
+* Clear typography
+* Smooth hover effects
+
+---
+
+### Extra Features (Optional but preferred)
+
+* Image upload using Cloudinary or similar
+* Simple analytics (page views)
+* Dark mode toggle
+
+---
+
+### Deliverables
+
+* Fully functional frontend and backend
+* Clean folder structure
+* README with setup instructions
+* Seed data for all divisions
+
+---
+
+If you want, I can also generate:
+
+* exact UI layout (Figma-style structure)
+* database schema ready to paste
+* or deploy steps for Replit + domain
+
+Just tell me.

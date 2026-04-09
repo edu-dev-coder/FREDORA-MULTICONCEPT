@@ -1,0 +1,38 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "VmVlDT_PIHmCDjOqzamph"
+uri = "file://artifacts/fredora/public/images/hero-bg.png"
+type = "image"
+title = "Hero Background"
+
+[[generated]]
+id = "Ez2r_MB_xSPaTpQtb3HOB"
+uri = "file://artifacts/fredora/public/images/foods-banner.png"
+type = "image"
+title = "Foods Division Banner"
+
+[[generated]]
+id = "wkqbPOsyg79yMaBGMNGU7"
+uri = "file://artifacts/fredora/public/images/eduservices-banner.png"
+type = "image"
+title = "EduServices Division Banner"
+
+[[generated]]
+id = "NahulOjZJAmg1iulJoe0p"
+uri = "file://artifacts/fredora/public/images/chems-banner.png"
+type = "image"
+title = "Chems Division Banner"
+
+[[generated]]
+id = "cuar2swcsWqlunmR3kjcQ"
+uri = "file://artifacts/fredora/public/images/scents-banner.png"
+type = "image"
+title = "Scents Division Banner"
+
+[[generated]]
+id = "rRrB-GjHE1uNuSchQQHXB"
+uri = "file://artifacts/fredora/public/images/transport-banner.png"
+type = "image"
+title = "Transport Division Banner"

@@ -126,7 +126,7 @@ export default function AdminHomepage() {
               </div>
 
               <div>
-                <FormLabel className="block mb-4">Core Values</FormLabel>
+                <label className="block mb-4 text-sm font-medium leading-none">Core Values</label>
                 <div className="space-y-3">
                   {form.watch("coreValues").map((_, index) => (
                     <FormField key={index} control={form.control} name={`coreValues.${index}`} render={({ field }) => (

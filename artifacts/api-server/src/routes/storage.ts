@@ -72,7 +72,7 @@ router.get("/storage/public-objects/*filePath", async (req: Request, res: Respon
       res.end();
     }
   } catch (error) {
-    req.log.error({ err: error }, "Error serving public object");
+    console.error("Error serving public object", error);
     res.status(500).json({ error: "Failed to serve public object" });
   }
 });
@@ -119,11 +119,11 @@ router.get("/storage/objects/*path", async (req: Request, res: Response) => {
     }
   } catch (error) {
     if (error instanceof ObjectNotFoundError) {
-      req.log.warn({ err: error }, "Object not found");
+      console.warn("Object not found", error);
       res.status(404).json({ error: "Object not found" });
       return;
     }
-    req.log.error({ err: error }, "Error serving object");
+    console.error("Error serving object", error);
     res.status(500).json({ error: "Failed to serve object" });
   }
 });

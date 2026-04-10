@@ -65,6 +65,22 @@ export interface Homepage {
   coreValues: string[];
   /** @nullable */
   heroImageUrl?: string | null;
+  /** @nullable */
+  whatsappNumber?: string | null;
+  /** @nullable */
+  facebookUrl?: string | null;
+  /** @nullable */
+  instagramUrl?: string | null;
+  /** @nullable */
+  twitterUrl?: string | null;
+  /** @nullable */
+  linkedinUrl?: string | null;
+  /** @nullable */
+  youtubeUrl?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  googleAnalyticsId?: string | null;
   updatedAt: string;
 }
 
@@ -77,6 +93,22 @@ export interface UpdateHomepageBody {
   coreValues?: string[];
   /** @nullable */
   heroImageUrl?: string | null;
+  /** @nullable */
+  whatsappNumber?: string | null;
+  /** @nullable */
+  facebookUrl?: string | null;
+  /** @nullable */
+  instagramUrl?: string | null;
+  /** @nullable */
+  twitterUrl?: string | null;
+  /** @nullable */
+  linkedinUrl?: string | null;
+  /** @nullable */
+  youtubeUrl?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  googleAnalyticsId?: string | null;
 }
 
 export interface UploadUrlRequest {
@@ -91,6 +123,88 @@ export interface UploadUrlRequest {
 export interface UploadUrlResponse {
   uploadURL: string;
   objectPath: string;
+}
+
+export interface GalleryItem {
+  id: number;
+  /** @nullable */
+  divisionSlug?: string | null;
+  imageUrl: string;
+  /** @nullable */
+  caption?: string | null;
+  sortOrder: number;
+  createdAt: string;
+}
+
+export interface CreateGalleryItemBody {
+  /** @nullable */
+  divisionSlug?: string | null;
+  imageUrl: string;
+  /** @nullable */
+  caption?: string | null;
+  sortOrder?: number;
+}
+
+export interface Product {
+  id: number;
+  divisionSlug: string;
+  name: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  imageUrl?: string | null;
+  /** @nullable */
+  price?: string | null;
+  sortOrder: number;
+  createdAt: string;
+}
+
+export interface CreateProductBody {
+  divisionSlug: string;
+  name: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  imageUrl?: string | null;
+  /** @nullable */
+  price?: string | null;
+  sortOrder?: number;
+}
+
+export interface Testimonial {
+  id: number;
+  authorName: string;
+  /** @nullable */
+  company?: string | null;
+  content: string;
+  /** @nullable */
+  avatarUrl?: string | null;
+  /** @nullable */
+  divisionSlug?: string | null;
+  sortOrder: number;
+  createdAt: string;
+}
+
+export interface CreateTestimonialBody {
+  authorName: string;
+  /** @nullable */
+  company?: string | null;
+  content: string;
+  /** @nullable */
+  avatarUrl?: string | null;
+  /** @nullable */
+  divisionSlug?: string | null;
+  sortOrder?: number;
+}
+
+export interface NewsletterSubscribeBody {
+  email: string;
+}
+
+export interface NewsletterSubscriber {
+  id: number;
+  email: string;
+  createdAt: string;
 }
 
 export interface Message {
@@ -130,3 +244,11 @@ export interface AdminStats {
   unreadMessages: number;
   totalServices: number;
 }
+
+export type ListGalleryItemsParams = {
+  divisionSlug?: string;
+};
+
+export type ListProductsParams = {
+  divisionSlug?: string;
+};

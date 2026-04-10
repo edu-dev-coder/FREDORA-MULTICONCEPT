@@ -19,6 +19,14 @@ tags:
     description: Admin operations
   - name: Storage
     description: Object storage upload and serving endpoints.
+  - name: gallery
+    description: Gallery / photo items
+  - name: products
+    description: Product catalog
+  - name: testimonials
+    description: Customer testimonials
+  - name: newsletter
+    description: Newsletter subscriptions
 
 paths:
   /healthz:
@@ -266,6 +274,229 @@ paths:
               schema:
                 $ref: "#/components/schemas/AdminStats"
 
+  /gallery:
+    get:
+      operationId: listGalleryItems
+      tags: [gallery]
+      summary: List gallery items
+      parameters:
+        - name: divisionSlug
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of gallery items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GalleryItem"
+    post:
+      operationId: createGalleryItem
+      tags: [gallery]
+      summary: Add a gallery item (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGalleryItemBody"
+      responses:
+        "201":
+          description: Created gallery item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GalleryItem"
+
+  /gallery/{id}:
+    delete:
+      operationId: deleteGalleryItem
+      tags: [gallery]
+      summary: Delete a gallery item (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /products:
+    get:
+      operationId: listProducts
+      tags: [products]
+      summary: List products
+      parameters:
+        - name: divisionSlug
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+    post:
+      operationId: createProduct
+      tags: [products]
+      summary: Add a product (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProductBody"
+      responses:
+        "201":
+          description: Created product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+
+  /products/{id}:
+    delete:
+      operationId: deleteProduct
+      tags: [products]
+      summary: Delete a product (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /testimonials:
+    get:
+      operationId: listTestimonials
+      tags: [testimonials]
+      summary: List testimonials
+      responses:
+        "200":
+          description: List of testimonials
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Testimonial"
+    post:
+      operationId: createTestimonial
+      tags: [testimonials]
+      summary: Add a testimonial (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTestimonialBody"
+      responses:
+        "201":
+          description: Created testimonial
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Testimonial"
+
+  /testimonials/{id}:
+    delete:
+      operationId: deleteTestimonial
+      tags: [testimonials]
+      summary: Delete a testimonial (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /newsletter/subscribe:
+    post:
+      operationId: subscribeNewsletter
+      tags: [newsletter]
+      summary: Subscribe to newsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsletterSubscribeBody"
+      responses:
+        "200":
+          description: Subscribed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "409":
+          description: Already subscribed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /newsletter/subscribers:
+    get:
+      operationId: listNewsletterSubscribers
+      tags: [newsletter]
+      summary: List newsletter subscribers (admin)
+      responses:
+        "200":
+          description: List of subscribers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsletterSubscriber"
+
   /storage/uploads/request-url:
     post:
       tags: [Storage]
@@ -449,6 +680,22 @@ components:
             type: string
         heroImageUrl:
           type: ["string", "null"]
+        whatsappNumber:
+          type: ["string", "null"]
+        facebookUrl:
+          type: ["string", "null"]
+        instagramUrl:
+          type: ["string", "null"]
+        twitterUrl:
+          type: ["string", "null"]
+        linkedinUrl:
+          type: ["string", "null"]
+        youtubeUrl:
+          type: ["string", "null"]
+        metaDescription:
+          type: ["string", "null"]
+        googleAnalyticsId:
+          type: ["string", "null"]
         updatedAt:
           type: string
       required:
@@ -480,6 +727,22 @@ components:
             type: string
         heroImageUrl:
           type: ["string", "null"]
+        whatsappNumber:
+          type: ["string", "null"]
+        facebookUrl:
+          type: ["string", "null"]
+        instagramUrl:
+          type: ["string", "null"]
+        twitterUrl:
+          type: ["string", "null"]
+        linkedinUrl:
+          type: ["string", "null"]
+        youtubeUrl:
+          type: ["string", "null"]
+        metaDescription:
+          type: ["string", "null"]
+        googleAnalyticsId:
+          type: ["string", "null"]
 
     UploadUrlRequest:
       type: object
@@ -503,6 +766,131 @@ components:
           type: string
           format: uri
         objectPath:
+          type: string
+
+    GalleryItem:
+      type: object
+      required: [id, imageUrl, sortOrder, createdAt]
+      properties:
+        id:
+          type: integer
+        divisionSlug:
+          type: ["string", "null"]
+        imageUrl:
+          type: string
+        caption:
+          type: ["string", "null"]
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+
+    CreateGalleryItemBody:
+      type: object
+      required: [imageUrl]
+      properties:
+        divisionSlug:
+          type: ["string", "null"]
+        imageUrl:
+          type: string
+        caption:
+          type: ["string", "null"]
+        sortOrder:
+          type: integer
+
+    Product:
+      type: object
+      required: [id, divisionSlug, name, sortOrder, createdAt]
+      properties:
+        id:
+          type: integer
+        divisionSlug:
+          type: string
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
+        price:
+          type: ["string", "null"]
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+
+    CreateProductBody:
+      type: object
+      required: [divisionSlug, name]
+      properties:
+        divisionSlug:
+          type: string
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
+        price:
+          type: ["string", "null"]
+        sortOrder:
+          type: integer
+
+    Testimonial:
+      type: object
+      required: [id, authorName, content, sortOrder, createdAt]
+      properties:
+        id:
+          type: integer
+        authorName:
+          type: string
+        company:
+          type: ["string", "null"]
+        content:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        divisionSlug:
+          type: ["string", "null"]
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+
+    CreateTestimonialBody:
+      type: object
+      required: [authorName, content]
+      properties:
+        authorName:
+          type: string
+        company:
+          type: ["string", "null"]
+        content:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        divisionSlug:
+          type: ["string", "null"]
+        sortOrder:
+          type: integer
+
+    NewsletterSubscribeBody:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+
+    NewsletterSubscriber:
+      type: object
+      required: [id, email, createdAt]
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        createdAt:
           type: string
 
     Message:

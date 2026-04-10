@@ -5,6 +5,10 @@ import homepageRouter from "./homepage";
 import messagesRouter from "./messages";
 import adminRouter from "./admin";
 import storageRouter from "./storage";
+import galleryRouter from "./gallery";
+import productsRouter from "./products";
+import testimonialsRouter from "./testimonials";
+import newsletterRouter from "./newsletter";
 
 const router: IRouter = Router();
 
@@ -14,5 +18,9 @@ router.use(homepageRouter);
 router.use(messagesRouter);
 router.use(adminRouter);
 router.use(storageRouter);
+router.use(galleryRouter);
+router.use(productsRouter);
+router.use(testimonialsRouter);
+router.use(newsletterRouter);
 
 export default router;

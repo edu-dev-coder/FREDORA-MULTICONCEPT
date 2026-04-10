@@ -3,3 +3,7 @@ export * from "./divisions";
 export * from "./services";
 export * from "./messages";
 export * from "./admins";
+export * from "./gallery";
+export * from "./products";
+export * from "./testimonials";
+export * from "./newsletter";

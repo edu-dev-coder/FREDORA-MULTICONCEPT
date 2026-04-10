@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { useEffect } from "react";
 import { useGetHomepage, useListDivisions } from "@workspace/api-client-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -6,10 +7,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronRight, CheckCircle2 } from "lucide-react";
+import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 
 export default function Home() {
   const { data: homepage, isLoading: homeLoading } = useGetHomepage();
   const { data: divisions, isLoading: divLoading } = useListDivisions();
+
+  useEffect(() => {
+    document.title = homepage?.heroTitle ? `${homepage.heroTitle} | Fredora Multiconcept` : "Fredora Multiconcept";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc && homepage?.metaDescription) {
+      metaDesc.setAttribute("content", homepage.metaDescription);
+    }
+  }, [homepage]);
 
   if (homeLoading || divLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -153,6 +163,8 @@ export default function Home() {
             )}
           </div>
         </section>
+
+        <TestimonialsSection />
 
       </main>
       

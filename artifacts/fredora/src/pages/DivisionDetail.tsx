@@ -5,6 +5,8 @@ import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { GallerySection } from "@/components/sections/GallerySection";
+import { ProductsSection } from "@/components/sections/ProductsSection";
 
 export default function DivisionDetail() {
   const params = useParams();
@@ -36,7 +38,7 @@ export default function DivisionDetail() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      <main className="flex-1 bg-slate-50">
+      <main className="flex-1 bg-white">
         <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 bg-slate-900/70 z-10" />
           <div 
@@ -117,6 +119,9 @@ export default function DivisionDetail() {
             </div>
           </div>
         </section>
+        <ProductsSection divisionSlug={slug} />
+        <GallerySection divisionSlug={slug} />
+
       </main>
 
       <Footer />

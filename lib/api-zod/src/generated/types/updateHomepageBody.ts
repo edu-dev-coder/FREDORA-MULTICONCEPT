@@ -15,4 +15,20 @@ export interface UpdateHomepageBody {
   coreValues?: string[];
   /** @nullable */
   heroImageUrl?: string | null;
+  /** @nullable */
+  whatsappNumber?: string | null;
+  /** @nullable */
+  facebookUrl?: string | null;
+  /** @nullable */
+  instagramUrl?: string | null;
+  /** @nullable */
+  twitterUrl?: string | null;
+  /** @nullable */
+  linkedinUrl?: string | null;
+  /** @nullable */
+  youtubeUrl?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  googleAnalyticsId?: string | null;
 }

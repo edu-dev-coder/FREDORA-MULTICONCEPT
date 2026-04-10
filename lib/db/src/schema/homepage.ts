@@ -11,6 +11,14 @@ export const homepageTable = pgTable("homepage", {
   visionStatement: text("vision_statement").notNull().default("To be Africa's most trusted multi-sector company, recognized for excellence, sustainability, and positive community impact."),
   coreValues: text("core_values").array().notNull().default(["Integrity", "Excellence", "Innovation", "Community", "Sustainability"]),
   heroImageUrl: text("hero_image_url"),
+  whatsappNumber: text("whatsapp_number"),
+  facebookUrl: text("facebook_url"),
+  instagramUrl: text("instagram_url"),
+  twitterUrl: text("twitter_url"),
+  linkedinUrl: text("linkedin_url"),
+  youtubeUrl: text("youtube_url"),
+  metaDescription: text("meta_description"),
+  googleAnalyticsId: text("google_analytics_id"),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
 

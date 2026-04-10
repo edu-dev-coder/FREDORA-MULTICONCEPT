@@ -126,6 +126,14 @@ export const GetHomepageResponse = zod.object({
   visionStatement: zod.string(),
   coreValues: zod.array(zod.string()),
   heroImageUrl: zod.string().nullish(),
+  whatsappNumber: zod.string().nullish(),
+  facebookUrl: zod.string().nullish(),
+  instagramUrl: zod.string().nullish(),
+  twitterUrl: zod.string().nullish(),
+  linkedinUrl: zod.string().nullish(),
+  youtubeUrl: zod.string().nullish(),
+  metaDescription: zod.string().nullish(),
+  googleAnalyticsId: zod.string().nullish(),
   updatedAt: zod.string(),
 });
 
@@ -140,6 +148,14 @@ export const UpdateHomepageBody = zod.object({
   visionStatement: zod.string().optional(),
   coreValues: zod.array(zod.string()).optional(),
   heroImageUrl: zod.string().nullish(),
+  whatsappNumber: zod.string().nullish(),
+  facebookUrl: zod.string().nullish(),
+  instagramUrl: zod.string().nullish(),
+  twitterUrl: zod.string().nullish(),
+  linkedinUrl: zod.string().nullish(),
+  youtubeUrl: zod.string().nullish(),
+  metaDescription: zod.string().nullish(),
+  googleAnalyticsId: zod.string().nullish(),
 });
 
 export const UpdateHomepageResponse = zod.object({
@@ -151,6 +167,14 @@ export const UpdateHomepageResponse = zod.object({
   visionStatement: zod.string(),
   coreValues: zod.array(zod.string()),
   heroImageUrl: zod.string().nullish(),
+  whatsappNumber: zod.string().nullish(),
+  facebookUrl: zod.string().nullish(),
+  instagramUrl: zod.string().nullish(),
+  twitterUrl: zod.string().nullish(),
+  linkedinUrl: zod.string().nullish(),
+  youtubeUrl: zod.string().nullish(),
+  metaDescription: zod.string().nullish(),
+  googleAnalyticsId: zod.string().nullish(),
   updatedAt: zod.string(),
 });
 
@@ -220,6 +244,147 @@ export const GetAdminStatsResponse = zod.object({
   unreadMessages: zod.number(),
   totalServices: zod.number(),
 });
+
+/**
+ * @summary List gallery items
+ */
+export const ListGalleryItemsQueryParams = zod.object({
+  divisionSlug: zod.coerce.string().optional(),
+});
+
+export const ListGalleryItemsResponseItem = zod.object({
+  id: zod.number(),
+  divisionSlug: zod.string().nullish(),
+  imageUrl: zod.string(),
+  caption: zod.string().nullish(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+});
+export const ListGalleryItemsResponse = zod.array(ListGalleryItemsResponseItem);
+
+/**
+ * @summary Add a gallery item (admin)
+ */
+export const CreateGalleryItemBody = zod.object({
+  divisionSlug: zod.string().nullish(),
+  imageUrl: zod.string(),
+  caption: zod.string().nullish(),
+  sortOrder: zod.number().optional(),
+});
+
+/**
+ * @summary Delete a gallery item (admin)
+ */
+export const DeleteGalleryItemParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const DeleteGalleryItemResponse = zod.object({
+  success: zod.boolean(),
+});
+
+/**
+ * @summary List products
+ */
+export const ListProductsQueryParams = zod.object({
+  divisionSlug: zod.coerce.string().optional(),
+});
+
+export const ListProductsResponseItem = zod.object({
+  id: zod.number(),
+  divisionSlug: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  imageUrl: zod.string().nullish(),
+  price: zod.string().nullish(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+});
+export const ListProductsResponse = zod.array(ListProductsResponseItem);
+
+/**
+ * @summary Add a product (admin)
+ */
+export const CreateProductBody = zod.object({
+  divisionSlug: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  imageUrl: zod.string().nullish(),
+  price: zod.string().nullish(),
+  sortOrder: zod.number().optional(),
+});
+
+/**
+ * @summary Delete a product (admin)
+ */
+export const DeleteProductParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const DeleteProductResponse = zod.object({
+  success: zod.boolean(),
+});
+
+/**
+ * @summary List testimonials
+ */
+export const ListTestimonialsResponseItem = zod.object({
+  id: zod.number(),
+  authorName: zod.string(),
+  company: zod.string().nullish(),
+  content: zod.string(),
+  avatarUrl: zod.string().nullish(),
+  divisionSlug: zod.string().nullish(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+});
+export const ListTestimonialsResponse = zod.array(ListTestimonialsResponseItem);
+
+/**
+ * @summary Add a testimonial (admin)
+ */
+export const CreateTestimonialBody = zod.object({
+  authorName: zod.string(),
+  company: zod.string().nullish(),
+  content: zod.string(),
+  avatarUrl: zod.string().nullish(),
+  divisionSlug: zod.string().nullish(),
+  sortOrder: zod.number().optional(),
+});
+
+/**
+ * @summary Delete a testimonial (admin)
+ */
+export const DeleteTestimonialParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const DeleteTestimonialResponse = zod.object({
+  success: zod.boolean(),
+});
+
+/**
+ * @summary Subscribe to newsletter
+ */
+export const SubscribeNewsletterBody = zod.object({
+  email: zod.string().email(),
+});
+
+export const SubscribeNewsletterResponse = zod.object({
+  success: zod.boolean(),
+});
+
+/**
+ * @summary List newsletter subscribers (admin)
+ */
+export const ListNewsletterSubscribersResponseItem = zod.object({
+  id: zod.number(),
+  email: zod.string(),
+  createdAt: zod.string(),
+});
+export const ListNewsletterSubscribersResponse = zod.array(
+  ListNewsletterSubscribersResponseItem,
+);
 
 /**
  * @summary Request a presigned URL for file upload

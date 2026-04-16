@@ -38,11 +38,11 @@ export default function AdminDivisionEdit() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  const { data: galleryItems } = useListGalleryItems({ divisionSlug: slug }, { query: { enabled: !!slug } });
+  const { data: galleryItems } = useListGalleryItems({ divisionSlug: slug }, { query: { enabled: !!slug, queryKey: getListGalleryItemsQueryKey({ divisionSlug: slug }) } });
   const createGalleryItem = useCreateGalleryItem();
   const deleteGalleryItem = useDeleteGalleryItem();
 
-  const { data: products } = useListProducts({ divisionSlug: slug }, { query: { enabled: !!slug } });
+  const { data: products } = useListProducts({ divisionSlug: slug }, { query: { enabled: !!slug, queryKey: getListProductsQueryKey({ divisionSlug: slug }) } });
   const createProduct = useCreateProduct();
   const deleteProduct = useDeleteProduct();
 

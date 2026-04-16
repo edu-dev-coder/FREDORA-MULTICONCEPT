@@ -1,6 +1,6 @@
 import { Link } from "wouter";
-import { useEffect } from "react";
-import { useGetHomepage, useListDivisions } from "@workspace/api-client-react";
+import { useEffect, useState, useCallback } from "react";
+import { useGetHomepage, useListDivisions, useListHeroSlides } from "@workspace/api-client-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -9,9 +9,57 @@ import { motion } from "framer-motion";
 import { ArrowRight, ChevronRight, CheckCircle2 } from "lucide-react";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 
+function HeroSlideshow({ slides, fallbackUrl }: { slides: { id: number; imageUrl: string }[]; fallbackUrl: string }) {
+  const [current, setCurrent] = useState(0);
+
+  const goTo = useCallback((i: number) => setCurrent(i), []);
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const id = setInterval(() => setCurrent((c) => (c + 1) % slides.length), 5000);
+    return () => clearInterval(id);
+  }, [slides.length]);
+
+  const images = slides.length > 0 ? slides : [{ id: 0, imageUrl: fallbackUrl }];
+  const all = images.length > 0 ? images : [{ id: 0, imageUrl: "/images/hero-bg.png" }];
+
+  return (
+    <>
+      {all.map((slide, i) => {
+        const url = slide.imageUrl.startsWith("/objects/")
+          ? `/api/storage${slide.imageUrl}`
+          : slide.imageUrl;
+        return (
+          <div
+            key={slide.id}
+            className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+            style={{
+              backgroundImage: `url('${url}')`,
+              opacity: i === current ? 1 : 0,
+            }}
+          />
+        );
+      })}
+      {all.length > 1 && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+          {all.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 border-2 border-white/60 ${i === current ? "bg-white scale-125" : "bg-white/30"}`}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
 export default function Home() {
   const { data: homepage, isLoading: homeLoading } = useGetHomepage();
   const { data: divisions, isLoading: divLoading } = useListDivisions();
+  const { data: heroSlides = [] } = useListHeroSlides();
 
   useEffect(() => {
     document.title = homepage?.heroTitle ? `${homepage.heroTitle} | Fredora Multiconcept` : "Fredora Multiconcept";
@@ -25,6 +73,10 @@ export default function Home() {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
+  const fallbackUrl = homepage?.heroImageUrl
+    ? (homepage.heroImageUrl.startsWith("/objects/") ? `/api/storage${homepage.heroImageUrl}` : homepage.heroImageUrl)
+    : "/images/hero-bg.png";
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -32,15 +84,8 @@ export default function Home() {
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+          <HeroSlideshow slides={heroSlides} fallbackUrl={fallbackUrl} />
           <div className="absolute inset-0 bg-slate-900/60 z-10" />
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: homepage?.heroImageUrl
-                ? `url('${homepage.heroImageUrl.startsWith("/objects/") ? `/api/storage${homepage.heroImageUrl}` : homepage.heroImageUrl}')`
-                : "url('/images/hero-bg.png')"
-            }}
-          />
           
           <div className="container relative z-20 text-center text-white px-4">
             <motion.h1 

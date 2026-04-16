@@ -9,6 +9,7 @@ import galleryRouter from "./gallery";
 import productsRouter from "./products";
 import testimonialsRouter from "./testimonials";
 import newsletterRouter from "./newsletter";
+import heroSlidesRouter from "./hero-slides";
 
 const router: IRouter = Router();
 
@@ -22,5 +23,6 @@ router.use(galleryRouter);
 router.use(productsRouter);
 router.use(testimonialsRouter);
 router.use(newsletterRouter);
+router.use(heroSlidesRouter);
 
 export default router;

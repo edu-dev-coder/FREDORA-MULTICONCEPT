@@ -402,6 +402,36 @@ export const RequestUploadUrlResponse = zod.object({
 });
 
 /**
+ * @summary List all hero slideshow images
+ */
+export const ListHeroSlidesResponseItem = zod.object({
+  id: zod.number(),
+  imageUrl: zod.string(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+});
+export const ListHeroSlidesResponse = zod.array(ListHeroSlidesResponseItem);
+
+/**
+ * @summary Add a new hero slide image
+ */
+export const CreateHeroSlideBody = zod.object({
+  imageUrl: zod.string(),
+  sortOrder: zod.number().optional(),
+});
+
+/**
+ * @summary Delete a hero slide
+ */
+export const DeleteHeroSlideParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const DeleteHeroSlideResponse = zod.object({
+  success: zod.boolean(),
+});
+
+/**
  * @summary Serve an uploaded object
  */
 export const GetStorageObjectParams = zod.object({

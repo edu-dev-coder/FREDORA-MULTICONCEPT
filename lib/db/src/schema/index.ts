@@ -7,3 +7,4 @@ export * from "./gallery";
 export * from "./products";
 export * from "./testimonials";
 export * from "./newsletter";
+export * from "./hero-slides";

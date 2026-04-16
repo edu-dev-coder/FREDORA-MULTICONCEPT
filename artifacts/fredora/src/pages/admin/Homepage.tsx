@@ -1,8 +1,11 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useEffect, useRef } from "react";
-import { useGetHomepage, useUpdateHomepage, getGetHomepageQueryKey } from "@workspace/api-client-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  useGetHomepage, useUpdateHomepage, getGetHomepageQueryKey,
+  useListHeroSlides, useCreateHeroSlide, useDeleteHeroSlide, getListHeroSlidesQueryKey,
+} from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -11,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Images } from "lucide-react";
 import { ImageUploadInput } from "@/components/admin/ImageUploadInput";
 
 const formSchema = z.object({
@@ -39,6 +42,39 @@ export default function AdminHomepage() {
   const updateHomepage = useUpdateHomepage();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+
+  const { data: heroSlides = [] } = useListHeroSlides({ query: { queryKey: getListHeroSlidesQueryKey() } });
+  const createHeroSlide = useCreateHeroSlide();
+  const deleteHeroSlide = useDeleteHeroSlide();
+  const [pendingSlideImage, setPendingSlideImage] = useState<string | null>(null);
+
+  function addHeroSlide() {
+    if (!pendingSlideImage) {
+      toast({ variant: "destructive", title: "Please upload an image first" });
+      return;
+    }
+    createHeroSlide.mutate({ data: { imageUrl: pendingSlideImage } }, {
+      onSuccess: () => {
+        toast({ title: "Slide added" });
+        setPendingSlideImage(null);
+        queryClient.invalidateQueries({ queryKey: getListHeroSlidesQueryKey() });
+      },
+      onError: (err: any) => {
+        const msg = err?.response?.data?.error || "Failed to add slide";
+        toast({ variant: "destructive", title: msg });
+      }
+    });
+  }
+
+  function removeHeroSlide(id: number) {
+    deleteHeroSlide.mutate({ id }, {
+      onSuccess: () => {
+        toast({ title: "Slide removed" });
+        queryClient.invalidateQueries({ queryKey: getListHeroSlidesQueryKey() });
+      },
+      onError: () => toast({ variant: "destructive", title: "Failed to remove slide" })
+    });
+  }
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -146,6 +182,71 @@ export default function AdminHomepage() {
                   <FormMessage />
                 </FormItem>
               )} />
+            </CardContent>
+          </Card>
+
+          {/* Hero Slideshow */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2"><Images className="h-5 w-5" /> Hero Slideshow Images</CardTitle>
+                <span className={`text-sm font-medium px-2 py-0.5 rounded-full ${heroSlides.length >= 10 ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"}`}>
+                  {heroSlides.length} / 10 slides
+                </span>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Upload up to 10 images. They will auto-advance every 5 seconds on the homepage hero. If no slides are added, the single hero image above is used as a fallback.
+              </p>
+
+              {heroSlides.length < 10 && (
+                <div className="p-4 bg-muted/30 rounded-xl space-y-3">
+                  <ImageUploadInput
+                    currentImageUrl={pendingSlideImage}
+                    label="Upload New Slide Image"
+                    onUploadComplete={(path) => setPendingSlideImage(path)}
+                  />
+                  <Button
+                    type="button"
+                    onClick={addHeroSlide}
+                    disabled={!pendingSlideImage || createHeroSlide.isPending}
+                    className="w-full"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    {createHeroSlide.isPending ? "Adding Slide..." : "Add Slide"}
+                  </Button>
+                </div>
+              )}
+
+              {heroSlides.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">No slides yet. Upload your first hero image above.</p>
+              ) : (
+                <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+                  {heroSlides.map((slide, i) => {
+                    const url = slide.imageUrl.startsWith("/objects/")
+                      ? `/api/storage${slide.imageUrl}`
+                      : slide.imageUrl;
+                    return (
+                      <div key={slide.id} className="relative group aspect-video rounded-lg overflow-hidden bg-slate-100">
+                        <img src={url} alt={`Slide ${i + 1}`} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <button
+                            type="button"
+                            onClick={() => removeHeroSlide(slide.id)}
+                            className="bg-destructive text-white rounded-full h-7 w-7 flex items-center justify-center"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                        <span className="absolute bottom-1 left-1 text-xs text-white font-medium bg-black/40 px-1.5 rounded">
+                          {i + 1}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </CardContent>
           </Card>
 

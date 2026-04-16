@@ -222,6 +222,18 @@ export interface CreateMessageBody {
   message: string;
 }
 
+export interface HeroSlide {
+  id: number;
+  imageUrl: string;
+  sortOrder: number;
+  createdAt: string;
+}
+
+export interface CreateHeroSlideBody {
+  imageUrl: string;
+  sortOrder?: number;
+}
+
 export interface AdminLoginBody {
   username: string;
   password: string;

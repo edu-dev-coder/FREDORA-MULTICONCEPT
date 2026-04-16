@@ -27,6 +27,8 @@ tags:
     description: Customer testimonials
   - name: newsletter
     description: Newsletter subscriptions
+  - name: hero-slides
+    description: Hero section slideshow images
 
 paths:
   /healthz:
@@ -528,6 +530,61 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /hero-slides:
+    get:
+      operationId: listHeroSlides
+      tags: [hero-slides]
+      summary: List all hero slideshow images
+      responses:
+        "200":
+          description: List of hero slides
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HeroSlide"
+    post:
+      operationId: createHeroSlide
+      tags: [hero-slides]
+      summary: Add a new hero slide image
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateHeroSlideBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HeroSlide"
+        "400":
+          description: Bad request or max slides reached
+
+  /hero-slides/{id}:
+    delete:
+      operationId: deleteHeroSlide
+      tags: [hero-slides]
+      summary: Delete a hero slide
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          description: Not found
+
   /storage/objects/{objectPath}:
     get:
       tags: [Storage]
@@ -929,6 +986,28 @@ components:
         - name
         - email
         - message
+
+    HeroSlide:
+      type: object
+      required: [id, imageUrl, sortOrder, createdAt]
+      properties:
+        id:
+          type: integer
+        imageUrl:
+          type: string
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+
+    CreateHeroSlideBody:
+      type: object
+      required: [imageUrl]
+      properties:
+        imageUrl:
+          type: string
+        sortOrder:
+          type: integer
 
     AdminLoginBody:
       type: object

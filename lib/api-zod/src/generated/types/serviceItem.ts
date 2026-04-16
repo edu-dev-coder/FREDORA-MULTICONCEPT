@@ -11,6 +11,8 @@ export interface ServiceItem {
   name: string;
   /** @nullable */
   description?: string | null;
+  /** @nullable */
+  imageUrl?: string | null;
   divisionSlug: string;
   sortOrder: number;
   createdAt: string;

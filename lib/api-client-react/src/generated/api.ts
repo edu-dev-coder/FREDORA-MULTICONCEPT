@@ -2461,3 +2461,62 @@ export function useGetStorageObject<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+export const getUpdateServiceUrl = (id: number) => `/api/services/${id}`;
+
+export const updateService = async (
+  id: number,
+  body: { imageUrl?: string | null },
+  options?: RequestInit,
+) => {
+  return customFetch<{ id: number; name: string; description?: string | null; imageUrl?: string | null; divisionSlug: string; sortOrder: number; createdAt: string }>(
+    getUpdateServiceUrl(id),
+    { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), ...options },
+  );
+};
+
+export const getUpdateServiceMutationOptions = <
+  TError = ErrorType<Error>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateService>>,
+    TError,
+    { id: number; body: { imageUrl?: string | null } },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateService>>,
+  TError,
+  { id: number; body: { imageUrl?: string | null } },
+  TContext
+> => {
+  const mutationKey = ["updateService"];
+  const { mutation: mutationOptions } = options ?? {};
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateService>>,
+    { id: number; body: { imageUrl?: string | null } }
+  > = ({ id, body }) => updateService(id, body);
+  return { mutationKey, mutationFn, ...mutationOptions };
+};
+
+export type UpdateServiceMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateService>>
+>;
+export type UpdateServiceMutationError = ErrorType<Error>;
+
+export const useUpdateService = <
+  TError = ErrorType<Error>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateService>>,
+    TError,
+    { id: number; body: { imageUrl?: string | null } },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  return useMutation(getUpdateServiceMutationOptions(options));
+};

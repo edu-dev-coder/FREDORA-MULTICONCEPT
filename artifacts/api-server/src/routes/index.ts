@@ -10,6 +10,7 @@ import productsRouter from "./products";
 import testimonialsRouter from "./testimonials";
 import newsletterRouter from "./newsletter";
 import heroSlidesRouter from "./hero-slides";
+import servicesRouter from "./services";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(productsRouter);
 router.use(testimonialsRouter);
 router.use(newsletterRouter);
 router.use(heroSlidesRouter);
+router.use(servicesRouter);
 
 export default router;

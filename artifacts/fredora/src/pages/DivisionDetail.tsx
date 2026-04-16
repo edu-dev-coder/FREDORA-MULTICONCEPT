@@ -98,18 +98,29 @@ export default function DivisionDetail() {
                         viewport={{ once: true }}
                         transition={{ delay: index * 0.1 }}
                       >
-                        <Card className="h-full border-none shadow-sm hover:shadow-md transition-shadow">
-                          <CardContent className="p-6">
-                            <div className="flex items-start gap-4">
-                              <CheckCircle2 className="h-6 w-6 text-primary shrink-0 mt-0.5" />
-                              <div>
-                                <h3 className="font-semibold text-lg mb-2">{service.name}</h3>
-                                {service.description && (
-                                  <p className="text-muted-foreground text-sm leading-relaxed">{service.description}</p>
-                                )}
+                        <Card className="h-full overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow group">
+                          <div className="h-44 overflow-hidden relative bg-slate-100">
+                            {service.imageUrl ? (
+                              <img
+                                src={service.imageUrl.startsWith("/objects/") ? `/api/storage${service.imageUrl}` : service.imageUrl}
+                                alt={service.name}
+                                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              />
+                            ) : (
+                              <div className="absolute inset-0 bg-primary/8 flex items-center justify-center">
+                                <CheckCircle2 className="h-12 w-12 text-primary/25" />
                               </div>
-                            </div>
-                          </CardContent>
+                            )}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                            <h3 className="absolute bottom-3 left-4 right-4 text-white font-bold text-base leading-tight drop-shadow-sm">
+                              {service.name}
+                            </h3>
+                          </div>
+                          {service.description && (
+                            <CardContent className="p-4">
+                              <p className="text-muted-foreground text-sm leading-relaxed">{service.description}</p>
+                            </CardContent>
+                          )}
                         </Card>
                       </motion.div>
                     ))}

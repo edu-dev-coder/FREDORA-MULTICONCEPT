@@ -7,6 +7,7 @@ import {
   useGetDivision, useUpdateDivision, getGetDivisionQueryKey,
   useListGalleryItems, useCreateGalleryItem, useDeleteGalleryItem, getListGalleryItemsQueryKey,
   useListProducts, useCreateProduct, useDeleteProduct, getListProductsQueryKey,
+  useUpdateService,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AdminLayout } from "@/components/layout/AdminLayout";
@@ -17,7 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Trash2, Plus, Images, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Trash2, Plus, Images, ShoppingBag, Layers } from "lucide-react";
 import { ImageUploadInput } from "@/components/admin/ImageUploadInput";
 
 const formSchema = z.object({
@@ -35,6 +36,7 @@ export default function AdminDivisionEdit() {
   const [, setLocation] = useLocation();
   const { data: division, isLoading } = useGetDivision(slug, { query: { enabled: !!slug, queryKey: getGetDivisionQueryKey(slug) } });
   const updateDivision = useUpdateDivision();
+  const updateService = useUpdateService();
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -139,6 +141,16 @@ export default function AdminDivisionEdit() {
         queryClient.invalidateQueries({ queryKey: getListProductsQueryKey({ divisionSlug: slug }) });
       },
       onError: () => toast({ variant: "destructive", title: "Failed to remove product" })
+    });
+  }
+
+  function handleServiceImageUpload(serviceId: number, imageUrl: string) {
+    updateService.mutate({ id: serviceId, body: { imageUrl } }, {
+      onSuccess: () => {
+        toast({ title: "Service image updated" });
+        queryClient.invalidateQueries({ queryKey: getGetDivisionQueryKey(slug) });
+      },
+      onError: () => toast({ variant: "destructive", title: "Failed to update service image" }),
     });
   }
 
@@ -279,6 +291,43 @@ export default function AdminDivisionEdit() {
             )}
           </CardContent>
         </Card>
+
+        {/* Services Images */}
+        {division.services && division.services.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><Layers className="h-5 w-5" /> Products & Services Images</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-6">Upload an image for each product or service. Images will appear in the "Our Products & Services" section on the division page.</p>
+              <div className="space-y-6">
+                {division.services.map((service) => {
+                  const imgUrl = service.imageUrl
+                    ? (service.imageUrl.startsWith("/objects/") ? `/api/storage${service.imageUrl}` : service.imageUrl)
+                    : null;
+                  return (
+                    <div key={service.id} className="flex gap-4 items-start p-4 rounded-xl border bg-muted/20">
+                      {imgUrl && (
+                        <img src={imgUrl} alt={service.name} className="h-16 w-24 object-cover rounded-lg shrink-0" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold mb-0.5">{service.name}</p>
+                        {service.description && (
+                          <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{service.description}</p>
+                        )}
+                        <ImageUploadInput
+                          currentImageUrl={service.imageUrl ?? null}
+                          label={imgUrl ? "Change Image" : "Upload Image"}
+                          onUploadComplete={(path) => handleServiceImageUpload(service.id, path)}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Gallery */}
         <Card>

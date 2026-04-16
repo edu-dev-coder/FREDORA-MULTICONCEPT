@@ -646,6 +646,8 @@ components:
           type: string
         description:
           type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
         divisionSlug:
           type: string
         sortOrder:

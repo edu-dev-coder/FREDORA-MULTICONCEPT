@@ -55,7 +55,7 @@ export default function AdminLogin() {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="admin" {...field} />
+                      <Input placeholder="Enter your username" autoComplete="username" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

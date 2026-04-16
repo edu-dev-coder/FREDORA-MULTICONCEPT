@@ -6,15 +6,24 @@ interface ImageUploadInputProps {
   currentImageUrl: string | null | undefined;
   onUploadComplete: (objectPath: string) => void;
   label?: string;
+  maxSizeMB?: number;
+  recommendedSize?: string;
 }
 
-export function ImageUploadInput({ currentImageUrl, onUploadComplete, label = "Banner Image" }: ImageUploadInputProps) {
+export function ImageUploadInput({
+  currentImageUrl,
+  onUploadComplete,
+  label = "Banner Image",
+  maxSizeMB = 10,
+  recommendedSize,
+}: ImageUploadInputProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const displayUrl = previewUrl || currentImageUrl;
+  const maxBytes = maxSizeMB * 1024 * 1024;
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -25,8 +34,8 @@ export function ImageUploadInput({ currentImageUrl, onUploadComplete, label = "B
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      setError("Image must be under 10MB");
+    if (file.size > maxBytes) {
+      setError(`Image must be under ${maxSizeMB}MB`);
       return;
     }
 
@@ -65,15 +74,21 @@ export function ImageUploadInput({ currentImageUrl, onUploadComplete, label = "B
   }
 
   return (
-    <div className="space-y-3">
-      <label className="block text-sm font-medium leading-none">{label}</label>
+    <div className="space-y-2">
+      <div className="flex items-baseline justify-between gap-2">
+        <label className="block text-sm font-medium leading-none">{label}</label>
+        <span className="text-xs text-muted-foreground shrink-0">
+          JPG · PNG · WebP · max {maxSizeMB}MB
+          {recommendedSize && ` · recommended ${recommendedSize}`}
+        </span>
+      </div>
 
       <div className="relative rounded-xl overflow-hidden border-2 border-dashed border-border bg-muted/30 group">
         {displayUrl ? (
           <div className="relative h-48">
             <img
               src={displayUrl.startsWith("/objects/") ? `/api/storage${displayUrl}` : displayUrl}
-              alt="Current banner"
+              alt="Uploaded image"
               className="w-full h-full object-cover"
               onError={() => setPreviewUrl(null)}
             />
@@ -90,8 +105,8 @@ export function ImageUploadInput({ currentImageUrl, onUploadComplete, label = "B
             </div>
           </div>
         ) : (
-          <div className="h-48 flex flex-col items-center justify-center gap-3 text-muted-foreground">
-            <ImageIcon className="h-10 w-10" />
+          <div className="h-40 flex flex-col items-center justify-center gap-3 text-muted-foreground">
+            <ImageIcon className="h-9 w-9 opacity-50" />
             <p className="text-sm">No image set</p>
             <Button
               type="button"
@@ -133,8 +148,6 @@ export function ImageUploadInput({ currentImageUrl, onUploadComplete, label = "B
           <X className="h-4 w-4" /> {error}
         </p>
       )}
-
-      <p className="text-xs text-muted-foreground">Supports JPG, PNG, WebP · Max 10MB</p>
 
       <input
         ref={fileInputRef}

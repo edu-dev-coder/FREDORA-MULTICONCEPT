@@ -104,12 +104,20 @@ export default function Home() {
                 >
                   <Link href={`/divisions/${div.slug}`}>
                     <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 border-none bg-white group cursor-pointer">
-                      <div className="h-48 overflow-hidden relative">
-                        <div 
-                          className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity"
-                          style={{ backgroundColor: div.bannerColor || 'var(--primary)' }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="h-48 overflow-hidden relative bg-slate-800">
+                        {div.imageUrl ? (
+                          <img
+                            src={div.imageUrl.startsWith("/objects/") ? `/api/storage${div.imageUrl}` : div.imageUrl}
+                            alt={div.name}
+                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div
+                            className="absolute inset-0 opacity-30 group-hover:opacity-40 transition-opacity"
+                            style={{ backgroundColor: div.bannerColor || 'var(--primary)' }}
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                         <h3 className="absolute bottom-4 left-6 text-2xl font-bold text-white font-serif">{div.name}</h3>
                       </div>
                       <CardContent className="pt-6">

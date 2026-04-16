@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useCreateMessage } from "@workspace/api-client-react";
+import { useCreateMessage, useGetHomepage } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -23,6 +23,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function Contact() {
   const { toast } = useToast();
   const createMessage = useCreateMessage();
+  const { data: homepage } = useGetHomepage();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -168,7 +169,16 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground">Call Us</h3>
-                      <p className="text-muted-foreground mt-1">+234 (0) 800 000 0000</p>
+                      {homepage?.whatsappNumber ? (
+                        <a
+                          href={`tel:${homepage.whatsappNumber.replace(/\s/g, "")}`}
+                          className="text-primary font-medium mt-1 hover:underline block"
+                        >
+                          {homepage.whatsappNumber}
+                        </a>
+                      ) : (
+                        <p className="text-muted-foreground mt-1">+234 (0) 800 000 0000</p>
+                      )}
                     </div>
                   </div>
                 </div>

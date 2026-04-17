@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
-import { db, adminsTable, divisionsTable, messagesTable, servicesTable } from "@workspace/db";
+import { db, adminsTable, divisionsTable, messagesTable, servicesTable, galleryItemsTable, productsTable, testimonialsTable, newsletterSubscribersTable } from "@workspace/db";
 import {
   AdminLoginBody,
   AdminLoginResponse,
@@ -61,24 +61,25 @@ router.post("/admin/logout", async (req, res): Promise<void> => {
 });
 
 router.get("/admin/stats", async (_req, res): Promise<void> => {
-  const [divisionCount] = await db
-    .select({ count: divisionsTable.id })
-    .from(divisionsTable);
+  const [
+    divisions,
+    messages,
+    services,
+    galleryItems,
+    products,
+    testimonials,
+    subscribers,
+  ] = await Promise.all([
+    db.select().from(divisionsTable),
+    db.select().from(messagesTable),
+    db.select().from(servicesTable),
+    db.select().from(galleryItemsTable),
+    db.select().from(productsTable),
+    db.select().from(testimonialsTable),
+    db.select().from(newsletterSubscribersTable),
+  ]);
 
-  const [messageCount] = await db
-    .select({ count: messagesTable.id })
-    .from(messagesTable);
-
-  const [serviceCount] = await db
-    .select({ count: servicesTable.id })
-    .from(servicesTable);
-
-  const allMessages = await db.select().from(messagesTable);
-  const unreadMessages = allMessages.filter((m) => !m.read).length;
-
-  const divisions = await db.select().from(divisionsTable);
-  const messages = await db.select().from(messagesTable);
-  const services = await db.select().from(servicesTable);
+  const unreadMessages = messages.filter((m) => !m.read).length;
 
   res.json(
     GetAdminStatsResponse.parse({
@@ -86,6 +87,10 @@ router.get("/admin/stats", async (_req, res): Promise<void> => {
       totalMessages: messages.length,
       unreadMessages,
       totalServices: services.length,
+      totalProducts: products.length,
+      totalGalleryItems: galleryItems.length,
+      totalTestimonials: testimonials.length,
+      totalSubscribers: subscribers.length,
     }),
   );
 });

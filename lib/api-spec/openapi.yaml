@@ -1054,8 +1054,20 @@ components:
           type: integer
         totalServices:
           type: integer
+        totalProducts:
+          type: integer
+        totalGalleryItems:
+          type: integer
+        totalTestimonials:
+          type: integer
+        totalSubscribers:
+          type: integer
       required:
         - totalDivisions
         - totalMessages
         - unreadMessages
         - totalServices
+        - totalProducts
+        - totalGalleryItems
+        - totalTestimonials
+        - totalSubscribers

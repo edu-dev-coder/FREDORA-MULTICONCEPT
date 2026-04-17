@@ -243,6 +243,10 @@ export const GetAdminStatsResponse = zod.object({
   totalMessages: zod.number(),
   unreadMessages: zod.number(),
   totalServices: zod.number(),
+  totalProducts: zod.number(),
+  totalGalleryItems: zod.number(),
+  totalTestimonials: zod.number(),
+  totalSubscribers: zod.number(),
 });
 
 /**

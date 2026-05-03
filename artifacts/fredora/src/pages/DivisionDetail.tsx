@@ -3,11 +3,20 @@ import { useGetDivision, getGetDivisionQueryKey } from "@workspace/api-client-re
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
-import { CheckCircle2, AlertCircle, Phone, MessageCircle } from "lucide-react";
+import { CheckCircle2, AlertCircle, Phone, MessageCircle, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { GallerySection } from "@/components/sections/GallerySection";
 import { ProductsSection } from "@/components/sections/ProductsSection";
+import { Link } from "wouter";
+
+const divisionAccents: Record<string, string> = {
+  foods: "from-emerald-500 to-teal-600",
+  eduservices: "from-sky-500 to-blue-700",
+  chems: "from-violet-500 to-purple-700",
+  scents: "from-rose-500 to-pink-700",
+  transport: "from-amber-500 to-orange-600",
+};
 
 export default function DivisionDetail() {
   const params = useParams();
@@ -15,51 +24,72 @@ export default function DivisionDetail() {
   const { data: division, isLoading } = useGetDivision(slug, { query: { enabled: !!slug, queryKey: getGetDivisionQueryKey(slug) } });
 
   if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50">
+        <div className="text-center">
+          <div className="h-12 w-12 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4" />
+          <p className="text-primary font-medium">Loading division…</p>
+        </div>
+      </div>
+    );
   }
 
   if (!division) {
-    return <div className="min-h-screen flex items-center justify-center text-xl text-muted-foreground">Division not found.</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center text-xl text-muted-foreground">
+        Division not found.
+      </div>
+    );
   }
 
   const defaultBgImageMap: Record<string, string> = {
-    'foods': '/images/foods-banner.png',
-    'eduservices': '/images/eduservices-banner.png',
-    'chems': '/images/chems-banner.png',
-    'scents': '/images/scents-banner.png',
-    'transport': '/images/transport-banner.png'
+    foods: "/images/foods-banner.png",
+    eduservices: "/images/eduservices-banner.png",
+    chems: "/images/chems-banner.png",
+    scents: "/images/scents-banner.png",
+    transport: "/images/transport-banner.png",
   };
 
   const rawImageUrl = division.imageUrl;
   const bgImage = rawImageUrl
-    ? (rawImageUrl.startsWith("/objects/") ? `/api/storage${rawImageUrl}` : rawImageUrl)
-    : (defaultBgImageMap[slug] || '/images/hero-bg.png');
+    ? rawImageUrl.startsWith("/objects/") ? `/api/storage${rawImageUrl}` : rawImageUrl
+    : defaultBgImageMap[slug] || "/images/hero-bg.png";
+
+  const accent = divisionAccents[slug] || "from-emerald-500 to-teal-600";
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
       <main className="flex-1 bg-white">
-        <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-slate-900/70 z-10" />
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url('${bgImage}')` }}
-          />
+        {/* Hero Banner */}
+        <section className="relative h-[55vh] min-h-[420px] flex items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${bgImage}')` }} />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/80" />
+          {/* Colorful bottom accent line */}
+          <div className={`absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r ${accent}`} />
+
           <div className="container relative z-20 text-center text-white px-4">
-            <motion.h1 
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-block text-xs font-bold tracking-widest uppercase text-white/70 bg-white/10 backdrop-blur px-4 py-1.5 rounded-full mb-5 border border-white/15"
+            >
+              Fredora Division
+            </motion.div>
+            <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-6xl font-bold font-serif mb-4"
+              className="text-4xl md:text-6xl font-bold font-serif mb-4 leading-tight"
             >
               {division.name}
             </motion.h1>
             {division.tagline && (
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-xl md:text-2xl font-light text-slate-200"
+                transition={{ delay: 0.15 }}
+                className="text-xl md:text-2xl font-light text-amber-200"
               >
                 {division.tagline}
               </motion.p>
@@ -67,73 +97,96 @@ export default function DivisionDetail() {
           </div>
         </section>
 
-        <section className="py-20">
+        {/* About section */}
+        <section className="py-20 bg-gradient-to-br from-emerald-50/60 via-white to-amber-50/40">
           <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-4xl mx-auto">
+
               {division.comingSoon && (
-                <div className="mb-12 bg-accent/10 border-l-4 border-accent p-6 rounded-r-lg flex items-start gap-4">
-                  <AlertCircle className="h-6 w-6 text-accent shrink-0" />
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-10 bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-2xl flex items-start gap-4 shadow-sm"
+                >
+                  <AlertCircle className="h-6 w-6 text-amber-500 shrink-0 mt-0.5" />
                   <div>
                     <h3 className="text-lg font-bold text-foreground mb-1">Coming Soon</h3>
                     <p className="text-muted-foreground">This division is currently under development. Stay tuned for our launch.</p>
                   </div>
-                </div>
+                </motion.div>
               )}
 
-              <div className="bg-white rounded-2xl p-8 shadow-sm border mb-12">
-                <h2 className="text-2xl font-serif font-bold text-primary mb-4">About this Division</h2>
-                <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white rounded-3xl p-8 md:p-10 shadow-sm border mb-10"
+              >
+                <div className={`inline-flex items-center gap-2 bg-gradient-to-r ${accent} text-white text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-5 shadow-sm`}>
+                  About This Division
+                </div>
+                <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line mb-8">
                   {division.description}
                 </p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Button asChild>
-                    <a href="/contact">
+                <div className="flex flex-wrap gap-3 pt-4 border-t">
+                  <Button asChild className="rounded-full px-6 shadow-sm shadow-primary/20">
+                    <Link href="/contact">
                       <MessageCircle className="mr-2 h-4 w-4" />
                       Request a Quote
-                    </a>
+                    </Link>
                   </Button>
-                  <Button asChild variant="outline">
-                    <a href="/contact">
+                  <Button asChild variant="outline" className="rounded-full px-6 border-primary text-primary hover:bg-primary hover:text-white">
+                    <Link href="/contact">
                       <Phone className="mr-2 h-4 w-4" />
                       Pay / Order
-                    </a>
+                    </Link>
                   </Button>
                 </div>
-              </div>
+              </motion.div>
 
               {division.services && division.services.length > 0 && (
                 <div>
-                  <h2 className="text-2xl font-serif font-bold text-primary mb-8 text-center">Our Products & Services</h2>
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="text-center mb-10">
+                    <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary bg-primary/10 px-4 py-1.5 rounded-full mb-4">
+                      Our Offerings
+                    </span>
+                    <h2 className="text-2xl font-serif font-bold text-foreground">Products & Services</h2>
+                  </div>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     {division.services.map((service, index) => (
                       <motion.div
                         key={service.id}
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: index * 0.1 }}
+                        transition={{ delay: index * 0.08 }}
                       >
-                        <Card className="h-full overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow group">
-                          <div className="h-44 overflow-hidden relative bg-slate-100">
+                        <Card className="h-full overflow-hidden border-none shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 rounded-2xl group">
+                          <div className="h-44 overflow-hidden relative">
                             {service.imageUrl ? (
                               <img
                                 src={service.imageUrl.startsWith("/objects/") ? `/api/storage${service.imageUrl}` : service.imageUrl}
                                 alt={service.name}
-                                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                               />
                             ) : (
-                              <div className="absolute inset-0 bg-primary/8 flex items-center justify-center">
-                                <CheckCircle2 className="h-12 w-12 text-primary/25" />
+                              <div className={`absolute inset-0 bg-gradient-to-br ${accent} opacity-80`}>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <CheckCircle2 className="h-14 w-14 text-white/30" />
+                                </div>
                               </div>
                             )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                            <h3 className="absolute bottom-3 left-4 right-4 text-white font-bold text-base leading-tight drop-shadow-sm">
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                            <h3 className="absolute bottom-3 left-4 right-4 text-white font-bold text-base leading-tight drop-shadow">
                               {service.name}
                             </h3>
                           </div>
                           {service.description && (
                             <CardContent className="p-4">
                               <p className="text-muted-foreground text-sm leading-relaxed">{service.description}</p>
+                              <div className="flex items-center text-primary text-xs font-semibold mt-3 group-hover:gap-1 transition-all">
+                                Learn More <ChevronRight className="h-3.5 w-3.5 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
+                              </div>
                             </CardContent>
                           )}
                         </Card>
@@ -145,9 +198,9 @@ export default function DivisionDetail() {
             </div>
           </div>
         </section>
+
         <ProductsSection divisionSlug={slug} />
         <GallerySection divisionSlug={slug} />
-
       </main>
 
       <Footer />

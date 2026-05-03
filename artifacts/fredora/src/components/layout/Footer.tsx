@@ -4,6 +4,7 @@ import { useListDivisions, useGetHomepage, useSubscribeNewsletter } from "@works
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaWhatsapp } from "react-icons/fa";
+import { ArrowRight, Mail } from "lucide-react";
 
 export function Footer() {
   const { data: divisions } = useListDivisions();
@@ -13,12 +14,12 @@ export function Footer() {
   const [subscribeStatus, setSubscribeStatus] = useState<"idle" | "success" | "error" | "duplicate">("idle");
 
   const socialLinks = [
-    { url: homepage?.facebookUrl, icon: FaFacebook, label: "Facebook" },
-    { url: homepage?.instagramUrl, icon: FaInstagram, label: "Instagram" },
-    { url: homepage?.twitterUrl, icon: FaTwitter, label: "Twitter / X" },
-    { url: homepage?.linkedinUrl, icon: FaLinkedin, label: "LinkedIn" },
-    { url: homepage?.youtubeUrl, icon: FaYoutube, label: "YouTube" },
-    { url: homepage?.whatsappNumber ? `https://wa.me/${homepage.whatsappNumber.replace(/\D/g, "")}` : null, icon: FaWhatsapp, label: "WhatsApp" },
+    { url: homepage?.facebookUrl, icon: FaFacebook, label: "Facebook", color: "hover:bg-blue-600" },
+    { url: homepage?.instagramUrl, icon: FaInstagram, label: "Instagram", color: "hover:bg-pink-600" },
+    { url: homepage?.twitterUrl, icon: FaTwitter, label: "Twitter / X", color: "hover:bg-sky-500" },
+    { url: homepage?.linkedinUrl, icon: FaLinkedin, label: "LinkedIn", color: "hover:bg-blue-700" },
+    { url: homepage?.youtubeUrl, icon: FaYoutube, label: "YouTube", color: "hover:bg-red-600" },
+    { url: homepage?.whatsappNumber ? `https://wa.me/${homepage.whatsappNumber.replace(/\D/g, "")}` : null, icon: FaWhatsapp, label: "WhatsApp", color: "hover:bg-emerald-600" },
   ].filter((s) => s.url);
 
   function handleSubscribe(e: React.FormEvent) {
@@ -34,70 +35,92 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-slate-950 text-slate-200 py-12 border-t border-slate-900 mt-auto">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <footer className="bg-slate-950 text-slate-200 mt-auto relative overflow-hidden">
+      {/* Colorful top border */}
+      <div className="h-1 bg-gradient-to-r from-emerald-500 via-amber-400 to-emerald-600" />
+
+      {/* Decorative blobs */}
+      <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-amber-500/5 blur-3xl pointer-events-none" />
+
+      <div className="container mx-auto px-4 md:px-6 py-16 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+          {/* Brand */}
           <div>
-            <Link href="/" className="inline-block mb-4">
-              <span className="text-2xl font-bold font-serif text-white">Fredora</span>
+            <Link href="/" className="inline-flex items-center gap-2 mb-5">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-black text-sm shadow-md">
+                F
+              </div>
+              <span className="text-xl font-bold font-serif text-white">Fredora</span>
             </Link>
-            <p className="text-sm text-slate-400 mb-6 max-w-xs">
+            <p className="text-sm text-slate-400 mb-6 leading-relaxed max-w-xs">
               {homepage?.motto || "Giving you the best of your needs. A proudly Nigerian conglomerate rooted in quality and community."}
             </p>
             {socialLinks.length > 0 && (
-              <div className="flex gap-3 flex-wrap">
-                {socialLinks.map(({ url, icon: Icon, label }) => (
+              <div className="flex gap-2.5 flex-wrap">
+                {socialLinks.map(({ url, icon: Icon, label, color }) => (
                   <a
                     key={label}
                     href={url!}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="h-9 w-9 flex items-center justify-center rounded-full bg-slate-800 hover:bg-primary transition-colors text-slate-400 hover:text-white"
+                    className={`h-9 w-9 flex items-center justify-center rounded-xl bg-slate-800 ${color} transition-colors text-slate-400 hover:text-white`}
                   >
-                    <Icon size={16} />
+                    <Icon size={15} />
                   </a>
                 ))}
               </div>
             )}
           </div>
 
+          {/* Company links */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Company</h4>
-            <ul className="space-y-2 text-sm text-slate-400">
-              <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
-              <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
+            <h4 className="text-sm font-bold tracking-wide text-white mb-5 uppercase">Company</h4>
+            <ul className="space-y-3 text-sm text-slate-400">
+              <li><Link href="/about" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />About Us</Link></li>
+              <li><Link href="/contact" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />Contact</Link></li>
+              <li><Link href="/admin/login" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />Admin Login</Link></li>
             </ul>
           </div>
 
+          {/* Divisions */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Divisions</h4>
-            <ul className="space-y-2 text-sm text-slate-400">
+            <h4 className="text-sm font-bold tracking-wide text-white mb-5 uppercase">Divisions</h4>
+            <ul className="space-y-3 text-sm text-slate-400">
               {divisions?.map((div) => (
                 <li key={div.slug}>
-                  <Link href={`/divisions/${div.slug}`} className="hover:text-primary transition-colors">
+                  <Link href={`/divisions/${div.slug}`} className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 group">
+                    <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {div.name}
+                    {div.comingSoon && <span className="text-[9px] uppercase font-bold text-amber-400/70 ml-1">Soon</span>}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
+          {/* Newsletter */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Newsletter</h4>
-            <p className="text-sm text-slate-400 mb-4">Stay updated with Fredora news and announcements.</p>
+            <h4 className="text-sm font-bold tracking-wide text-white mb-5 uppercase">Newsletter</h4>
+            <p className="text-sm text-slate-400 mb-5 leading-relaxed">Stay updated with Fredora news, launches, and announcements.</p>
             {subscribeStatus === "success" ? (
-              <p className="text-sm text-green-400 font-medium">Thank you for subscribing!</p>
+              <div className="bg-emerald-500/15 border border-emerald-500/30 rounded-xl p-4 text-sm text-emerald-400 font-medium">
+                Thank you for subscribing! 🎉
+              </div>
             ) : (
-              <form onSubmit={handleSubscribe} className="space-y-2">
-                <Input
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => { setEmail(e.target.value); setSubscribeStatus("idle"); }}
-                  className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 focus:border-primary"
-                  required
-                />
+              <form onSubmit={handleSubscribe} className="space-y-3">
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                  <Input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => { setEmail(e.target.value); setSubscribeStatus("idle"); }}
+                    className="bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 focus:border-emerald-500 pl-9 rounded-xl"
+                    required
+                  />
+                </div>
                 {subscribeStatus === "duplicate" && (
                   <p className="text-xs text-amber-400">This email is already subscribed.</p>
                 )}
@@ -106,21 +129,19 @@ export function Footer() {
                 )}
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="w-full rounded-xl"
                   disabled={subscribeNewsletter.isPending}
                 >
-                  {subscribeNewsletter.isPending ? "Subscribing..." : "Subscribe"}
+                  {subscribeNewsletter.isPending ? "Subscribing…" : "Subscribe"}
                 </Button>
               </form>
             )}
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500">
+        <div className="mt-14 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-slate-600">
           <p>&copy; {new Date().getFullYear()} Fredora Multiconcept. All rights reserved.</p>
-          <div className="mt-4 md:mt-0 space-x-4">
-            <Link href="/admin/login" className="hover:text-white transition-colors">Admin Login</Link>
-          </div>
+          <p className="mt-2 md:mt-0 text-slate-700">Enugu, Nigeria 🇳🇬</p>
         </div>
       </div>
     </footer>

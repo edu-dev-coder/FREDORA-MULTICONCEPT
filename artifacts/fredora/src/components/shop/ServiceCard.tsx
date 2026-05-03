@@ -1,13 +1,16 @@
-import { MessageCircle, Wrench } from "lucide-react";
+import { useState } from "react";
+import { MessageCircle, Wrench, ShoppingCart, Check, Tag } from "lucide-react";
 import { useGetHomepage } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { useCart } from "@/contexts/CartContext";
 
 export interface ShopService {
   id: number;
   name: string;
   description?: string | null;
   imageUrl?: string | null;
+  price?: string | null;
   divisionSlug: string;
   divisionName: string;
 }
@@ -37,6 +40,9 @@ const divisionColors: Record<string, string> = {
 
 export function ServiceCard({ service }: { service: ShopService }) {
   const { data: homepage } = useGetHomepage();
+  const { addItem } = useCart();
+  const [added, setAdded] = useState(false);
+
   const whatsappNumber = homepage?.whatsappNumber?.replace(/\D/g, "") ?? "";
   const imageUrl = getImageUrl(service.imageUrl);
   const gradient = divisionGradients[service.divisionSlug] ?? "from-slate-500 to-slate-700";
@@ -47,6 +53,20 @@ export function ServiceCard({ service }: { service: ShopService }) {
     if (!whatsappNumber) return;
     const text = `Hello Fredora Multiconcept! I'm interested in your *${service.name}* service from ${service.divisionName}. Could you please share more details?`;
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
+  }
+
+  function handleAddToCart(e: React.MouseEvent) {
+    e.stopPropagation();
+    addItem({
+      id: service.id,
+      name: service.name,
+      price: service.price ?? null,
+      imageUrl: service.imageUrl ?? null,
+      divisionSlug: service.divisionSlug,
+      divisionName: service.divisionName,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
   }
 
   return (
@@ -69,7 +89,6 @@ export function ServiceCard({ service }: { service: ShopService }) {
           </div>
         )}
 
-        {/* Overlay on no-image cards to show name */}
         {!imageUrl && (
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         )}
@@ -81,8 +100,8 @@ export function ServiceCard({ service }: { service: ShopService }) {
           </Badge>
         </div>
 
-        {/* WhatsApp overlay button on hover */}
-        <div className={`absolute inset-0 bg-black/30 flex items-end justify-center pb-4 transition-opacity duration-200 ${imageUrl ? "opacity-0 group-hover:opacity-100" : "opacity-0 group-hover:opacity-100"}`}>
+        {/* WhatsApp overlay on hover */}
+        <div className="absolute inset-0 bg-black/30 flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button
             onClick={handleEnquire}
             className="flex items-center gap-1.5 bg-[#25D366] hover:bg-[#1da851] text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg transition-colors"
@@ -105,13 +124,37 @@ export function ServiceCard({ service }: { service: ShopService }) {
           </p>
         )}
 
-        <button
-          onClick={handleEnquire}
-          className="flex items-center gap-1.5 text-xs font-semibold text-[#25D366] hover:text-[#1da851] transition-colors mt-auto"
-        >
-          <MessageCircle className="h-3.5 w-3.5" />
-          Enquire via WhatsApp
-        </button>
+        <div className="flex items-center justify-between gap-2 mt-auto pt-2">
+          {service.price ? (
+            <div className="flex items-center gap-1 text-primary font-bold text-sm">
+              <Tag className="h-3.5 w-3.5" />
+              {service.price}
+            </div>
+          ) : (
+            <button
+              onClick={handleEnquire}
+              className="flex items-center gap-1.5 text-xs font-semibold text-[#25D366] hover:text-[#1da851] transition-colors"
+            >
+              <MessageCircle className="h-3.5 w-3.5" />
+              Enquire
+            </button>
+          )}
+
+          <button
+            onClick={handleAddToCart}
+            className={`flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full transition-all duration-200 ${
+              added
+                ? "bg-green-100 text-green-700 border border-green-200"
+                : "bg-primary/10 text-primary hover:bg-primary hover:text-white border border-primary/20 hover:border-primary"
+            }`}
+          >
+            {added ? (
+              <><Check className="h-3 w-3" /> Added</>
+            ) : (
+              <><ShoppingCart className="h-3 w-3" /> Add</>
+            )}
+          </button>
+        </div>
       </div>
     </motion.div>
   );

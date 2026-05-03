@@ -60,9 +60,9 @@ export default function Contact() {
       icon: MapPin,
       title: "Our Headquarters",
       lines: ["Enugu, Nigeria"],
-      color: "from-emerald-500 to-teal-600",
-      bg: "from-emerald-50 to-teal-50",
-      border: "border-emerald-100",
+      color: "from-blue-600 to-blue-800",
+      bg: "from-blue-50 to-slate-50",
+      border: "border-blue-100",
     },
     {
       icon: Mail,

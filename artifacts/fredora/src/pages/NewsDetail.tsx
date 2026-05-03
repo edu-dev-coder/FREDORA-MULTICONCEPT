@@ -89,7 +89,7 @@ export default function NewsDetail() {
               </div>
             </div>
           ) : (
-            <div className="bg-gradient-to-br from-emerald-900 to-teal-800 py-20">
+            <div className="bg-gradient-to-br from-[#001847] to-[#1565C0] py-20">
               <div className="container px-4">
                 <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-3xl md:text-5xl font-bold font-serif text-white leading-tight max-w-3xl">
                   {post.title}
@@ -124,7 +124,7 @@ export default function NewsDetail() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="prose prose-lg prose-emerald max-w-none text-foreground/90 leading-relaxed whitespace-pre-wrap"
+                className="prose prose-lg prose-blue max-w-none text-foreground/90 leading-relaxed whitespace-pre-wrap"
               >
                 {post.content}
               </motion.div>

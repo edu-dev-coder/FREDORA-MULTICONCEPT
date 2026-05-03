@@ -77,50 +77,50 @@
   --elevate-2: rgba(0,0,0, .08);
 
   --background: 0 0% 100%;
-  --foreground: 160 40% 8%;
+  --foreground: 220 60% 8%;
 
-  --border: 150 20% 88%;
-  --input: 150 20% 88%;
-  --ring: 152 68% 30%;
+  --border: 220 20% 88%;
+  --input: 220 20% 88%;
+  --ring: 220 80% 30%;
 
   --card: 0 0% 100%;
-  --card-foreground: 160 40% 8%;
-  --card-border: 150 20% 88%;
+  --card-foreground: 220 60% 8%;
+  --card-border: 220 20% 88%;
 
   --sidebar: 0 0% 98%;
-  --sidebar-foreground: 160 40% 10%;
-  --sidebar-border: 150 20% 88%;
-  --sidebar-primary: 152 68% 30%;
+  --sidebar-foreground: 220 60% 10%;
+  --sidebar-border: 220 20% 88%;
+  --sidebar-primary: 220 80% 25%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 150 30% 96%;
-  --sidebar-accent-foreground: 160 40% 10%;
-  --sidebar-ring: 152 68% 30%;
+  --sidebar-accent: 220 30% 96%;
+  --sidebar-accent-foreground: 220 60% 10%;
+  --sidebar-ring: 220 80% 30%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 160 40% 8%;
-  --popover-border: 150 20% 88%;
+  --popover-foreground: 220 60% 8%;
+  --popover-border: 220 20% 88%;
 
-  /* Emerald green primary */
-  --primary: 152 68% 30%;
+  /* Fredora navy blue primary */
+  --primary: 220 80% 25%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 150 20% 95%;
-  --secondary-foreground: 160 40% 10%;
+  --secondary: 220 20% 95%;
+  --secondary-foreground: 220 60% 10%;
 
-  --muted: 150 15% 96%;
-  --muted-foreground: 150 10% 42%;
+  --muted: 220 15% 96%;
+  --muted-foreground: 220 10% 42%;
 
-  /* Golden amber accent */
-  --accent: 38 92% 52%;
-  --accent-foreground: 160 40% 8%;
+  /* Fredora magenta accent */
+  --accent: 345 90% 42%;
+  --accent-foreground: 0 0% 100%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
-  --chart-1: 152 68% 30%;
-  --chart-2: 38 92% 52%;
-  --chart-3: 200 80% 45%;
-  --chart-4: 280 60% 50%;
+  --chart-1: 220 80% 25%;
+  --chart-2: 345 90% 42%;
+  --chart-3: 217 79% 45%;
+  --chart-4: 38 72% 65%;
   --chart-5: 15 80% 52%;
 
   --app-font-sans: 'Inter', sans-serif;
@@ -165,49 +165,49 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: 160 40% 6%;
+  --background: 220 40% 6%;
   --foreground: 0 0% 98%;
 
-  --border: 150 20% 18%;
-  --input: 150 20% 18%;
-  --ring: 152 68% 40%;
+  --border: 220 20% 18%;
+  --input: 220 20% 18%;
+  --ring: 220 80% 45%;
 
-  --card: 160 40% 8%;
+  --card: 220 40% 8%;
   --card-foreground: 0 0% 98%;
-  --card-border: 150 20% 18%;
+  --card-border: 220 20% 18%;
 
-  --sidebar: 160 40% 8%;
+  --sidebar: 220 40% 8%;
   --sidebar-foreground: 0 0% 98%;
-  --sidebar-border: 150 20% 18%;
-  --sidebar-primary: 152 68% 40%;
+  --sidebar-border: 220 20% 18%;
+  --sidebar-primary: 220 80% 45%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 150 20% 18%;
+  --sidebar-accent: 220 20% 18%;
   --sidebar-accent-foreground: 0 0% 98%;
-  --sidebar-ring: 152 68% 40%;
+  --sidebar-ring: 220 80% 45%;
 
-  --popover: 160 40% 8%;
+  --popover: 220 40% 8%;
   --popover-foreground: 0 0% 98%;
-  --popover-border: 150 20% 18%;
+  --popover-border: 220 20% 18%;
 
-  --primary: 152 68% 40%;
+  --primary: 220 80% 45%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 150 20% 18%;
+  --secondary: 220 20% 18%;
   --secondary-foreground: 0 0% 98%;
 
-  --muted: 150 20% 18%;
-  --muted-foreground: 150 10% 60%;
+  --muted: 220 20% 18%;
+  --muted-foreground: 220 10% 60%;
 
-  --accent: 38 92% 55%;
-  --accent-foreground: 160 40% 8%;
+  --accent: 345 90% 55%;
+  --accent-foreground: 0 0% 100%;
 
   --destructive: 0 62% 30%;
   --destructive-foreground: 0 0% 98%;
 
-  --chart-1: 152 68% 40%;
-  --chart-2: 38 92% 55%;
-  --chart-3: 200 80% 50%;
-  --chart-4: 280 60% 55%;
+  --chart-1: 220 80% 45%;
+  --chart-2: 345 90% 55%;
+  --chart-3: 217 79% 55%;
+  --chart-4: 38 72% 65%;
   --chart-5: 15 80% 55%;
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
@@ -223,7 +223,7 @@
 
   body {
     @apply font-sans antialiased text-foreground;
-    background: linear-gradient(135deg, hsl(152, 68%, 96%) 0%, hsl(48, 20%, 99%) 45%, hsl(38, 92%, 96%) 100%);
+    background: linear-gradient(135deg, hsl(220, 60%, 97%) 0%, hsl(0, 0%, 100%) 45%, hsl(220, 30%, 97%) 100%);
     background-attachment: fixed;
   }
 }

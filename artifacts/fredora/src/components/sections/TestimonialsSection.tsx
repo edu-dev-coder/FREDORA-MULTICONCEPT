@@ -3,12 +3,12 @@ import { motion } from "framer-motion";
 import { Quote, Star } from "lucide-react";
 
 const cardGradients = [
-  "from-emerald-500 to-teal-600",
+  "from-blue-600 to-blue-800",
   "from-amber-500 to-orange-600",
   "from-violet-500 to-purple-700",
   "from-sky-500 to-blue-700",
   "from-rose-500 to-red-700",
-  "from-lime-500 to-green-600",
+  "from-cyan-500 to-blue-700",
 ];
 
 export function TestimonialsSection() {
@@ -19,7 +19,7 @@ export function TestimonialsSection() {
   return (
     <section className="py-24 relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1.5px, transparent 0)', backgroundSize: '32px 32px' }} />
-      <div className="absolute top-0 left-0 w-96 h-96 rounded-full bg-emerald-500/10 blur-3xl" />
+      <div className="absolute top-0 left-0 w-96 h-96 rounded-full bg-blue-500/10 blur-3xl" />
       <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl" />
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">

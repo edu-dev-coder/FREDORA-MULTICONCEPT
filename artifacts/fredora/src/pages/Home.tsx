@@ -58,12 +58,12 @@ function HeroSlideshow({ slides, fallbackUrl }: { slides: { id: number; imageUrl
 }
 
 const divisionColors = [
-  "from-emerald-500 to-teal-600",
+  "from-blue-600 to-blue-800",
   "from-amber-500 to-orange-600",
   "from-violet-500 to-purple-700",
   "from-sky-500 to-blue-700",
   "from-rose-500 to-red-700",
-  "from-lime-500 to-green-700",
+  "from-cyan-500 to-blue-700",
 ];
 
 export default function Home() {
@@ -80,7 +80,7 @@ export default function Home() {
 
   if (homeLoading || divLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-100">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-slate-100">
         <div className="text-center">
           <div className="h-12 w-12 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4" />
           <p className="text-primary font-medium">Loading…</p>
@@ -94,7 +94,7 @@ export default function Home() {
     : "/images/hero-bg.png";
 
   const stats = [
-    { label: "Divisions", value: "5+", icon: TrendingUp, color: "text-emerald-600" },
+    { label: "Divisions", value: "5+", icon: TrendingUp, color: "text-blue-600" },
     { label: "Happy Clients", value: "500+", icon: Users, color: "text-amber-600" },
     { label: "Years of Excellence", value: "10+", icon: Star, color: "text-violet-600" },
     { label: "Awards Won", value: "20+", icon: Award, color: "text-rose-600" },
@@ -111,7 +111,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70 z-10" />
           
           {/* Decorative circles */}
-          <div className="absolute top-20 right-10 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl z-10" />
+          <div className="absolute top-20 right-10 w-64 h-64 rounded-full bg-blue-500/10 blur-3xl z-10" />
           <div className="absolute bottom-20 left-10 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl z-10" />
           
           <div className="container relative z-20 text-center text-white px-4">
@@ -178,8 +178,8 @@ export default function Home() {
         </section>
 
         {/* Intro Section */}
-        <section className="py-24 bg-gradient-to-br from-emerald-50 via-teal-50 to-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-emerald-100/60 blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <section className="py-24 bg-gradient-to-br from-blue-50 via-slate-50 to-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-blue-100/60 blur-3xl -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-amber-100/60 blur-3xl translate-y-1/2 -translate-x-1/2" />
           <div className="container mx-auto px-4 md:px-6 relative z-10">
             <div className="max-w-3xl mx-auto text-center">
@@ -295,8 +295,8 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="bg-white/10 backdrop-blur-md rounded-3xl p-10 border border-white/20"
               >
-                <div className="w-12 h-12 rounded-2xl bg-emerald-400/20 flex items-center justify-center mb-6">
-                  <Star className="h-6 w-6 text-emerald-300" />
+                <div className="w-12 h-12 rounded-2xl bg-blue-400/20 flex items-center justify-center mb-6">
+                  <Star className="h-6 w-6 text-blue-300" />
                 </div>
                 <h3 className="text-2xl font-serif font-bold text-white mb-4">Our Vision</h3>
                 <p className="text-lg leading-relaxed text-white/85">
@@ -358,7 +358,7 @@ export default function Home() {
 
         {/* Social Media Section */}
         {(homepage?.facebookUrl || homepage?.instagramUrl || homepage?.twitterUrl || homepage?.linkedinUrl || homepage?.youtubeUrl) && (
-          <section className="py-16 bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 relative overflow-hidden">
+          <section className="py-16 bg-gradient-to-br from-slate-900 via-[#001020] to-slate-900 relative overflow-hidden">
             <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, white 1.5px, transparent 0)", backgroundSize: "32px 32px" }} />
             <div className="container mx-auto px-4 md:px-6 relative z-10 text-center">
               <motion.div

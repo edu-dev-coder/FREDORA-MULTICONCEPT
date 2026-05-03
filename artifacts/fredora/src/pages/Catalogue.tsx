@@ -38,8 +38,8 @@ function DivisionCatalogue({ slug, name }: { slug: string; name: string }) {
                 <img src={getUrl(product.imageUrl)} alt={product.name} className="w-full h-full object-cover" />
               </div>
             ) : (
-              <div className="aspect-square bg-gradient-to-br from-emerald-50 to-teal-100 flex items-center justify-center">
-                <ShoppingBag className="h-10 w-10 text-emerald-300" />
+              <div className="aspect-square bg-gradient-to-br from-blue-50 to-slate-100 flex items-center justify-center">
+                <ShoppingBag className="h-10 w-10 text-blue-300" />
               </div>
             )}
             <div className="p-3">
@@ -89,7 +89,7 @@ export default function Catalogue() {
 
       <main className="flex-1">
         {/* Screen-only header */}
-        <section className="print:hidden py-16 bg-gradient-to-br from-emerald-900 to-teal-800 overflow-hidden relative">
+        <section className="print:hidden py-16 bg-gradient-to-br from-[#001847] to-[#1565C0] overflow-hidden relative">
           <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, white 1.5px, transparent 0)", backgroundSize: "36px 36px" }} />
           <div className="container relative z-10 text-center text-white px-4">
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-5 py-2 mb-6 text-sm font-medium">
@@ -103,7 +103,7 @@ export default function Catalogue() {
               Browse our full range of products across all Fredora divisions. Print or save as PDF.
             </motion.p>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} className="flex gap-4 justify-center">
-              <Button onClick={handlePrint} size="lg" className="rounded-full bg-white text-emerald-900 hover:bg-white/90 font-semibold px-8 gap-2">
+              <Button onClick={handlePrint} size="lg" className="rounded-full bg-white text-[#001847] hover:bg-white/90 font-semibold px-8 gap-2">
                 <Printer className="h-5 w-5" />
                 Print / Save PDF
               </Button>

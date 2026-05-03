@@ -39,7 +39,7 @@ export default function News() {
 
       <main className="flex-1">
         {/* Hero Banner */}
-        <section className="relative py-24 bg-gradient-to-br from-emerald-900 via-teal-800 to-emerald-800 overflow-hidden">
+        <section className="relative py-24 bg-gradient-to-br from-[#001847] via-[#0d3a8e] to-[#1565C0] overflow-hidden">
           <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, white 1.5px, transparent 0)", backgroundSize: "36px 36px" }} />
           <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
           <div className="container relative z-10 text-center text-white px-4">
@@ -83,7 +83,7 @@ export default function News() {
                   >
                     <Link href={`/news/${post.slug}`}>
                       <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-none bg-white/80 backdrop-blur-sm rounded-2xl group cursor-pointer">
-                        <div className="h-52 overflow-hidden relative bg-gradient-to-br from-emerald-100 to-teal-100">
+                        <div className="h-52 overflow-hidden relative bg-gradient-to-br from-blue-50 to-slate-100">
                           {post.imageUrl ? (
                             <img
                               src={post.imageUrl.startsWith("/objects/") ? `/api/storage${post.imageUrl}` : post.imageUrl}
@@ -92,7 +92,7 @@ export default function News() {
                             />
                           ) : (
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <Newspaper className="h-16 w-16 text-emerald-300" />
+                              <Newspaper className="h-16 w-16 text-blue-300" />
                             </div>
                           )}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />

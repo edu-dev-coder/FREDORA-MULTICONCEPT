@@ -8,12 +8,12 @@ interface ProductsSectionProps {
 }
 
 const accentColors = [
-  "from-emerald-500 to-teal-600",
+  "from-blue-600 to-blue-800",
   "from-amber-500 to-orange-600",
   "from-violet-500 to-purple-700",
   "from-sky-500 to-blue-700",
   "from-rose-500 to-red-700",
-  "from-lime-500 to-green-600",
+  "from-cyan-500 to-blue-700",
 ];
 
 export function ProductsSection({ divisionSlug }: ProductsSectionProps) {
@@ -33,8 +33,8 @@ export function ProductsSection({ divisionSlug }: ProductsSectionProps) {
   };
 
   return (
-    <section className="py-20 relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-amber-50">
-      <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-emerald-100/60 blur-3xl -translate-y-1/2 translate-x-1/3" />
+    <section className="py-20 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-slate-50">
+      <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-blue-100/60 blur-3xl -translate-y-1/2 translate-x-1/3" />
       <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-amber-100/60 blur-3xl translate-y-1/3 -translate-x-1/4" />
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">

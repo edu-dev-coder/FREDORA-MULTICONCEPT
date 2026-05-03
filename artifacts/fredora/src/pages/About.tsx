@@ -19,7 +19,7 @@ export default function About() {
 
   if (homeLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-100">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-slate-100">
         <div className="h-10 w-10 rounded-full border-4 border-primary border-t-transparent animate-spin" />
       </div>
     );
@@ -31,10 +31,10 @@ export default function About() {
       
       <main className="flex-1">
         {/* Hero Banner */}
-        <section className="relative py-28 overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(152, 68%, 22%) 0%, hsl(152, 68%, 32%) 60%, hsl(175, 60%, 28%) 100%)' }}>
+        <section className="relative py-28 overflow-hidden" style={{ background: 'linear-gradient(135deg, #001847 0%, #0d3a8e 60%, #1565C0 100%)' }}>
           <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1.5px, transparent 0)', backgroundSize: '32px 32px' }} />
-          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-emerald-400/10 blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full bg-amber-400/10 blur-3xl" />
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-blue-400/10 blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full bg-pink-400/10 blur-3xl" />
           <div className="container mx-auto px-4 md:px-6 text-center relative z-10">
             <motion.span
               initial={{ opacity: 0, y: -10 }}
@@ -93,7 +93,7 @@ export default function About() {
                 viewport={{ once: true }}
                 className="rounded-3xl overflow-hidden shadow-xl border"
               >
-                <div className="bg-gradient-to-br from-emerald-600 to-teal-700 p-8 text-white">
+                <div className="bg-gradient-to-br from-[#001847] to-[#1565C0] p-8 text-white">
                   <h3 className="text-xl font-serif font-bold mb-6">Company Profile</h3>
                   <ul className="space-y-4 text-sm">
                     {[
@@ -120,8 +120,8 @@ export default function About() {
         </section>
 
         {/* Mission / Vision */}
-        <section className="py-20 bg-gradient-to-br from-emerald-50 via-teal-50 to-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-emerald-100/50 blur-3xl" />
+        <section className="py-20 bg-gradient-to-br from-blue-50 via-slate-50 to-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-blue-100/50 blur-3xl" />
           <div className="container mx-auto px-4 md:px-6 max-w-5xl relative z-10">
             <div className="text-center mb-14">
               <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary bg-primary/10 px-4 py-1.5 rounded-full mb-5">
@@ -136,7 +136,7 @@ export default function About() {
                 viewport={{ once: true }}
                 className="bg-white/80 backdrop-blur-sm rounded-3xl p-10 shadow-sm border hover:shadow-md transition-shadow"
               >
-                <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center mb-5">
+                <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center mb-5">
                   <TrendingUp className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-2xl font-serif font-bold text-primary mb-4">Our Mission</h3>
@@ -172,7 +172,7 @@ export default function About() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                   {homepage.coreValues.map((value, i) => {
                     const colors = [
-                      "from-emerald-500 to-teal-600",
+                      "from-blue-600 to-blue-800",
                       "from-amber-500 to-orange-600",
                       "from-violet-500 to-purple-700",
                       "from-sky-500 to-blue-700",

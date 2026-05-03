@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useListDivisions } from "@workspace/api-client-react";
 
 const divisionColors: Record<number, string> = {
-  0: "border-emerald-400 text-emerald-700 hover:bg-emerald-600 hover:text-white hover:border-emerald-600",
+  0: "border-blue-400 text-blue-700 hover:bg-blue-700 hover:text-white hover:border-blue-700",
   1: "border-amber-400 text-amber-700 hover:bg-amber-500 hover:text-white hover:border-amber-500",
   2: "border-violet-400 text-violet-700 hover:bg-violet-600 hover:text-white hover:border-violet-600",
   3: "border-sky-400 text-sky-700 hover:bg-sky-600 hover:text-white hover:border-sky-600",
@@ -27,18 +27,17 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm">
-      {/* Colorful top accent bar */}
-      <div className="h-1 bg-gradient-to-r from-emerald-500 via-amber-400 to-emerald-600" />
+      {/* Brand gradient top bar */}
+      <div className="h-1 bg-gradient-to-r from-[#001847] via-[#1565C0] to-[#C8003C]" />
 
       {/* Main nav row */}
       <div className="container mx-auto px-4 md:px-6 flex h-14 items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2.5 shrink-0 group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-black text-sm shadow-sm">
-            F
-          </div>
-          <span className="text-lg font-bold font-serif text-foreground group-hover:text-primary transition-colors">
-            Fredora <span className="hidden sm:inline text-muted-foreground font-normal text-base">Multiconcept</span>
-          </span>
+        <Link href="/" className="flex items-center shrink-0 group">
+          <img
+            src="/images/logo.png"
+            alt="Fredora Multiconcept"
+            className="h-9 w-auto object-contain"
+          />
         </Link>
 
         {/* Desktop Nav */}
@@ -72,7 +71,7 @@ export function Navbar() {
 
       {/* Divisions strip — desktop */}
       {divisions && divisions.length > 0 && (
-        <div className="hidden md:block border-t bg-gradient-to-r from-emerald-50 via-white to-amber-50">
+        <div className="hidden md:block border-t bg-gradient-to-r from-blue-50 via-white to-slate-50">
           <div className="container mx-auto px-4 md:px-6 flex items-center gap-2 h-10">
             <span className="text-[9px] font-black tracking-widest uppercase text-muted-foreground/50 mr-2 shrink-0">
               Divisions

@@ -36,22 +36,23 @@ export function Footer() {
 
   return (
     <footer className="bg-slate-950 text-slate-200 mt-auto relative overflow-hidden">
-      {/* Colorful top border */}
-      <div className="h-1 bg-gradient-to-r from-emerald-500 via-amber-400 to-emerald-600" />
+      {/* Brand gradient top border */}
+      <div className="h-1 bg-gradient-to-r from-[#001847] via-[#1565C0] to-[#C8003C]" />
 
       {/* Decorative blobs */}
-      <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-amber-500/5 blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-blue-500/5 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-pink-500/5 blur-3xl pointer-events-none" />
 
       <div className="container mx-auto px-4 md:px-6 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <Link href="/" className="inline-flex items-center gap-2 mb-5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-black text-sm shadow-md">
-                F
-              </div>
-              <span className="text-xl font-bold font-serif text-white">Fredora</span>
+            <Link href="/" className="inline-flex items-center mb-5">
+              <img
+                src="/images/logo.png"
+                alt="Fredora Multiconcept"
+                className="h-10 w-auto object-contain brightness-0 invert"
+              />
             </Link>
             <p className="text-sm text-slate-400 mb-6 leading-relaxed max-w-xs">
               {homepage?.motto || "Giving you the best of your needs. A proudly Nigerian conglomerate rooted in quality and community."}
@@ -78,9 +79,11 @@ export function Footer() {
           <div>
             <h4 className="text-sm font-bold tracking-wide text-white mb-5 uppercase">Company</h4>
             <ul className="space-y-3 text-sm text-slate-400">
-              <li><Link href="/about" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />About Us</Link></li>
-              <li><Link href="/contact" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />Contact</Link></li>
-              <li><Link href="/admin/login" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />Admin Login</Link></li>
+              <li><Link href="/about" className="hover:text-blue-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />About Us</Link></li>
+              <li><Link href="/news" className="hover:text-blue-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />News</Link></li>
+              <li><Link href="/catalogue" className="hover:text-blue-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />Catalogue</Link></li>
+              <li><Link href="/contact" className="hover:text-blue-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />Contact</Link></li>
+              <li><Link href="/admin/login" className="hover:text-blue-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />Admin Login</Link></li>
             </ul>
           </div>
 
@@ -90,7 +93,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-slate-400">
               {divisions?.map((div) => (
                 <li key={div.slug}>
-                  <Link href={`/divisions/${div.slug}`} className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 group">
+                  <Link href={`/divisions/${div.slug}`} className="hover:text-blue-400 transition-colors flex items-center gap-1.5 group">
                     <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {div.name}
                     {div.comingSoon && <span className="text-[9px] uppercase font-bold text-amber-400/70 ml-1">Soon</span>}
@@ -105,7 +108,7 @@ export function Footer() {
             <h4 className="text-sm font-bold tracking-wide text-white mb-5 uppercase">Newsletter</h4>
             <p className="text-sm text-slate-400 mb-5 leading-relaxed">Stay updated with Fredora news, launches, and announcements.</p>
             {subscribeStatus === "success" ? (
-              <div className="bg-emerald-500/15 border border-emerald-500/30 rounded-xl p-4 text-sm text-emerald-400 font-medium">
+              <div className="bg-blue-500/15 border border-blue-500/30 rounded-xl p-4 text-sm text-blue-400 font-medium">
                 Thank you for subscribing! 🎉
               </div>
             ) : (
@@ -117,7 +120,7 @@ export function Footer() {
                     placeholder="your@email.com"
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setSubscribeStatus("idle"); }}
-                    className="bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 focus:border-emerald-500 pl-9 rounded-xl"
+                    className="bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 focus:border-blue-500 pl-9 rounded-xl"
                     required
                   />
                 </div>

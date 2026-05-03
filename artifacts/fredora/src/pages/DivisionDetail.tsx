@@ -12,7 +12,7 @@ import { Link } from "wouter";
 import { useSEO } from "@/lib/seo";
 
 const divisionAccents: Record<string, string> = {
-  foods: "from-emerald-500 to-teal-600",
+  foods: "from-blue-600 to-blue-800",
   eduservices: "from-sky-500 to-blue-700",
   chems: "from-violet-500 to-purple-700",
   scents: "from-rose-500 to-pink-700",

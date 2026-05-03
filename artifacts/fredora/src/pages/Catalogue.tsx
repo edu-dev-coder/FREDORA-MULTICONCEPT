@@ -14,7 +14,6 @@ import { useSEO } from "@/lib/seo";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { ServiceCard } from "@/components/shop/ServiceCard";
 import { ProductModal, type ShopProduct } from "@/components/shop/ProductModal";
-import { CartDrawer } from "@/components/shop/CartDrawer";
 import { useCart } from "@/contexts/CartContext";
 import type { Division } from "@workspace/api-client-react";
 
@@ -148,7 +147,6 @@ export default function Catalogue() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       <Navbar />
-      <CartDrawer />
       <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
 
       {/* Hero */}

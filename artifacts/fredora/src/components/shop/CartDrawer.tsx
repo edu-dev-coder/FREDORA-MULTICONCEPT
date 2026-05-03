@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { X, ShoppingCart, Trash2, Plus, Minus, MessageCircle, PackageOpen, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "wouter";
+import { useLocation } from "wouter";
 
 function getImageUrl(raw: string | null | undefined) {
   if (!raw) return null;
@@ -19,6 +19,7 @@ function formatNGN(n: number) {
 export function CartDrawer() {
   const { items, removeItem, updateQuantity, clearCart, totalItems, totalPrice, isOpen, closeCart } = useCart();
   const { data: homepage } = useGetHomepage();
+  const [, navigate] = useLocation();
 
   const whatsappNumber = homepage?.whatsappNumber?.replace(/\D/g, "") ?? "";
 
@@ -98,10 +99,11 @@ export function CartDrawer() {
                     <p className="font-semibold text-lg mb-1">Your cart is empty</p>
                     <p className="text-sm text-muted-foreground">Browse our products and add items to get started</p>
                   </div>
-                  <Button asChild onClick={closeCart} className="rounded-full gap-2 mt-2">
-                    <Link href="/catalogue">
-                      Shop Now <ArrowRight className="h-4 w-4" />
-                    </Link>
+                  <Button
+                    onClick={() => { closeCart(); navigate("/catalogue"); }}
+                    className="rounded-full gap-2 mt-2"
+                  >
+                    Shop Now <ArrowRight className="h-4 w-4" />
                   </Button>
                 </div>
               ) : (

@@ -25,6 +25,7 @@ import AdminNewsletter from "@/pages/admin/Newsletter";
 import AdminCatalogue from "@/pages/admin/Catalogue";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { CartProvider } from "@/contexts/CartContext";
+import { CartDrawer } from "@/components/shop/CartDrawer";
 
 const queryClient = new QueryClient();
 
@@ -94,6 +95,7 @@ function App() {
             <AnalyticsInjector />
             <Router />
             <WhatsAppButton />
+            <CartDrawer />
           </WouterRouter>
           <Toaster />
         </TooltipProvider>

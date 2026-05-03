@@ -213,6 +213,7 @@ export interface Message {
   email: string;
   message: string;
   read: boolean;
+  status: string;
   createdAt: string;
 }
 
@@ -220,6 +221,46 @@ export interface CreateMessageBody {
   name: string;
   email: string;
   message: string;
+}
+
+export interface UpdateMessageStatusBody {
+  status: "pending" | "in_progress" | "resolved";
+}
+
+export interface Post {
+  id: number;
+  title: string;
+  slug: string;
+  /** @nullable */
+  excerpt?: string | null;
+  content: string;
+  /** @nullable */
+  imageUrl?: string | null;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreatePostBody {
+  title: string;
+  slug: string;
+  /** @nullable */
+  excerpt?: string | null;
+  content: string;
+  /** @nullable */
+  imageUrl?: string | null;
+  published?: boolean;
+}
+
+export interface UpdatePostBody {
+  title?: string;
+  slug?: string;
+  /** @nullable */
+  excerpt?: string | null;
+  content?: string;
+  /** @nullable */
+  imageUrl?: string | null;
+  published?: boolean;
 }
 
 export interface HeroSlide {

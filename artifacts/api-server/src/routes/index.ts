@@ -11,6 +11,7 @@ import testimonialsRouter from "./testimonials";
 import newsletterRouter from "./newsletter";
 import heroSlidesRouter from "./hero-slides";
 import servicesRouter from "./services";
+import postsRouter from "./posts";
 
 const router: IRouter = Router();
 
@@ -26,5 +27,6 @@ router.use(testimonialsRouter);
 router.use(newsletterRouter);
 router.use(heroSlidesRouter);
 router.use(servicesRouter);
+router.use(postsRouter);
 
 export default router;

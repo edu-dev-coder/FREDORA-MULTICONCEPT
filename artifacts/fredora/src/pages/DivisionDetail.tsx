@@ -1,5 +1,5 @@
 import { useParams } from "wouter";
-import { useGetDivision, getGetDivisionQueryKey } from "@workspace/api-client-react";
+import { useGetDivision, getGetDivisionQueryKey, useGetHomepage } from "@workspace/api-client-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
@@ -23,6 +23,14 @@ export default function DivisionDetail() {
   const params = useParams();
   const slug = params.slug || "";
   const { data: division, isLoading } = useGetDivision(slug, { query: { enabled: !!slug, queryKey: getGetDivisionQueryKey(slug) } });
+  const { data: homepage } = useGetHomepage();
+
+  const buildServiceWhatsAppUrl = (serviceName: string) => {
+    const number = homepage?.whatsappNumber?.replace(/\D/g, "");
+    if (!number) return "/contact";
+    const text = encodeURIComponent(`Hi Fredora, I'd like to enquire about: ${serviceName}`);
+    return `https://wa.me/${number}?text=${text}`;
+  };
 
   useSEO({
     title: division ? division.name : "Division",
@@ -190,14 +198,26 @@ export default function DivisionDetail() {
                               {service.name}
                             </h3>
                           </div>
-                          {service.description && (
-                            <CardContent className="p-4">
-                              <p className="text-muted-foreground text-sm leading-relaxed">{service.description}</p>
-                              <div className="flex items-center text-primary text-xs font-semibold mt-3 group-hover:gap-1 transition-all">
-                                Learn More <ChevronRight className="h-3.5 w-3.5 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
-                              </div>
-                            </CardContent>
-                          )}
+                          <CardContent className="p-4">
+                            {service.description && (
+                              <p className="text-muted-foreground text-sm leading-relaxed mb-3">{service.description}</p>
+                            )}
+                            {(() => {
+                              const waUrl = buildServiceWhatsAppUrl(service.name);
+                              const isWa = waUrl.startsWith("https://wa.me");
+                              return (
+                                <a
+                                  href={waUrl}
+                                  target={isWa ? "_blank" : undefined}
+                                  rel={isWa ? "noopener noreferrer" : undefined}
+                                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-1.5 rounded-full bg-[#25D366] hover:bg-[#1ebe5d] text-white transition-all"
+                                >
+                                  <MessageCircle className="h-3.5 w-3.5" />
+                                  Enquire on WhatsApp
+                                </a>
+                              );
+                            })()}
+                          </CardContent>
                         </Card>
                       </motion.div>
                     ))}

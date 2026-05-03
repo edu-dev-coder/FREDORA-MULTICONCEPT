@@ -190,9 +190,18 @@ export const ListMessagesResponseItem = zod.object({
   email: zod.string(),
   message: zod.string(),
   read: zod.boolean(),
+  status: zod.string().default("pending"),
   createdAt: zod.string(),
 });
 export const ListMessagesResponse = zod.array(ListMessagesResponseItem);
+
+export const UpdateMessageStatusBody = zod.object({
+  status: zod.enum(["pending", "in_progress", "resolved"]),
+});
+
+export const UpdateMessageStatusParams = zod.object({
+  id: zod.coerce.number(),
+});
 
 /**
  * @summary Submit a contact message

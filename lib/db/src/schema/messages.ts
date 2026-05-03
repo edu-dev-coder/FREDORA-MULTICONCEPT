@@ -8,9 +8,10 @@ export const messagesTable = pgTable("messages", {
   email: text("email").notNull(),
   message: text("message").notNull(),
   read: boolean("read").notNull().default(false),
+  status: text("status").notNull().default("pending"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const insertMessageSchema = createInsertSchema(messagesTable).omit({ id: true, createdAt: true, read: true });
+export const insertMessageSchema = createInsertSchema(messagesTable).omit({ id: true, createdAt: true, read: true, status: true });
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type Message = typeof messagesTable.$inferSelect;

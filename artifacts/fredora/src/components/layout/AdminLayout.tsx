@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, Home, Layers, MessageSquare, LogOut, Quote, Mail } from "lucide-react";
+import { LayoutDashboard, Home, Layers, MessageSquare, LogOut, Quote, Mail, Newspaper } from "lucide-react";
 import { useGetAdminMe, useAdminLogout } from "@workspace/api-client-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     { href: "/admin/homepage", label: "Homepage Content", icon: Home },
     { href: "/admin/divisions", label: "Divisions", icon: Layers },
     { href: "/admin/messages", label: "Messages", icon: MessageSquare },
+    { href: "/admin/news", label: "News & Blog", icon: Newspaper },
     { href: "/admin/testimonials", label: "Testimonials", icon: Quote },
     { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
   ];

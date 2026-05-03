@@ -9,12 +9,16 @@ import Home from "@/pages/Home";
 import About from "@/pages/About";
 import DivisionDetail from "@/pages/DivisionDetail";
 import Contact from "@/pages/Contact";
+import News from "@/pages/News";
+import NewsDetail from "@/pages/NewsDetail";
+import Catalogue from "@/pages/Catalogue";
 import AdminLogin from "@/pages/admin/Login";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import AdminHomepage from "@/pages/admin/Homepage";
 import AdminDivisions from "@/pages/admin/Divisions";
 import AdminDivisionEdit from "@/pages/admin/DivisionEdit";
 import AdminMessages from "@/pages/admin/Messages";
+import AdminNews from "@/pages/admin/News";
 import AdminTestimonials from "@/pages/admin/Testimonials";
 import AdminNewsletter from "@/pages/admin/Newsletter";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -57,6 +61,9 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/contact" component={Contact} />
       <Route path="/divisions/:slug" component={DivisionDetail} />
+      <Route path="/news" component={News} />
+      <Route path="/news/:slug" component={NewsDetail} />
+      <Route path="/catalogue" component={Catalogue} />
       
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
@@ -64,6 +71,7 @@ function Router() {
       <Route path="/admin/divisions" component={AdminDivisions} />
       <Route path="/admin/divisions/:slug" component={AdminDivisionEdit} />
       <Route path="/admin/messages" component={AdminMessages} />
+      <Route path="/admin/news" component={AdminNews} />
       <Route path="/admin/testimonials" component={AdminTestimonials} />
       <Route path="/admin/newsletter" component={AdminNewsletter} />
       

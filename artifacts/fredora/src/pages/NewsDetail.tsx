@@ -8,6 +8,79 @@ import { Calendar, ChevronLeft, Newspaper } from "lucide-react";
 import { format } from "date-fns";
 import { useSEO } from "@/lib/seo";
 
+// Simple markdown → JSX renderer (no external deps)
+function renderMarkdown(text: string): React.ReactNode[] {
+  const lines = text.split("\n");
+  const nodes: React.ReactNode[] = [];
+  let i = 0;
+
+  function inlineFormat(line: string, key: string): React.ReactNode {
+    // Process inline: **bold**, *italic*, [text](url)
+    const parts: React.ReactNode[] = [];
+    let last = 0;
+    const pattern = /(\*\*(.+?)\*\*|\*(.+?)\*|\[(.+?)\]\((.+?)\))/g;
+    let m: RegExpExecArray | null;
+    while ((m = pattern.exec(line)) !== null) {
+      if (m.index > last) parts.push(line.slice(last, m.index));
+      if (m[2]) parts.push(<strong key={`b${m.index}`}>{m[2]}</strong>);
+      else if (m[3]) parts.push(<em key={`i${m.index}`}>{m[3]}</em>);
+      else if (m[4]) parts.push(<a key={`a${m.index}`} href={m[5]} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">{m[4]}</a>);
+      last = m.index + m[0].length;
+    }
+    if (last < line.length) parts.push(line.slice(last));
+    return parts.length === 0 ? line : <span key={key}>{parts}</span>;
+  }
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    if (!line.trim()) { nodes.push(<div key={`br${i}`} className="h-3" />); i++; continue; }
+    if (/^---+$/.test(line.trim())) { nodes.push(<hr key={`hr${i}`} className="my-6 border-border" />); i++; continue; }
+    if (line.startsWith("# ")) { nodes.push(<h1 key={`h1${i}`} className="text-3xl font-bold font-serif text-foreground mt-8 mb-4 leading-tight">{inlineFormat(line.slice(2), `h1c${i}`)}</h1>); i++; continue; }
+    if (line.startsWith("## ")) { nodes.push(<h2 key={`h2${i}`} className="text-2xl font-bold font-serif text-foreground mt-7 mb-3 leading-tight">{inlineFormat(line.slice(3), `h2c${i}`)}</h2>); i++; continue; }
+    if (line.startsWith("### ")) { nodes.push(<h3 key={`h3${i}`} className="text-xl font-bold text-foreground mt-6 mb-3">{inlineFormat(line.slice(4), `h3c${i}`)}</h3>); i++; continue; }
+
+    // Blockquote
+    if (line.startsWith("> ")) {
+      const items: React.ReactNode[] = [];
+      while (i < lines.length && lines[i].startsWith("> ")) {
+        items.push(<p key={`bqi${i}`} className="mb-1 last:mb-0">{inlineFormat(lines[i].slice(2), `bqc${i}`)}</p>);
+        i++;
+      }
+      nodes.push(<blockquote key={`bq${i}`} className="border-l-4 border-primary pl-5 my-5 italic text-muted-foreground bg-primary/5 py-3 pr-4 rounded-r-lg">{items}</blockquote>);
+      continue;
+    }
+
+    // Bullet list
+    if (line.startsWith("- ") || line.startsWith("* ")) {
+      const items: React.ReactNode[] = [];
+      while (i < lines.length && (lines[i].startsWith("- ") || lines[i].startsWith("* "))) {
+        items.push(<li key={`li${i}`} className="mb-1">{inlineFormat(lines[i].slice(2), `lic${i}`)}</li>);
+        i++;
+      }
+      nodes.push(<ul key={`ul${i}`} className="list-disc list-outside pl-5 my-4 space-y-1">{items}</ul>);
+      continue;
+    }
+
+    // Numbered list
+    if (/^\d+\. /.test(line)) {
+      const items: React.ReactNode[] = [];
+      while (i < lines.length && /^\d+\. /.test(lines[i])) {
+        items.push(<li key={`oli${i}`} className="mb-1">{inlineFormat(lines[i].replace(/^\d+\. /, ""), `olic${i}`)}</li>);
+        i++;
+      }
+      nodes.push(<ol key={`ol${i}`} className="list-decimal list-outside pl-5 my-4 space-y-1">{items}</ol>);
+      continue;
+    }
+
+    // Regular paragraph
+    nodes.push(<p key={`p${i}`} className="mb-4 text-foreground/90 leading-relaxed">{inlineFormat(line, `pc${i}`)}</p>);
+    i++;
+  }
+
+  return nodes;
+}
+
 interface Post {
   id: number;
   title: string;
@@ -124,9 +197,9 @@ export default function NewsDetail() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="prose prose-lg prose-blue max-w-none text-foreground/90 leading-relaxed whitespace-pre-wrap"
+                className="max-w-none text-base"
               >
-                {post.content}
+                {renderMarkdown(post.content)}
               </motion.div>
 
               {/* Footer nav */}

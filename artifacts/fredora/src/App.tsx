@@ -21,6 +21,7 @@ import AdminMessages from "@/pages/admin/Messages";
 import AdminNews from "@/pages/admin/News";
 import AdminTestimonials from "@/pages/admin/Testimonials";
 import AdminNewsletter from "@/pages/admin/Newsletter";
+import AdminCatalogue from "@/pages/admin/Catalogue";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const queryClient = new QueryClient();
@@ -74,6 +75,7 @@ function Router() {
       <Route path="/admin/news" component={AdminNews} />
       <Route path="/admin/testimonials" component={AdminTestimonials} />
       <Route path="/admin/newsletter" component={AdminNewsletter} />
+      <Route path="/admin/catalogue" component={AdminCatalogue} />
       
       <Route component={NotFound} />
     </Switch>

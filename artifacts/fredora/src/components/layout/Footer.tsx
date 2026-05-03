@@ -51,7 +51,7 @@ export function Footer() {
               <img
                 src="/images/logo.png"
                 alt="Fredora Multiconcept"
-                className="h-10 w-auto object-contain brightness-0 invert"
+                className="h-14 w-auto object-contain brightness-0 invert"
               />
             </Link>
             <p className="text-sm text-slate-400 mb-6 leading-relaxed max-w-xs">

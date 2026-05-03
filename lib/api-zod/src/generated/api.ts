@@ -137,6 +137,7 @@ export const GetHomepageResponse = zod.object({
   youtubeUrl: zod.string().nullish(),
   metaDescription: zod.string().nullish(),
   googleAnalyticsId: zod.string().nullish(),
+  catalogueNotes: zod.string().nullish(),
   updatedAt: zod.string(),
 });
 
@@ -159,6 +160,7 @@ export const UpdateHomepageBody = zod.object({
   youtubeUrl: zod.string().nullish(),
   metaDescription: zod.string().nullish(),
   googleAnalyticsId: zod.string().nullish(),
+  catalogueNotes: zod.string().nullish(),
 });
 
 export const UpdateHomepageResponse = zod.object({
@@ -178,6 +180,7 @@ export const UpdateHomepageResponse = zod.object({
   youtubeUrl: zod.string().nullish(),
   metaDescription: zod.string().nullish(),
   googleAnalyticsId: zod.string().nullish(),
+  catalogueNotes: zod.string().nullish(),
   updatedAt: zod.string(),
 });
 

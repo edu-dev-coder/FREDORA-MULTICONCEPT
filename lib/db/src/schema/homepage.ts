@@ -19,6 +19,7 @@ export const homepageTable = pgTable("homepage", {
   youtubeUrl: text("youtube_url"),
   metaDescription: text("meta_description"),
   googleAnalyticsId: text("google_analytics_id"),
+  catalogueNotes: text("catalogue_notes"),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
 

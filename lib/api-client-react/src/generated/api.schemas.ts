@@ -81,6 +81,8 @@ export interface Homepage {
   metaDescription?: string | null;
   /** @nullable */
   googleAnalyticsId?: string | null;
+  /** @nullable */
+  catalogueNotes?: string | null;
   updatedAt: string;
 }
 
@@ -109,6 +111,8 @@ export interface UpdateHomepageBody {
   metaDescription?: string | null;
   /** @nullable */
   googleAnalyticsId?: string | null;
+  /** @nullable */
+  catalogueNotes?: string | null;
 }
 
 export interface UploadUrlRequest {

@@ -3,13 +3,15 @@ import { useGetDivision, getGetDivisionQueryKey, useGetHomepage } from "@workspa
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
-import { CheckCircle2, AlertCircle, Phone, MessageCircle, ChevronRight } from "lucide-react";
+import { CheckCircle2, AlertCircle, Phone, MessageCircle, ShoppingCart, Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { GallerySection } from "@/components/sections/GallerySection";
 import { ProductsSection } from "@/components/sections/ProductsSection";
 import { Link } from "wouter";
 import { useSEO } from "@/lib/seo";
+import { useCart } from "@/contexts/CartContext";
+import { useState } from "react";
 
 const divisionAccents: Record<string, string> = {
   foods: "from-blue-600 to-blue-800",
@@ -25,6 +27,22 @@ export default function DivisionDetail() {
   const slug = params.slug || "";
   const { data: division, isLoading } = useGetDivision(slug, { query: { enabled: !!slug, queryKey: getGetDivisionQueryKey(slug) } });
   const { data: homepage } = useGetHomepage();
+  const { addItem, openCart } = useCart();
+  const [addedIds, setAddedIds] = useState<Set<number>>(new Set());
+
+  const handleAddToCart = (service: { id: number; name: string; price?: string | null; imageUrl?: string | null }) => {
+    addItem({
+      id: service.id,
+      name: service.name,
+      price: service.price ?? null,
+      imageUrl: service.imageUrl ?? null,
+      divisionSlug: slug,
+      divisionName: division?.name ?? slug,
+    });
+    setAddedIds((prev) => new Set(prev).add(service.id));
+    setTimeout(() => setAddedIds((prev) => { const next = new Set(prev); next.delete(service.id); return next; }), 2000);
+    openCart();
+  };
 
   const buildServiceWhatsAppUrl = (serviceName: string) => {
     const number = homepage?.whatsappNumber?.replace(/\D/g, "");
@@ -203,21 +221,40 @@ export default function DivisionDetail() {
                             {service.description && (
                               <p className="text-muted-foreground text-sm leading-relaxed mb-3">{service.description}</p>
                             )}
-                            {(() => {
-                              const waUrl = buildServiceWhatsAppUrl(service.name);
-                              const isWa = waUrl.startsWith("https://wa.me");
-                              return (
-                                <a
-                                  href={waUrl}
-                                  target={isWa ? "_blank" : undefined}
-                                  rel={isWa ? "noopener noreferrer" : undefined}
-                                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-1.5 rounded-full bg-[#25D366] hover:bg-[#1ebe5d] text-white transition-all"
-                                >
-                                  <MessageCircle className="h-3.5 w-3.5" />
-                                  Enquire on WhatsApp
-                                </a>
-                              );
-                            })()}
+                            {service.price && (
+                              <p className="text-sm font-semibold text-foreground mb-3">{service.price}</p>
+                            )}
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                onClick={() => handleAddToCart(service)}
+                                className={`inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-1.5 rounded-full transition-all ${
+                                  addedIds.has(service.id)
+                                    ? "bg-green-600 text-white"
+                                    : "bg-[#001847] hover:bg-[#0d3a8e] text-white"
+                                }`}
+                              >
+                                {addedIds.has(service.id) ? (
+                                  <><Check className="h-3.5 w-3.5" /> Added!</>
+                                ) : (
+                                  <><ShoppingCart className="h-3.5 w-3.5" /> Add to Cart</>
+                                )}
+                              </button>
+                              {(() => {
+                                const waUrl = buildServiceWhatsAppUrl(service.name);
+                                const isWa = waUrl.startsWith("https://wa.me");
+                                return (
+                                  <a
+                                    href={waUrl}
+                                    target={isWa ? "_blank" : undefined}
+                                    rel={isWa ? "noopener noreferrer" : undefined}
+                                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-1.5 rounded-full bg-[#25D366] hover:bg-[#1ebe5d] text-white transition-all"
+                                  >
+                                    <MessageCircle className="h-3.5 w-3.5" />
+                                    Enquire
+                                  </a>
+                                );
+                              })()}
+                            </div>
                           </CardContent>
                         </Card>
                       </motion.div>

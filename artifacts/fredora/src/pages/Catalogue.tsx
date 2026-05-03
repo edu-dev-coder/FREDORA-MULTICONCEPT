@@ -96,6 +96,7 @@ export default function Catalogue() {
         id: s.id,
         name: s.name,
         description: s.description,
+        imageUrl: s.imageUrl ?? null,
         divisionSlug: div.slug,
         divisionName: div.name,
       }))

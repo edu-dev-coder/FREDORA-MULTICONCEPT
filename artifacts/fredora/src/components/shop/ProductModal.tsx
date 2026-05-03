@@ -35,6 +35,7 @@ const divisionColors: Record<string, string> = {
   chems: "bg-violet-100 text-violet-700",
   scents: "bg-pink-100 text-pink-700",
   transport: "bg-amber-100 text-amber-700",
+  temperamap: "bg-indigo-100 text-indigo-800",
 };
 
 export function ProductModal({ product, onClose }: ProductModalProps) {

@@ -104,7 +104,7 @@ export default function Contact() {
           </div>
         </section>
 
-        <section className="py-16 md:py-24 bg-gradient-to-br from-emerald-50/50 via-white to-amber-50/50">
+        <section className="py-16 md:py-24">
           <div className="container mx-auto px-4 md:px-6">
             {/* Contact cards */}
             <div className="grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto mb-16">
@@ -133,7 +133,7 @@ export default function Contact() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
-                className="bg-white rounded-3xl shadow-lg border p-8 md:p-10"
+                className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border p-8 md:p-10"
               >
                 <div className="flex items-center gap-3 mb-8">
                   <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-sm shadow-primary/20">

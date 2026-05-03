@@ -62,7 +62,7 @@ export default function About() {
         </section>
 
         {/* Our Story */}
-        <section className="py-20 bg-white">
+        <section className="py-20">
           <div className="container mx-auto px-4 md:px-6">
             <div className="grid md:grid-cols-2 gap-16 items-center max-w-5xl mx-auto">
               <motion.div
@@ -134,7 +134,7 @@ export default function About() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="bg-white rounded-3xl p-10 shadow-sm border hover:shadow-md transition-shadow"
+                className="bg-white/80 backdrop-blur-sm rounded-3xl p-10 shadow-sm border hover:shadow-md transition-shadow"
               >
                 <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center mb-5">
                   <TrendingUp className="h-6 w-6 text-primary" />
@@ -149,7 +149,7 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.15 }}
-                className="bg-white rounded-3xl p-10 shadow-sm border hover:shadow-md transition-shadow"
+                className="bg-white/80 backdrop-blur-sm rounded-3xl p-10 shadow-sm border hover:shadow-md transition-shadow"
               >
                 <div className="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center mb-5">
                   <Star className="h-6 w-6 text-amber-600" />
@@ -184,7 +184,7 @@ export default function About() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: i * 0.07 }}
-                        className="flex flex-col items-center text-center p-6 rounded-2xl bg-white border shadow-sm hover:shadow-md transition-shadow"
+                        className="flex flex-col items-center text-center p-6 rounded-2xl bg-white/80 backdrop-blur-sm border shadow-sm hover:shadow-md transition-shadow"
                       >
                         <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${colors[i % colors.length]} flex items-center justify-center mb-4 shadow-sm`}>
                           <Award className="h-6 w-6 text-white" />

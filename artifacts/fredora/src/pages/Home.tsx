@@ -157,7 +157,7 @@ export default function Home() {
         </section>
 
         {/* Stats Strip */}
-        <section className="relative -mt-1 bg-white border-b shadow-md z-20">
+        <section className="relative -mt-1 bg-white/80 backdrop-blur-sm border-b shadow-md z-20">
           <div className="container mx-auto px-4 md:px-6">
             <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0">
               {stats.map((stat, i) => (
@@ -202,7 +202,7 @@ export default function Home() {
         </section>
 
         {/* Divisions Section */}
-        <section className="py-24 bg-white">
+        <section className="py-24">
           <div className="container mx-auto px-4 md:px-6">
             <div className="text-center mb-16">
               <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary bg-primary/10 px-4 py-1.5 rounded-full mb-6">
@@ -224,7 +224,7 @@ export default function Home() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   <Link href={`/divisions/${div.slug}`}>
-                    <Card className="h-full overflow-hidden hover:shadow-2xl transition-all duration-400 border border-border hover:-translate-y-1 bg-white group cursor-pointer">
+                    <Card className="h-full overflow-hidden hover:shadow-2xl transition-all duration-400 border border-border hover:-translate-y-1 bg-white/85 backdrop-blur-sm group cursor-pointer">
                       <div className="h-52 overflow-hidden relative">
                         {div.imageUrl ? (
                           <img

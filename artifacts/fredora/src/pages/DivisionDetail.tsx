@@ -70,7 +70,7 @@ export default function DivisionDetail() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      <main className="flex-1 bg-white">
+      <main className="flex-1">
         {/* Hero Banner */}
         <section className="relative h-[55vh] min-h-[420px] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${bgImage}')` }} />
@@ -107,7 +107,7 @@ export default function DivisionDetail() {
         </section>
 
         {/* About section */}
-        <section className="py-20 bg-gradient-to-br from-emerald-50/60 via-white to-amber-50/40">
+        <section className="py-20">
           <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-4xl mx-auto">
 
@@ -129,7 +129,7 @@ export default function DivisionDetail() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-white rounded-3xl p-8 md:p-10 shadow-sm border mb-10"
+                className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-sm border mb-10"
               >
                 <div className={`inline-flex items-center gap-2 bg-gradient-to-r ${accent} text-white text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-5 shadow-sm`}>
                   About This Division

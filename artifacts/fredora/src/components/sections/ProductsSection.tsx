@@ -1,6 +1,7 @@
 import { useListProducts } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
-import { ShoppingBag } from "lucide-react";
+import { ExternalLink, ShoppingBag } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface ProductsSectionProps {
@@ -14,6 +15,7 @@ export function ProductsSection({ divisionSlug }: ProductsSectionProps) {
 
   const getUrl = (raw: string) =>
     raw.startsWith("/objects/") ? `/api/storage${raw}` : raw;
+  const contactHref = "/contact";
 
   return (
     <section className="py-20 bg-slate-50">
@@ -48,9 +50,18 @@ export function ProductsSection({ divisionSlug }: ProductsSectionProps) {
                   {product.description && (
                     <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{product.description}</p>
                   )}
-                  {product.price && (
-                    <p className="text-sm font-bold text-primary">{product.price}</p>
-                  )}
+                  <div className="flex items-center justify-between gap-3">
+                    {product.price ? (
+                      <p className="text-sm font-bold text-primary">{product.price}</p>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">Contact us for pricing</span>
+                    )}
+                    <Button asChild size="sm" className="shrink-0">
+                      <a href={contactHref}>
+                        Buy Now <ExternalLink className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>

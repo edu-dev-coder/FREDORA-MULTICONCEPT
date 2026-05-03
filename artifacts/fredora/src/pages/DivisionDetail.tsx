@@ -3,8 +3,9 @@ import { useGetDivision, getGetDivisionQueryKey } from "@workspace/api-client-re
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
-import { CheckCircle2, AlertCircle } from "lucide-react";
+import { CheckCircle2, AlertCircle, Phone, MessageCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { GallerySection } from "@/components/sections/GallerySection";
 import { ProductsSection } from "@/components/sections/ProductsSection";
 
@@ -84,6 +85,20 @@ export default function DivisionDetail() {
                 <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
                   {division.description}
                 </p>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Button asChild>
+                    <a href="/contact">
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      Request a Quote
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline">
+                    <a href="/contact">
+                      <Phone className="mr-2 h-4 w-4" />
+                      Pay / Order
+                    </a>
+                  </Button>
+                </div>
               </div>
 
               {division.services && division.services.length > 0 && (

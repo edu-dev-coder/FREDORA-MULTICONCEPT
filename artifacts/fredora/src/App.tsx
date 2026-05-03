@@ -12,6 +12,7 @@ import Contact from "@/pages/Contact";
 import News from "@/pages/News";
 import NewsDetail from "@/pages/NewsDetail";
 import Catalogue from "@/pages/Catalogue";
+import TemperaMap from "@/pages/TemperaMap";
 import AdminLogin from "@/pages/admin/Login";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import AdminHomepage from "@/pages/admin/Homepage";
@@ -62,11 +63,12 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/contact" component={Contact} />
+      <Route path="/divisions/temperamap" component={TemperaMap} />
       <Route path="/divisions/:slug" component={DivisionDetail} />
       <Route path="/news" component={News} />
       <Route path="/news/:slug" component={NewsDetail} />
       <Route path="/catalogue" component={Catalogue} />
-      
+
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/homepage" component={AdminHomepage} />

@@ -1,0 +1,80 @@
+Build a beautiful, conversion-focused product/service page for "Fredora TemperaMap" — a professional temperament testing platform — to be added to my existing website. The page should be a single standalone HTML/CSS/JS file (or a React component if the site uses React).
+
+---
+
+BRAND
+- Primary color (navy blue): #1B3A6B
+- Accent color (gold): #C8961E
+- Logo mark: a navy rounded-square badge with a gold "F" lettermark, followed by "FREDORA" in bold and "TEMPERAMAP" in gold beneath it
+- Font: Inter or similar clean sans-serif
+
+---
+
+PAGE SECTIONS (top to bottom)
+
+1. HERO
+   - Bold headline: "Discover Your Temperament Blueprint"
+   - Subheading: "A 60-question scientific assessment that reveals your unique personality blend — and what it means for your relationships, work, and life."
+   - Two CTA buttons: "Take the Test" (gold, primary) and "Learn More" (outlined, scrolls down)
+   - Background: dark navy gradient
+
+2. WHAT IS TEMPERAMAP?
+   - Short paragraph explaining the 4 classical temperaments
+   - Four personality type cards in a row:
+     * 🌟 Sanguine — Outgoing, enthusiastic & social
+     * 🔥 Choleric — Bold, decisive & goal-oriented
+     * 🌊 Melancholic — Thoughtful, analytical & deep
+     * 🌿 Phlegmatic — Calm, steady & reliable
+   - Each card has a colored accent and short description
+
+3. HOW IT WORKS
+   - 3-step visual flow:
+     Step 1: Sign up & choose your test
+     Step 2: Complete the 60-question assessment
+     Step 3: Download your detailed PDF report
+
+4. FEATURES
+   - Icon + title + description cards in a 2-column grid:
+     * 🧠 Deep 60-Question Assessment
+     * 📊 Detailed PDF Report
+     * 👫 Couples Compatibility Test
+     * 🏫 School Licensing for educators
+     * 🏢 Corporate Team Profiling
+     * 🔒 Secure & private — your data stays yours
+
+5. PRICING
+   - 4 pricing cards:
+     * Individual Test — ₦3,000 — Full 60-question assessment + PDF report
+     * Couples Test — ₦10,000 — Two assessments + compatibility report [mark as POPULAR]
+     * School License — ₦50,000 — Up to 20 students + class summary report
+     * Corporate Team — ₦150,000 — Up to 15 members + leadership & team dynamics report
+   - Each card has a "Get Started" CTA button linking to the app
+
+6. TESTIMONIALS (placeholder)
+   - 3 quote cards with star ratings, name, and role (use realistic placeholder names)
+
+7. FAQ
+   - Accordion-style, 5 questions:
+     * How long does the test take? (~15–20 minutes)
+     * Is this test scientifically accurate?
+     * Can I retake the test?
+     * What do I get after completing the test?
+     * Is the Couples Test done together or separately?
+
+8. FINAL CTA BANNER
+   - Dark navy background
+   - Headline: "Ready to understand yourself better?"
+   - Button: "Start Your Assessment — From ₦3,000"
+
+9. FOOTER
+   - Logo, copyright, and a small "Admin Sign In" link
+
+---
+
+DESIGN REQUIREMENTS
+- Fully responsive (mobile-first)
+- Smooth scroll between sections
+- Subtle fade-in animations on scroll (Intersection Observer)
+- All CTA buttons link to: https://[your-app-domain]/web/
+- Clean, professional, award-winning aesthetic
+- No placeholder images — use emoji icons and CSS shapes only

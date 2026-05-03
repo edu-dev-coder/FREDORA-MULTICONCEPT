@@ -17,6 +17,7 @@ const divisionAccents: Record<string, string> = {
   chems: "from-violet-500 to-purple-700",
   scents: "from-rose-500 to-pink-700",
   transport: "from-amber-500 to-orange-600",
+  temperamap: "from-[#1B3A6B] to-[#0a2a5e]",
 };
 
 export default function DivisionDetail() {

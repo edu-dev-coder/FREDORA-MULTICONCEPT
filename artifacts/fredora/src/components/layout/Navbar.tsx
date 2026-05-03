@@ -1,8 +1,9 @@
 import { Link, useLocation } from "wouter";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useListDivisions } from "@workspace/api-client-react";
+import { useCart } from "@/contexts/CartContext";
 
 const divisionColors: Record<number, string> = {
   0: "border-blue-400 text-blue-700 hover:bg-blue-700 hover:text-white hover:border-blue-700",
@@ -16,6 +17,7 @@ export function Navbar() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const { data: divisions } = useListDivisions();
+  const { totalItems, openCart } = useCart();
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -55,7 +57,19 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Button asChild size="sm" className="ml-3 rounded-full px-5 shadow-sm shadow-primary/20">
+          <button
+            onClick={openCart}
+            className="relative ml-2 p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+            aria-label="Open cart"
+          >
+            <ShoppingCart className="h-5 w-5" />
+            {totalItems > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 bg-[#C8003C] text-white text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+          </button>
+          <Button asChild size="sm" className="ml-1 rounded-full px-5 shadow-sm shadow-primary/20">
             <Link href="/contact">Get in Touch</Link>
           </Button>
         </nav>

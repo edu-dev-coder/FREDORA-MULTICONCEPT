@@ -23,6 +23,7 @@ import AdminTestimonials from "@/pages/admin/Testimonials";
 import AdminNewsletter from "@/pages/admin/Newsletter";
 import AdminCatalogue from "@/pages/admin/Catalogue";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { CartProvider } from "@/contexts/CartContext";
 
 const queryClient = new QueryClient();
 
@@ -85,14 +86,16 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <AnalyticsInjector />
-          <Router />
-          <WhatsAppButton />
-        </WouterRouter>
-        <Toaster />
-      </TooltipProvider>
+      <CartProvider>
+        <TooltipProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <AnalyticsInjector />
+            <Router />
+            <WhatsAppButton />
+          </WouterRouter>
+          <Toaster />
+        </TooltipProvider>
+      </CartProvider>
     </QueryClientProvider>
   );
 }

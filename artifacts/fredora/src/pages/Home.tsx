@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { ChevronRight, Star, TrendingUp, Users, Award, ArrowRight } from "lucide-react";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
+import { useSEO } from "@/lib/seo";
 
 function HeroSlideshow({ slides, fallbackUrl }: { slides: { id: number; imageUrl: string }[]; fallbackUrl: string }) {
   const [current, setCurrent] = useState(0);
@@ -70,13 +71,12 @@ export default function Home() {
   const { data: divisions, isLoading: divLoading } = useListDivisions();
   const { data: heroSlides = [] } = useListHeroSlides();
 
-  useEffect(() => {
-    document.title = homepage?.heroTitle ? `${homepage.heroTitle} | Fredora Multiconcept` : "Fredora Multiconcept";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc && homepage?.metaDescription) {
-      metaDesc.setAttribute("content", homepage.metaDescription);
-    }
-  }, [homepage]);
+  useSEO({
+    title: "Fredora Multiconcept",
+    description: homepage?.metaDescription
+      ?? (homepage?.heroSubtitle ?? "Fredora Multiconcept — a Nigerian multi-division company in Foods, EduServices, Chems, Scents, and Transport & Logistics, based in Enugu."),
+    imageUrl: homepage?.heroImageUrl,
+  });
 
   if (homeLoading || divLoading) {
     return (

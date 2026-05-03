@@ -5,6 +5,7 @@ import { useCreateMessage, useGetHomepage } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { useSEO } from "@/lib/seo";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,6 +25,11 @@ export default function Contact() {
   const { toast } = useToast();
   const createMessage = useCreateMessage();
   const { data: homepage } = useGetHomepage();
+
+  useSEO({
+    title: "Contact Us",
+    description: "Get in touch with Fredora Multiconcept. Send us a message, request a quote, or visit us in Enugu, Nigeria. We're happy to help across all our divisions.",
+  });
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),

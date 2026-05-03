@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { GallerySection } from "@/components/sections/GallerySection";
 import { ProductsSection } from "@/components/sections/ProductsSection";
 import { Link } from "wouter";
+import { useSEO } from "@/lib/seo";
 
 const divisionAccents: Record<string, string> = {
   foods: "from-emerald-500 to-teal-600",
@@ -22,6 +23,14 @@ export default function DivisionDetail() {
   const params = useParams();
   const slug = params.slug || "";
   const { data: division, isLoading } = useGetDivision(slug, { query: { enabled: !!slug, queryKey: getGetDivisionQueryKey(slug) } });
+
+  useSEO({
+    title: division ? division.name : "Division",
+    description: division
+      ? `${division.tagline ? division.tagline + " — " : ""}${division.description.slice(0, 155)}…`
+      : "Explore Fredora Multiconcept's divisions — Foods, EduServices, Chems, Scents, and Transport & Logistics.",
+    imageUrl: division?.imageUrl,
+  });
 
   if (isLoading) {
     return (

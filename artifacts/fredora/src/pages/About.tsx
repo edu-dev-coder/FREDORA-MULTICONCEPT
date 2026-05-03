@@ -5,9 +5,17 @@ import { motion } from "framer-motion";
 import { Star, TrendingUp, MapPin, Users, Award, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { useSEO } from "@/lib/seo";
 
 export default function About() {
   const { data: homepage, isLoading: homeLoading } = useGetHomepage();
+
+  useSEO({
+    title: "About Us",
+    description: homepage?.missionStatement
+      ? `${homepage.missionStatement} — Learn more about Fredora Multiconcept, a Nigerian multi-division company based in Enugu.`
+      : "Learn about Fredora Multiconcept — a Nigerian multi-division company in Foods, EduServices, Chems, Scents, and Transport & Logistics, based in Enugu.",
+  });
 
   if (homeLoading) {
     return (

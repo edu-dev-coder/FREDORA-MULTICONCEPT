@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useUser } from "@clerk/react";
+import { useAuth } from "@/context/AuthContext";
 import { useLocation, useParams } from "wouter";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -194,7 +194,7 @@ function isAdultTest(testType: string) {
 }
 
 export default function Results() {
-  const { user } = useUser();
+  const { user } = useAuth();
   const { sessionId } = useParams<{ sessionId: string }>();
   const [, setLocation] = useLocation();
   const { toast } = useToast();

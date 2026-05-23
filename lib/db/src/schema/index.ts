@@ -14,3 +14,4 @@ export * from "./tm-test-sessions";
 export * from "./tm-payments";
 export * from "./tm-reports";
 export * from "./tm-coupons";
+export * from "./tm-users";

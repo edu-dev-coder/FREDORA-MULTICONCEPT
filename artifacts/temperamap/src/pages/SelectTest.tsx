@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useUser } from "@clerk/react";
+import { useAuth } from "@/context/AuthContext";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -82,7 +82,7 @@ const TESTS = [
 ];
 
 export default function SelectTest() {
-  const { user } = useUser();
+  const { user } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);

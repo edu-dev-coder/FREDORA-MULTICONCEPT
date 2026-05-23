@@ -17,6 +17,7 @@ import tmProfilesRouter from "./tm-profiles";
 import tmPaymentsRouter from "./tm-payments";
 import tmReportsRouter from "./tm-reports";
 import tmAdminRouter from "./tm-admin";
+import tmAuthRouter from "./tm-auth";
 
 const router: IRouter = Router();
 
@@ -38,5 +39,6 @@ router.use(tmProfilesRouter);
 router.use(tmPaymentsRouter);
 router.use(tmReportsRouter);
 router.use(tmAdminRouter);
+router.use(tmAuthRouter);
 
 export default router;

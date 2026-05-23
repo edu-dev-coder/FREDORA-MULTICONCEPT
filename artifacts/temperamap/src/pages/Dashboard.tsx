@@ -1,4 +1,4 @@
-import { useUser, useClerk } from "@clerk/react";
+import { useAuth } from "@/context/AuthContext";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -45,8 +45,7 @@ const TEMP_COLOR: Record<string, string> = {
 };
 
 export default function Dashboard() {
-  const { user } = useUser();
-  const { signOut } = useClerk();
+  const { user, logout } = useAuth();
   const [, setLocation] = useLocation();
 
   const { data: tests = [], isLoading } = useQuery<TestSession[]>({
@@ -70,9 +69,9 @@ export default function Dashboard() {
           <FrederaLogo size="sm" onDark />
           <div className="flex items-center gap-3">
             <span className="text-blue-200 text-sm hidden sm:block">
-              {user?.firstName || user?.emailAddresses[0]?.emailAddress}
+              {user?.firstName || user?.email}
             </span>
-            {(user?.publicMetadata as { role?: string })?.role === "admin" && (
+            {user?.role === "admin" && (
               <a
                 href="/admin/"
                 target="_blank"
@@ -85,7 +84,7 @@ export default function Dashboard() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => signOut(() => setLocation("/"))}
+              onClick={() => { logout(); setLocation("/"); }}
               className="text-white hover:bg-white/10"
             >
               Sign Out
@@ -255,9 +254,9 @@ export default function Dashboard() {
       <footer className="mt-12 py-8 px-4 text-center border-t border-border">
         <p className="text-xs text-muted-foreground mb-3">© {new Date().getFullYear()} Fredora TemperaMap</p>
         <div className="flex flex-wrap justify-center gap-4 text-xs text-muted-foreground/60">
-          <a href="/web/terms" className="hover:text-accent transition-colors">Terms of Service</a>
+          <a href={`${import.meta.env.BASE_URL}terms`} className="hover:text-accent transition-colors">Terms of Service</a>
           <span>·</span>
-          <a href="/web/privacy" className="hover:text-accent transition-colors">Privacy Policy</a>
+          <a href={`${import.meta.env.BASE_URL}privacy`} className="hover:text-accent transition-colors">Privacy Policy</a>
           <span>·</span>
           <a href="mailto:support@fredora.com" className="hover:text-accent transition-colors">Support</a>
         </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useUser } from "@clerk/react";
+import { useAuth } from "@/context/AuthContext";
 import { useLocation, useParams, useSearch } from "wouter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,7 @@ function formatKobo(kobo: number) {
 
 export default function Payment() {
   const { sessionId } = useParams<{ sessionId: string }>();
-  const { user } = useUser();
+  const { user } = useAuth();
   const [, setLocation] = useLocation();
   const search = useSearch();
   const { toast } = useToast();
@@ -72,8 +72,8 @@ export default function Payment() {
       setIsVerifying(true);
       fetch(`/api/payments/verify/${reference}`)
         .then(r => r.json())
-        .then((data: { success: boolean; sessionId?: string }) => {
-          if (data.success) {
+        .then((data: { status: string; sessionId?: string | null }) => {
+          if (data.status === "success") {
             if (isMobileSource) {
               // Show return-to-app screen — don't navigate
               setIsVerifying(false);
@@ -126,7 +126,7 @@ export default function Payment() {
 
   const initPayment = useMutation({
     mutationFn: async () => {
-      const email = user?.emailAddresses[0]?.emailAddress;
+      const email = user?.email;
       if (!email) throw new Error("No email");
       const r = await fetch("/api/payments/initialize", {
         method: "POST",
@@ -268,7 +268,7 @@ export default function Payment() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Account</span>
-                <span className="font-medium truncate ml-4">{user?.emailAddresses[0]?.emailAddress}</span>
+                <span className="font-medium truncate ml-4">{user?.email}</span>
               </div>
               {appliedCoupon && (
                 <div className="flex justify-between text-green-700">

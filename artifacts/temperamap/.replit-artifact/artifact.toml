@@ -1,0 +1,32 @@
+kind = "web"
+  previewPath = "/temperamap/"
+  title = "Fredora TemperaMap"
+  version = "1.0.0"
+  id = "artifacts/fredora-web"
+  router = "path"
+
+  [[integratedSkills]]
+  name = "react-vite"
+  version = "1.0.0"
+
+  [[services]]
+  name = "web"
+  paths = [ "/temperamap/" ]
+  localPort = 26111
+
+  [services.development]
+  run = "pnpm --filter @workspace/temperamap run dev"
+
+  [services.production]
+  build = [ "pnpm", "--filter", "@workspace/temperamap", "run", "build" ]
+  publicDir = "artifacts/temperamap/dist/public"
+  serve = "static"
+
+  [[services.production.rewrites]]
+  from = "/*"
+  to = "/index.html"
+
+  [services.env]
+  PORT = "26111"
+  BASE_PATH = "/temperamap/"
+  

@@ -9,3 +9,8 @@ export * from "./testimonials";
 export * from "./newsletter";
 export * from "./hero-slides";
 export * from "./posts";
+export * from "./tm-profiles";
+export * from "./tm-test-sessions";
+export * from "./tm-payments";
+export * from "./tm-reports";
+export * from "./tm-coupons";

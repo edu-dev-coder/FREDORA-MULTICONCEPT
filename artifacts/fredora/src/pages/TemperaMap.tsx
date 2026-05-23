@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, Star, Check, ArrowRight } from "lucide-react";
 import { useSEO } from "@/lib/seo";
 
-const APP_URL = "https://temperamap.fredora.com/web/";
+const APP_URL = "/temperamap/";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },

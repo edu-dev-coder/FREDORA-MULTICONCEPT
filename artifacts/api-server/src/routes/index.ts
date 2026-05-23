@@ -12,6 +12,11 @@ import newsletterRouter from "./newsletter";
 import heroSlidesRouter from "./hero-slides";
 import servicesRouter from "./services";
 import postsRouter from "./posts";
+import tmTestsRouter from "./tm-tests";
+import tmProfilesRouter from "./tm-profiles";
+import tmPaymentsRouter from "./tm-payments";
+import tmReportsRouter from "./tm-reports";
+import tmAdminRouter from "./tm-admin";
 
 const router: IRouter = Router();
 
@@ -28,5 +33,10 @@ router.use(newsletterRouter);
 router.use(heroSlidesRouter);
 router.use(servicesRouter);
 router.use(postsRouter);
+router.use(tmTestsRouter);
+router.use(tmProfilesRouter);
+router.use(tmPaymentsRouter);
+router.use(tmReportsRouter);
+router.use(tmAdminRouter);
 
 export default router;

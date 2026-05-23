@@ -1,0 +1,110 @@
+import { useLocation } from "wouter";
+import { Button } from "@/components/ui/button";
+import FrederaLogo from "@/components/FrederaLogo";
+
+export default function Terms() {
+  const [, setLocation] = useLocation();
+  return (
+    <div className="min-h-screen bg-background">
+      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-border">
+        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+          <button onClick={() => setLocation("/")} className="cursor-pointer">
+            <FrederaLogo size="sm" />
+          </button>
+          <Button variant="ghost" onClick={() => setLocation(-1 as any)} className="text-primary text-sm">
+            ← Back
+          </Button>
+        </div>
+      </nav>
+
+      <div className="max-w-3xl mx-auto px-4 py-12">
+        <h1 className="text-3xl font-bold text-primary mb-2">Terms of Service</h1>
+        <p className="text-muted-foreground text-sm mb-10">Last updated: January 2025</p>
+
+        <div className="prose prose-slate max-w-none space-y-8 text-foreground">
+
+          <section>
+            <h2 className="text-xl font-bold text-primary mb-3">1. Acceptance of Terms</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              By accessing or using the Fredora TemperaMap platform — including our website at fredora.com, our mobile application, or any associated services — you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-primary mb-3">2. Description of Service</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              Fredora TemperaMap provides a classical temperament assessment platform. Users complete a 60-question assessment and receive a detailed report identifying their temperament blend (Sanguine, Choleric, Melancholic, or Phlegmatic). We also offer couples assessments, school licensing packages, and corporate team profiling.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-primary mb-3">3. Payment & Refund Policy</h2>
+            <p className="text-muted-foreground leading-relaxed mb-3">
+              All payments are processed securely through Paystack. Prices are stated in Nigerian Naira (₦) and are subject to change without notice. All sales are final once a test session has been unlocked and the assessment started. If you experience a technical issue that prevents you from completing your assessment after payment, please contact us within 7 days for a resolution.
+            </p>
+            <p className="text-muted-foreground leading-relaxed">
+              Refunds will not be issued for completed assessments, change of mind, or if you disagreed with your results. For technical failures on our part, we will either restore access or issue a full refund at our discretion.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-primary mb-3">4. User Accounts</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              You must create an account to use our services. You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. You must provide accurate and complete information when registering. You may not share your account or transfer it to another person.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-primary mb-3">5. Intellectual Property</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              All content on the Fredora TemperaMap platform — including assessment questions, result descriptions, PDF reports, and brand materials — is the exclusive intellectual property of Fredora and is protected by copyright law. You may not reproduce, distribute, or use any content for commercial purposes without our explicit written consent. Your personal assessment results are yours to keep and share.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-primary mb-3">6. Disclaimer of Medical Advice</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              Fredora TemperaMap assessments are designed for self-insight and personal development purposes only. Results are <strong>not</strong> a clinical diagnosis, psychological evaluation, or medical advice of any kind. If you have concerns about your mental health, please consult a qualified mental health professional. Do not make major life decisions based solely on your temperament results.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-primary mb-3">7. Limitation of Liability</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              To the maximum extent permitted by applicable law, Fredora shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of our services. Our total liability to you for any claim arising from these terms shall not exceed the amount you paid for the specific service giving rise to the claim.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-primary mb-3">8. Governing Law</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              These Terms of Service are governed by the laws of the Federal Republic of Nigeria. Any disputes arising from these terms shall be resolved in the courts of competent jurisdiction in Nigeria.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-primary mb-3">9. Changes to Terms</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              We reserve the right to update these Terms of Service at any time. We will notify users of significant changes by email or in-app notification. Continued use of our services after changes are posted constitutes acceptance of the updated terms.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-primary mb-3">10. Contact Us</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              For questions about these Terms of Service, please contact us at{" "}
+              <a href="mailto:support@fredora.com" className="text-accent hover:underline font-medium">
+                support@fredora.com
+              </a>
+              .
+            </p>
+          </section>
+        </div>
+      </div>
+
+      <footer className="bg-primary text-blue-200 py-8 px-4 text-center text-sm mt-12">
+        <p>© {new Date().getFullYear()} Fredora TemperaMap. All rights reserved.</p>
+      </footer>
+    </div>
+  );
+}

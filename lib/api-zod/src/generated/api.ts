@@ -456,3 +456,190 @@ export const DeleteHeroSlideResponse = zod.object({
 export const GetStorageObjectParams = zod.object({
   objectPath: zod.coerce.string(),
 });
+
+// ============================================================
+// TemperaMap Schemas
+// ============================================================
+
+/**
+ * @summary List test sessions
+ */
+export const ListTestsQueryParams = zod.object({
+  userId: zod.string().optional(),
+});
+
+export const TestSessionSchema = zod.object({
+  id: zod.string(),
+  userId: zod.string().nullable(),
+  testType: zod.string(),
+  status: zod.string(),
+  paid: zod.boolean(),
+  paymentRef: zod.string().nullable(),
+  answers: zod.unknown().nullable(),
+  primaryTemp: zod.string().nullable(),
+  secondaryTemp: zod.string().nullable(),
+  blend: zod.string().nullable(),
+  results: zod.unknown().nullable(),
+  partnerSessionId: zod.string().nullable(),
+  completedAt: zod.string().nullable(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+export const ListTestsResponse = zod.array(TestSessionSchema);
+
+/**
+ * @summary Create a test session
+ */
+export const CreateTestBody = zod.object({
+  userId: zod.string().optional(),
+  testType: zod.string().min(1),
+});
+
+/**
+ * @summary Get a test session
+ */
+export const GetTestParams = zod.object({
+  id: zod.string(),
+});
+
+export const GetTestResponse = TestSessionSchema;
+
+/**
+ * @summary Update a test session
+ */
+export const UpdateTestParams = zod.object({
+  id: zod.string(),
+});
+
+export const UpdateTestBody = zod.object({
+  status: zod.string().optional(),
+  answers: zod.unknown().optional(),
+  results: zod.unknown().optional(),
+  blend: zod.string().optional(),
+  primaryTemp: zod.string().optional(),
+  secondaryTemp: zod.string().optional(),
+  partnerSessionId: zod.string().optional(),
+  paid: zod.boolean().optional(),
+  completedAt: zod.string().optional(),
+});
+
+export const UpdateTestResponse = TestSessionSchema;
+
+/**
+ * @summary Get a user profile
+ */
+export const GetProfileParams = zod.object({
+  userId: zod.string(),
+});
+
+export const ProfileSchema = zod.object({
+  id: zod.string(),
+  fullName: zod.string().nullable(),
+  phone: zod.string().nullable(),
+  ageGroup: zod.string().nullable(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+export const GetProfileResponse = ProfileSchema;
+
+/**
+ * @summary Update a user profile
+ */
+export const UpdateProfileParams = zod.object({
+  userId: zod.string(),
+});
+
+export const UpdateProfileBody = zod.object({
+  fullName: zod.string().optional(),
+  phone: zod.string().optional(),
+  ageGroup: zod.string().optional(),
+});
+
+export const UpdateProfileResponse = ProfileSchema;
+
+/**
+ * @summary Initialize a payment
+ */
+export const InitializePaymentBody = zod.object({
+  email: zod.string().email(),
+  product: zod.string().min(1),
+  sessionId: zod.string(),
+  userId: zod.string().optional(),
+  couponCode: zod.string().optional(),
+});
+
+export const InitializePaymentResponse = zod.object({
+  authorizationUrl: zod.string().nullable(),
+  reference: zod.string(),
+});
+
+/**
+ * @summary Verify a payment
+ */
+export const VerifyPaymentParams = zod.object({
+  reference: zod.string(),
+});
+
+export const VerifyPaymentResponse = zod.object({
+  status: zod.string(),
+  sessionId: zod.string().nullable(),
+});
+
+/**
+ * @summary List payments
+ */
+export const ListPaymentsQueryParams = zod.object({
+  userId: zod.string().optional(),
+});
+
+export const PaymentSchema = zod.object({
+  id: zod.string(),
+  userId: zod.string().nullable(),
+  sessionId: zod.string().nullable(),
+  amount: zod.number(),
+  paystackRef: zod.string(),
+  product: zod.string(),
+  status: zod.string(),
+  couponId: zod.string().nullable(),
+  createdAt: zod.string(),
+});
+
+export const ListPaymentsResponse = zod.array(PaymentSchema);
+
+/**
+ * @summary List reports
+ */
+export const ListReportsQueryParams = zod.object({
+  userId: zod.string().optional(),
+});
+
+export const ReportSchema = zod.object({
+  id: zod.string(),
+  sessionId: zod.string(),
+  userId: zod.string().nullable(),
+  reportUrl: zod.string(),
+  reportType: zod.string(),
+  createdAt: zod.string(),
+});
+
+export const ListReportsResponse = zod.array(ReportSchema);
+
+/**
+ * @summary Get a report
+ */
+export const GetReportParams = zod.object({
+  id: zod.string(),
+});
+
+export const GetReportResponse = ReportSchema;
+
+/**
+ * @summary Generate a PDF report for a session
+ */
+export const GenerateReportParams = zod.object({
+  sessionId: zod.string(),
+});
+
+export const GenerateReportResponse = ReportSchema;

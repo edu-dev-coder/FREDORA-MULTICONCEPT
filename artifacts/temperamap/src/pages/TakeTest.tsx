@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useParams } from "wouter";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,8 @@ export default function TakeTest() {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [page, setPage] = useState(0);
 
+  const loadedRef = useRef(false);
+
   const { data: session, isFetched } = useQuery<TestSession>({
     queryKey: ["test", sessionId],
     queryFn: async () => {
@@ -40,14 +42,28 @@ export default function TakeTest() {
       return r.json();
     },
     enabled: !!sessionId,
-    staleTime: 0,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
-    if (!isFetched) return;
-    if (session?.answers) setAnswers(session.answers as Record<string, number>);
-    if (session?.status === "completed") setLocation(`/results/${sessionId}`);
-  }, [session, isFetched]);
+    if (!isFetched || loadedRef.current) return;
+    loadedRef.current = true;
+
+    if (session?.status === "completed") {
+      setLocation(`/results/${sessionId}`);
+      return;
+    }
+
+    // Prefer localStorage (survives HMR reloads) over server answers
+    const saved = sessionId ? localStorage.getItem(`tm-answers-${sessionId}`) : null;
+    if (saved) {
+      try { setAnswers(JSON.parse(saved) as Record<string, number>); return; } catch { /* fall through */ }
+    }
+    if (session?.answers) {
+      setAnswers(session.answers as Record<string, number>);
+    }
+  }, [session, isFetched, sessionId, setLocation]);
 
   const questions: Question[] = getQuestionsForTestType(session?.testType ?? "single_test");
   const coreQuestions = questions.filter(q => q.temperament !== "bonus");
@@ -90,6 +106,7 @@ export default function TakeTest() {
       return r.json();
     },
     onSuccess: () => {
+      if (sessionId) localStorage.removeItem(`tm-answers-${sessionId}`);
       toast({ title: "Assessment complete!", description: "View your results below." });
       if (session?.testType === "couples_test") {
         setLocation(`/invite-partner/${sessionId}`);
@@ -103,7 +120,11 @@ export default function TakeTest() {
   });
 
   const handleAnswer = (questionId: number, value: number) => {
-    setAnswers(prev => ({ ...prev, [questionId.toString()]: value }));
+    setAnswers(prev => {
+      const next = { ...prev, [questionId.toString()]: value };
+      if (sessionId) localStorage.setItem(`tm-answers-${sessionId}`, JSON.stringify(next));
+      return next;
+    });
   };
 
   const startIdx = isBonusPage ? coreQuestions.length : page * QUESTIONS_PER_PAGE;

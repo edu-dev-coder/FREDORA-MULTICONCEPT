@@ -29,8 +29,32 @@ export default function News() {
   });
 
   useSEO({
-    title: "News & Updates — Fredora Multiconcept",
+    title: "News & Updates",
     description: "Latest news, announcements, and updates from Fredora Multiconcept — Foods, EduServices, Chems, Scents, Transport & Logistics.",
+    structuredData: [
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": window.location.origin + "/" },
+          { "@type": "ListItem", "position": 2, "name": "News & Updates", "item": window.location.origin + "/news" },
+        ],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Fredora Multiconcept News",
+        "description": "Latest news, announcements, and updates from Fredora Multiconcept.",
+        "publisher": { "@type": "Organization", "name": "Fredora Multiconcept", "url": window.location.origin },
+        "blogPost": posts?.map((p) => ({
+          "@type": "BlogPosting",
+          "headline": p.title,
+          "url": `${window.location.origin}/news/${p.slug}`,
+          "datePublished": p.createdAt,
+          "description": p.excerpt ?? "",
+        })) ?? [],
+      },
+    ],
   });
 
   return (

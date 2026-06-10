@@ -64,8 +64,26 @@ export default function Catalogue() {
   const [selectedProduct, setSelectedProduct] = useState<ShopProduct | null>(null);
 
   useSEO({
-    title: "Shop — Fredora Multiconcept",
+    title: "Shop",
     description: "Browse and order products & services from Fredora Multiconcept — Foods, EduServices, Chems, Scents, Transport & Logistics.",
+    structuredData: [
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": window.location.origin + "/" },
+          { "@type": "ListItem", "position": 2, "name": "Shop", "item": window.location.origin + "/catalogue" },
+        ],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Fredora Multiconcept Shop",
+        "description": "Browse products and services from all Fredora Multiconcept divisions — Foods, EduServices, Chems, Scents, Transport & Logistics.",
+        "url": window.location.origin + "/catalogue",
+        "publisher": { "@type": "Organization", "name": "Fredora Multiconcept", "url": window.location.origin },
+      },
+    ],
   });
 
   const activeDivisions = divisions?.filter((d) => !d.comingSoon) ?? [];

@@ -71,11 +71,48 @@ export default function Home() {
   const { data: divisions, isLoading: divLoading } = useListDivisions();
   const { data: heroSlides = [] } = useListHeroSlides();
 
+  const _homeDesc = homepage?.metaDescription
+    ?? (homepage?.heroSubtitle ?? "Fredora Multiconcept — a Nigerian multi-division company in Foods, EduServices, Chems, Scents, and Transport & Logistics, based in Enugu.");
+  const _homeSameAs = [
+    homepage?.facebookUrl,
+    homepage?.instagramUrl,
+    homepage?.twitterUrl,
+    homepage?.linkedinUrl,
+    homepage?.youtubeUrl,
+  ].filter(Boolean) as string[];
   useSEO({
     title: "Fredora Multiconcept",
-    description: homepage?.metaDescription
-      ?? (homepage?.heroSubtitle ?? "Fredora Multiconcept — a Nigerian multi-division company in Foods, EduServices, Chems, Scents, and Transport & Logistics, based in Enugu."),
+    description: _homeDesc,
     imageUrl: homepage?.heroImageUrl,
+    structuredData: [
+      {
+        "@context": "https://schema.org",
+        "@type": ["Organization", "LocalBusiness"],
+        "name": "Fredora Multiconcept",
+        "url": window.location.origin,
+        "logo": { "@type": "ImageObject", "url": `${window.location.origin}/favicon.svg` },
+        "description": _homeDesc,
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Enugu",
+          "addressRegion": "Enugu State",
+          "addressCountry": "NG",
+        },
+        "areaServed": "Nigeria",
+        "sameAs": _homeSameAs,
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "availableLanguage": "English",
+        },
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Fredora Multiconcept",
+        "url": window.location.origin,
+      },
+    ],
   });
 
   if (homeLoading || divLoading) {

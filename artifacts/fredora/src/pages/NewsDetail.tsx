@@ -108,9 +108,45 @@ export default function NewsDetail() {
   });
 
   useSEO({
-    title: post ? `${post.title} — Fredora News` : "News — Fredora Multiconcept",
+    title: post ? post.title : "News",
     description: post?.excerpt ?? "Read the latest news and updates from Fredora Multiconcept.",
     imageUrl: post?.imageUrl,
+    type: "article",
+    structuredData: post
+      ? [
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": window.location.origin + "/" },
+              { "@type": "ListItem", "position": 2, "name": "News", "item": window.location.origin + "/news" },
+              { "@type": "ListItem", "position": 3, "name": post.title, "item": `${window.location.origin}/news/${post.slug}` },
+            ],
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "NewsArticle",
+            "headline": post.title,
+            "description": post.excerpt ?? "",
+            "datePublished": post.createdAt,
+            "url": `${window.location.origin}/news/${post.slug}`,
+            "image": post.imageUrl
+              ? post.imageUrl.startsWith("/objects/")
+                ? `${window.location.origin}/api/storage${post.imageUrl}`
+                : post.imageUrl.startsWith("http")
+                  ? post.imageUrl
+                  : `${window.location.origin}${post.imageUrl}`
+              : `${window.location.origin}/opengraph.jpg`,
+            "author": { "@type": "Organization", "name": "Fredora Multiconcept", "url": window.location.origin },
+            "publisher": {
+              "@type": "Organization",
+              "name": "Fredora Multiconcept",
+              "logo": { "@type": "ImageObject", "url": `${window.location.origin}/favicon.svg` },
+            },
+            "mainEntityOfPage": { "@type": "WebPage", "@id": `${window.location.origin}/news/${post.slug}` },
+          },
+        ]
+      : undefined,
   });
 
   if (isLoading) {

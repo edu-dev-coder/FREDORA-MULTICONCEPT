@@ -15,6 +15,47 @@ export default function About() {
     description: homepage?.missionStatement
       ? `${homepage.missionStatement} — Learn more about Fredora Multiconcept, a Nigerian multi-division company based in Enugu.`
       : "Learn about Fredora Multiconcept — a Nigerian multi-division company in Foods, EduServices, Chems, Scents, and Transport & Logistics, based in Enugu.",
+    structuredData: [
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": window.location.origin + "/" },
+          { "@type": "ListItem", "position": 2, "name": "About Us", "item": window.location.origin + "/about" },
+        ],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Fredora Multiconcept?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Fredora Multiconcept is a Nigerian multi-division company based in Enugu, Nigeria, operating across Foods, EduServices, Chems, Scents, and Transport & Logistics." },
+          },
+          {
+            "@type": "Question",
+            "name": "What is Fredora Multiconcept's mission?",
+            "acceptedAnswer": { "@type": "Answer", "text": homepage?.missionStatement || "To consistently deliver high-quality products and services that meet the diverse needs of our customers while contributing positively to the communities we serve." },
+          },
+          {
+            "@type": "Question",
+            "name": "What is Fredora Multiconcept's vision?",
+            "acceptedAnswer": { "@type": "Answer", "text": homepage?.visionStatement || "To be the leading and most trusted multiconcept corporation in Nigeria and beyond, known for excellence, innovation, and integrity." },
+          },
+          {
+            "@type": "Question",
+            "name": "Where is Fredora Multiconcept located?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Fredora Multiconcept is based in Enugu, Enugu State, Nigeria." },
+          },
+          {
+            "@type": "Question",
+            "name": "What divisions does Fredora Multiconcept have?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Fredora Multiconcept has five divisions: Fredora Foods (natural honey, zobo drinks, smoothies), Fredora EduServices (tutoring and coaching), Fredora Chems (liquid soap and cleaning products), Fredora Scents (perfumes and custom blends), and Fredora Transport & Logistics." },
+          },
+        ],
+      },
+    ],
   });
 
   if (homeLoading) {

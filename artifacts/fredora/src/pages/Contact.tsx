@@ -29,6 +29,42 @@ export default function Contact() {
   useSEO({
     title: "Contact Us",
     description: "Get in touch with Fredora Multiconcept. Send us a message, request a quote, or visit us in Enugu, Nigeria. We're happy to help across all our divisions.",
+    structuredData: [
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": window.location.origin + "/" },
+          { "@type": "ListItem", "position": 2, "name": "Contact Us", "item": window.location.origin + "/contact" },
+        ],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How can I contact Fredora Multiconcept?",
+            "acceptedAnswer": { "@type": "Answer", "text": "You can contact Fredora Multiconcept by filling the contact form on this page, by WhatsApp, or by visiting our office in Enugu, Nigeria." },
+          },
+          {
+            "@type": "Question",
+            "name": "Where is Fredora Multiconcept located?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Fredora Multiconcept is based in Enugu, Enugu State, Nigeria." },
+          },
+          {
+            "@type": "Question",
+            "name": "What services does Fredora Multiconcept offer?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Fredora Multiconcept offers products and services across 5 divisions: Foods (natural honey, zobo, smoothies), EduServices (tutoring and coaching), Chems (soaps and detergents), Scents (perfumes and custom blends), and Transport & Logistics." },
+          },
+          {
+            "@type": "Question",
+            "name": "How do I place an order from Fredora Multiconcept?",
+            "acceptedAnswer": { "@type": "Answer", "text": "You can place an order by visiting the relevant division page and clicking the WhatsApp order button, or by contacting us directly through the contact form." },
+          },
+        ],
+      },
+    ],
   });
 
   const form = useForm<FormValues>({

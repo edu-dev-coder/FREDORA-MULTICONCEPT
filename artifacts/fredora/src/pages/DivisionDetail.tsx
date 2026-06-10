@@ -51,12 +51,36 @@ export default function DivisionDetail() {
     return `https://wa.me/${number}?text=${text}`;
   };
 
+  const _divDesc = division
+    ? `${division.tagline ? division.tagline + " — " : ""}${division.description.slice(0, 155)}…`
+    : "Explore Fredora Multiconcept's divisions — Foods, EduServices, Chems, Scents, and Transport & Logistics.";
   useSEO({
     title: division ? division.name : "Division",
-    description: division
-      ? `${division.tagline ? division.tagline + " — " : ""}${division.description.slice(0, 155)}…`
-      : "Explore Fredora Multiconcept's divisions — Foods, EduServices, Chems, Scents, and Transport & Logistics.",
+    description: _divDesc,
     imageUrl: division?.imageUrl,
+    structuredData: division
+      ? [
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": window.location.origin + "/" },
+              { "@type": "ListItem", "position": 2, "name": "Divisions", "item": window.location.origin + "/divisions/" },
+              { "@type": "ListItem", "position": 3, "name": division.name, "item": `${window.location.origin}/divisions/${slug}` },
+            ],
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": division.name,
+            "description": division.description,
+            "serviceType": division.name,
+            "provider": { "@type": "Organization", "name": "Fredora Multiconcept", "url": window.location.origin },
+            "areaServed": { "@type": "Country", "name": "Nigeria" },
+            "url": `${window.location.origin}/divisions/${slug}`,
+          },
+        ]
+      : undefined,
   });
 
   if (isLoading) {

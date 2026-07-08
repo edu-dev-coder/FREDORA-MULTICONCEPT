@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useListDivisions, useListProducts, useGetHomepage } from "@workspace/api-client-react";
+import { useListDivisions, useListProducts, useGetHomepage, getListProductsQueryKey } from "@workspace/api-client-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -20,12 +20,12 @@ import type { Division } from "@workspace/api-client-react";
 // ----- AllProductsLoader: fetches products for every division -----
 function useAllProducts(divisions: Division[] | undefined) {
   const slugs = divisions?.map((d) => d.slug) ?? [];
-  const q0 = useListProducts({ divisionSlug: slugs[0] ?? "__none__" }, { query: { enabled: !!slugs[0] } });
-  const q1 = useListProducts({ divisionSlug: slugs[1] ?? "__none__" }, { query: { enabled: !!slugs[1] } });
-  const q2 = useListProducts({ divisionSlug: slugs[2] ?? "__none__" }, { query: { enabled: !!slugs[2] } });
-  const q3 = useListProducts({ divisionSlug: slugs[3] ?? "__none__" }, { query: { enabled: !!slugs[3] } });
-  const q4 = useListProducts({ divisionSlug: slugs[4] ?? "__none__" }, { query: { enabled: !!slugs[4] } });
-  const q5 = useListProducts({ divisionSlug: slugs[5] ?? "__none__" }, { query: { enabled: !!slugs[5] } });
+  const q0 = useListProducts({ divisionSlug: slugs[0] ?? "__none__" }, { query: { enabled: !!slugs[0], queryKey: getListProductsQueryKey({ divisionSlug: slugs[0] ?? "__none__" }) } });
+  const q1 = useListProducts({ divisionSlug: slugs[1] ?? "__none__" }, { query: { enabled: !!slugs[1], queryKey: getListProductsQueryKey({ divisionSlug: slugs[1] ?? "__none__" }) } });
+  const q2 = useListProducts({ divisionSlug: slugs[2] ?? "__none__" }, { query: { enabled: !!slugs[2], queryKey: getListProductsQueryKey({ divisionSlug: slugs[2] ?? "__none__" }) } });
+  const q3 = useListProducts({ divisionSlug: slugs[3] ?? "__none__" }, { query: { enabled: !!slugs[3], queryKey: getListProductsQueryKey({ divisionSlug: slugs[3] ?? "__none__" }) } });
+  const q4 = useListProducts({ divisionSlug: slugs[4] ?? "__none__" }, { query: { enabled: !!slugs[4], queryKey: getListProductsQueryKey({ divisionSlug: slugs[4] ?? "__none__" }) } });
+  const q5 = useListProducts({ divisionSlug: slugs[5] ?? "__none__" }, { query: { enabled: !!slugs[5], queryKey: getListProductsQueryKey({ divisionSlug: slugs[5] ?? "__none__" }) } });
   const queries = [q0, q1, q2, q3, q4, q5];
   return slugs.map((slug, i) => ({
     slug,

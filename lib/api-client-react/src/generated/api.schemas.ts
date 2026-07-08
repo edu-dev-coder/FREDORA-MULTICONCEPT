@@ -24,6 +24,8 @@ export interface ServiceItem {
   description?: string | null;
   /** @nullable */
   imageUrl?: string | null;
+  /** @nullable */
+  price?: string | null;
   divisionSlug: string;
   sortOrder: number;
   createdAt: string;
@@ -302,6 +304,10 @@ export interface AdminStats {
   totalMessages: number;
   unreadMessages: number;
   totalServices: number;
+  totalProducts: number;
+  totalGalleryItems: number;
+  totalTestimonials: number;
+  totalSubscribers: number;
 }
 
 export type ListGalleryItemsParams = {

@@ -1,0 +1,3 @@
+- [Deployment typecheck blockers](deployment-typecheck-blockers.md) — missing root tsconfig masks lib errors; ad hoc `pnpm run build` fails on missing PORT but that's expected, not a real bug.
+- [Generated API types drift](generated-api-types-drift.md) — api-zod and api-client-react generated files are hand-maintained, not auto-synced; api-zod must only export Zod schemas, not TS interfaces.
+- [Duplicate artifact directories](duplicate-artifact-directories.md) — stale pre-merge artifact folders can cause EADDRINUSE; delete dir + kill orphaned process, don't just stop the workflow.

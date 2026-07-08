@@ -18,11 +18,15 @@ router.patch("/services/:id", async (req, res): Promise<void> => {
     return;
   }
 
-  const { imageUrl } = req.body as { imageUrl?: string | null };
+  const { imageUrl, price } = req.body as { imageUrl?: string | null; price?: string | null };
+
+  const updates: Partial<typeof servicesTable.$inferInsert> = {};
+  if (imageUrl !== undefined) updates.imageUrl = imageUrl;
+  if (price !== undefined) updates.price = price;
 
   const [updated] = await db
     .update(servicesTable)
-    .set({ imageUrl: imageUrl ?? null })
+    .set(updates)
     .where(eq(servicesTable.id, id))
     .returning();
 

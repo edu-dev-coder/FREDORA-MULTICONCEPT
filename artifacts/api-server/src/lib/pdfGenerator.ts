@@ -212,7 +212,6 @@ export async function generateReport(session: SessionData, userData: UserData): 
 
     // Blend badge
     if (secondary) {
-      doc.fillColor("rgba(255,255,255,0.15)").roundedRect ? null : null;
       roundedRect(doc, W / 2 - 80, 162, 160, 24, 12);
       doc.fill("rgba(255,255,255,0.15)");
       doc.fillColor(B.white).fontSize(10).font("Helvetica")
@@ -301,7 +300,6 @@ export async function generateReport(session: SessionData, userData: UserData): 
       roundedRect(doc, ML, bY, CW, 68, 8);
       doc.fill(isPrimary ? B.blue + "0D" : B.offWhite);
       if (isPrimary) {
-        doc.roundedRect ? null : null;
         doc.moveTo(ML, bY + 8).lineTo(ML, bY + 60).strokeColor(tColor).lineWidth(3).stroke();
       }
 

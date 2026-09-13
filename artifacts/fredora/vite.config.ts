@@ -1508,16 +1508,17 @@ function mockApiPlugin(): Plugin {
         if (req.method === "POST" && url === "/api/passcodes/validate") {
           const body = await readBody(req);
           const { code, testType } = body;
-          const match = passcodes.find(
-            (p) =>
-              p.code.toUpperCase() === (code || "").toUpperCase() &&
-              (p.status === "active" || p.currentUses < p.maxUses) &&
-              (!testType || p.testType === testType || testType === "couples_test" && p.testType === "couple_test"),
-          );
+          const match = passcodes.find((p) => {
+            const codeMatches = p.code.toUpperCase() === (code || "").toUpperCase();
+            const notExhausted = p.status === "active" && (p.currentUses || 0) < p.maxUses;
+            const notExpired = !p.expiresAt || new Date(p.expiresAt).getTime() > Date.now();
+            const typeMatches = !testType || p.testType === testType || (testType === "couples_test" && p.testType === "couple_test");
+            return codeMatches && notExhausted && notExpired && typeMatches;
+          });
           if (match) {
             return res.end(JSON.stringify({ valid: true, passcode: match }));
           }
-          return res.end(JSON.stringify({ valid: false, message: "Invalid or expired passcode for this test type" }));
+          return res.end(JSON.stringify({ valid: false, message: "Invalid, expired, or fully used passcode for this test type" }));
         }
 
         // ── Test Sessions ─────────────────────────────────────────────────
@@ -1571,17 +1572,8 @@ function mockApiPlugin(): Plugin {
           if (found) {
             return res.end(JSON.stringify(found));
           }
-          return res.end(JSON.stringify({
-            id,
-            testType: "single_test",
-            status: "paid",
-            paid: true,
-            results: null,
-            primaryTemp: null,
-            secondaryTemp: null,
-            blend: null,
-            completedAt: null,
-          }));
+          res.statusCode = 404;
+          return res.end(JSON.stringify({ error: "Session not found" }));
         }
 
         if (req.method === "PATCH" && url.startsWith("/api/tests/")) {
@@ -1819,9 +1811,9 @@ function mockApiPlugin(): Plugin {
             return res.end(JSON.stringify({ error: "Not found" }));
           }
           const session = testSessions[idx];
-          if (session.status !== "pending") {
+          if (session.status === "completed") {
             res.statusCode = 409;
-            return res.end(JSON.stringify({ error: "Only pending sessions can be deleted" }));
+            return res.end(JSON.stringify({ error: "Completed sessions with saved results cannot be deleted" }));
           }
           testSessions.splice(idx, 1);
           return res.end(JSON.stringify({ ok: true, freedPasscode: session.passcodeUsed || null }));

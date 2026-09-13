@@ -49,7 +49,7 @@ export default function TakeTest() {
       await fetch(`/api/tests/${sessionId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers: ans }),
+        body: JSON.stringify({ answers: ans, status: "in_progress" }),
       });
     } catch { /* silent — will retry on next change */ }
     setSaving(false);

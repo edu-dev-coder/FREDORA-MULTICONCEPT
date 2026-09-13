@@ -19,7 +19,9 @@ export default function SignInPage() {
     setLoading(true);
     try {
       await login(email, password);
-      setLocation("/temperamap/dashboard");
+      const params = new URLSearchParams(window.location.search);
+      const redirectUrl = params.get("redirect") || "/temperamap/dashboard";
+      setLocation(redirectUrl);
     } catch (err: unknown) {
       toast({
         title: "Sign in failed",

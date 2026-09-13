@@ -25,7 +25,9 @@ export default function SignUpPage() {
     setLoading(true);
     try {
       await register(email, password, firstName, lastName);
-      setLocation("/temperamap/select-test");
+      const params = new URLSearchParams(window.location.search);
+      const redirectUrl = params.get("redirect") || "/temperamap/select-test";
+      setLocation(redirectUrl);
     } catch (err: unknown) {
       toast({
         title: "Registration failed",

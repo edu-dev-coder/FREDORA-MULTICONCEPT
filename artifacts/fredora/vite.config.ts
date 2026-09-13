@@ -198,7 +198,11 @@ function mockApiPlugin(): Plugin {
       updatedAt: now,
     },
   ];
-  const divisionMap = Object.fromEntries(divisions.map((d) => [d.slug, d]));
+  let divisionMap = Object.fromEntries(divisions.map((d) => [d.slug, d]));
+
+  function refreshDivisionMap() {
+    divisionMap = Object.fromEntries(divisions.map((d) => [d.slug, d]));
+  }
 
   let galleryItems = [
     { id: 1, divisionSlug: "foods", imageUrl: "/images/foods-banner.png", caption: "Catering preparation in progress", sortOrder: 0, createdAt: now },
@@ -446,6 +450,7 @@ function mockApiPlugin(): Plugin {
   function saveLocalState() {
     try {
       const data = {
+        divisions,
         products,
         productIdCounter,
         galleryItems,
@@ -474,6 +479,20 @@ function mockApiPlugin(): Plugin {
       if (fs.existsSync(STATE_FILE_PATH)) {
         const raw = fs.readFileSync(STATE_FILE_PATH, "utf-8");
         const parsed = JSON.parse(raw);
+        if (parsed.divisions && Array.isArray(parsed.divisions)) {
+          // Merge services while keeping built-in structure
+          for (const savedDiv of parsed.divisions) {
+            const existing = divisions.find((d) => d.slug === savedDiv.slug);
+            if (existing) {
+              if (savedDiv.tagline !== undefined) existing.tagline = savedDiv.tagline;
+              if (savedDiv.description !== undefined) existing.description = savedDiv.description;
+              if (savedDiv.comingSoon !== undefined) existing.comingSoon = savedDiv.comingSoon;
+              if (savedDiv.imageUrl !== undefined) existing.imageUrl = savedDiv.imageUrl;
+              if (Array.isArray(savedDiv.services)) existing.services = savedDiv.services;
+            }
+          }
+          refreshDivisionMap();
+        }
         if (parsed.products) products = parsed.products;
         if (parsed.productIdCounter) productIdCounter = parsed.productIdCounter;
         if (parsed.galleryItems) galleryItems = parsed.galleryItems;
@@ -502,7 +521,7 @@ function mockApiPlugin(): Plugin {
   // Also sync with Supabase PostgreSQL in the background
   async function syncFromSupabase() {
     try {
-      const [hpRes, prodRes, postRes] = await Promise.all([
+      const [hpRes, prodRes, postRes, servRes] = await Promise.all([
         fetch(`${SUPABASE_REST_URL}/rest/v1/homepage?id=eq.1&select=*`, {
           headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
         }),
@@ -510,6 +529,9 @@ function mockApiPlugin(): Plugin {
           headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
         }),
         fetch(`${SUPABASE_REST_URL}/rest/v1/posts?select=*`, {
+          headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
+        }),
+        fetch(`${SUPABASE_REST_URL}/rest/v1/services?select=*`, {
           headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
         }),
       ]);
@@ -573,6 +595,38 @@ function mockApiPlugin(): Plugin {
             updatedAt: r.updated_at,
           }));
           postIdCounter = Math.max(postIdCounter, ...posts.map((p) => p.id + 1));
+        }
+      }
+
+      if (servRes.ok) {
+        const servRows = await servRes.json();
+        if (Array.isArray(servRows) && servRows.length > 0) {
+          // Group by division_slug and merge into divisions
+          for (const s of servRows) {
+            const div = divisions.find((d) => d.slug === s.division_slug);
+            if (div) {
+              div.services = div.services || [];
+              const existing = div.services.find((x: any) => x.id === s.id);
+              if (existing) {
+                existing.name = s.name;
+                existing.description = s.description;
+                existing.price = s.price;
+                existing.imageUrl = s.image_url;
+                existing.sortOrder = s.sort_order;
+              } else {
+                div.services.push({
+                  id: s.id,
+                  divisionSlug: s.division_slug,
+                  name: s.name,
+                  description: s.description,
+                  price: s.price,
+                  imageUrl: s.image_url,
+                  sortOrder: s.sort_order,
+                });
+              }
+            }
+          }
+          refreshDivisionMap();
         }
       }
 
@@ -767,8 +821,60 @@ function mockApiPlugin(): Plugin {
             const s = div.services?.find((srv: any) => srv.id === sId);
             if (s) {
               Object.assign(s, body);
+              refreshDivisionMap();
+              saveLocalState();
+
+              // Asynchronously sync to Supabase PostgreSQL
+              fetch(`${SUPABASE_REST_URL}/rest/v1/services?id=eq.${sId}`, {
+                method: "PATCH",
+                headers: {
+                  apikey: SUPABASE_REST_KEY,
+                  Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  ...(body.name !== undefined ? { name: body.name } : {}),
+                  ...(body.description !== undefined ? { description: body.description } : {}),
+                  ...(body.price !== undefined ? { price: body.price } : {}),
+                  ...(body.imageUrl !== undefined ? { image_url: body.imageUrl } : {}),
+                  ...(body.sortOrder !== undefined ? { sort_order: body.sortOrder } : {}),
+                }),
+              }).catch(() => {});
+
               return res.end(JSON.stringify(s));
             }
+          }
+          res.statusCode = 404;
+          return res.end(JSON.stringify({ error: "Service not found" }));
+        }
+
+        if (req.method === "DELETE" && serviceIdMatch) {
+          const sId = Number(serviceIdMatch[1]);
+          let removed = false;
+          for (const div of divisions) {
+            if (div.services) {
+              const prevLen = div.services.length;
+              div.services = div.services.filter((srv: any) => srv.id !== sId);
+              if (div.services.length !== prevLen) {
+                removed = true;
+                break;
+              }
+            }
+          }
+          if (removed) {
+            refreshDivisionMap();
+            saveLocalState();
+
+            // Asynchronously delete from Supabase PostgreSQL
+            fetch(`${SUPABASE_REST_URL}/rest/v1/services?id=eq.${sId}`, {
+              method: "DELETE",
+              headers: {
+                apikey: SUPABASE_REST_KEY,
+                Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+              },
+            }).catch(() => {});
+
+            return res.end(JSON.stringify({ success: true }));
           }
           res.statusCode = 404;
           return res.end(JSON.stringify({ error: "Service not found" }));
@@ -789,7 +895,29 @@ function mockApiPlugin(): Plugin {
           if (div) {
             div.services = div.services || [];
             div.services.push(newService);
+            refreshDivisionMap();
+            saveLocalState();
           }
+
+          // Asynchronously insert into Supabase PostgreSQL
+          fetch(`${SUPABASE_REST_URL}/rest/v1/services`, {
+            method: "POST",
+            headers: {
+              apikey: SUPABASE_REST_KEY,
+              Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: newService.id,
+              division_slug: newService.divisionSlug,
+              name: newService.name,
+              description: newService.description,
+              price: newService.price,
+              image_url: newService.imageUrl,
+              sort_order: newService.sortOrder,
+            }),
+          }).catch(() => {});
+
           res.statusCode = 201;
           return res.end(JSON.stringify(newService));
         }
@@ -874,10 +1002,43 @@ function mockApiPlugin(): Plugin {
           return res.end(JSON.stringify(prod));
         }
 
+        const productIdMatch = url.match(/^\/api\/products\/(\d+)$/);
+        if (req.method === "PATCH" && productIdMatch) {
+          const id = Number(productIdMatch[1]);
+          const body = await readBody(req);
+          const p = products.find((item) => item.id === id);
+          if (p) {
+            Object.assign(p, body);
+            saveLocalState();
+
+            // Asynchronously sync to Supabase PostgreSQL
+            fetch(`${SUPABASE_REST_URL}/rest/v1/products?id=eq.${id}`, {
+              method: "PATCH",
+              headers: {
+                apikey: SUPABASE_REST_KEY,
+                Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                ...(body.name !== undefined ? { name: body.name } : {}),
+                ...(body.description !== undefined ? { description: body.description } : {}),
+                ...(body.price !== undefined ? { price: body.price } : {}),
+                ...(body.imageUrl !== undefined ? { image_url: body.imageUrl } : {}),
+                ...(body.sortOrder !== undefined ? { sort_order: body.sortOrder } : {}),
+              }),
+            }).catch(() => {});
+
+            return res.end(JSON.stringify(p));
+          }
+          res.statusCode = 404;
+          return res.end(JSON.stringify({ error: "Product not found" }));
+        }
+
         const delProductMatch = url.match(/^\/api\/products\/(\d+)$/);
         if (req.method === "DELETE" && delProductMatch) {
           const id = Number(delProductMatch[1]);
           products = products.filter((p) => p.id !== id);
+          saveLocalState();
 
           // Asynchronously delete from Supabase PostgreSQL
           fetch(`${SUPABASE_REST_URL}/rest/v1/products?id=eq.${id}`, {

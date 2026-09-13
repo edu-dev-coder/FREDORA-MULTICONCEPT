@@ -52,4 +52,5 @@ Thumbs.db
 *.log
 artifacts/temperamap - Copy/
 .agents/
+.db_state.json
 

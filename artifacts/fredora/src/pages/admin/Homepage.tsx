@@ -60,6 +60,9 @@ const formSchema = z.object({
   metaDescription: optionalString,
   googleAnalyticsId: optionalString,
   catalogueNotes: optionalString,
+  introSectionTitle: optionalString,
+  introSectionSubtitle: optionalString,
+  faqs: z.array(z.object({ question: z.string().min(1), answer: z.string().min(1) })).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -115,11 +118,13 @@ export default function AdminHomepage() {
       ctaBannerTitle: null, ctaBannerText: null, footerDescription: null,
       facebookUrl: null, instagramUrl: null, twitterUrl: null, linkedinUrl: null, youtubeUrl: null,
       metaDescription: null, googleAnalyticsId: null, catalogueNotes: null,
+      introSectionTitle: null, introSectionSubtitle: null, faqs: [],
     },
   });
 
   const { fields: hourFields, append: appendHour, remove: removeHour } = useFieldArray({ control: form.control, name: "businessHours" });
   const { fields: statFields, append: appendStat, remove: removeStat } = useFieldArray({ control: form.control, name: "stats" });
+  const { fields: faqFields, append: appendFaq, remove: removeFaq } = useFieldArray({ control: form.control, name: "faqs" });
 
   const initialized = useRef(false);
 
@@ -132,6 +137,7 @@ export default function AdminHomepage() {
         : [{ day: "Monday — Friday", hours: "8:00 AM – 5:00 PM" }, { day: "Saturday", hours: "9:00 AM – 2:00 PM" }, { day: "Sunday", hours: "Closed" }];
       const safeStats = Array.isArray(hp.stats) && hp.stats.length ? hp.stats
         : [{ label: "Divisions", value: "5+" }, { label: "Happy Clients", value: "500+" }, { label: "Years of Excellence", value: "10+" }, { label: "Awards Won", value: "20+" }];
+      const safeFaqs = Array.isArray(hp.faqs) ? hp.faqs : [];
 
       form.reset({
         heroTitle: hp.heroTitle || "Fredora Multiconcept", heroSubtitle: hp.heroSubtitle || "", motto: hp.motto || "",
@@ -143,6 +149,8 @@ export default function AdminHomepage() {
         facebookUrl: hp.facebookUrl ?? null, instagramUrl: hp.instagramUrl ?? null, twitterUrl: hp.twitterUrl ?? null,
         linkedinUrl: hp.linkedinUrl ?? null, youtubeUrl: hp.youtubeUrl ?? null, metaDescription: hp.metaDescription ?? null,
         googleAnalyticsId: hp.googleAnalyticsId ?? null, catalogueNotes: hp.catalogueNotes ?? null,
+        introSectionTitle: hp.introSectionTitle ?? null, introSectionSubtitle: hp.introSectionSubtitle ?? null,
+        faqs: safeFaqs,
       });
       initialized.current = true;
     }
@@ -175,9 +183,9 @@ export default function AdminHomepage() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 
-          {/* Hero Content */}
+          {/* Hero & Intro */}
           <Card>
-            <CardHeader><CardTitle>Hero Section</CardTitle></CardHeader>
+            <CardHeader><CardTitle>Hero & Intro</CardTitle></CardHeader>
             <CardContent className="space-y-6">
               <ImageUploadInput currentImageUrl={form.watch("heroImageUrl")} label="Hero Background Image"
                 onUploadComplete={(objectPath) => { form.setValue("heroImageUrl", objectPath); toast({ title: "Image uploaded — click Save Changes to apply." }); }} />
@@ -186,6 +194,12 @@ export default function AdminHomepage() {
                 <FormField control={form.control} name="motto" render={({ field }) => (<FormItem><FormLabel>Motto / Subheading</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
               </div>
               <FormField control={form.control} name="heroSubtitle" render={({ field }) => (<FormItem><FormLabel>Hero Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>)} />
+              
+              <div className="border-t pt-6 mt-6 space-y-4">
+                <h3 className="text-sm font-medium">Intro Section (Below Hero)</h3>
+                <FormField control={form.control} name="introSectionTitle" render={({ field }) => (<FormItem><FormLabel>Intro Section Title</FormLabel><FormControl><Input {...field} value={field.value || ""} placeholder="A Nigerian Conglomerate Rooted in Excellence" /></FormControl><FormMessage /></FormItem>)} />
+                <FormField control={form.control} name="introSectionSubtitle" render={({ field }) => (<FormItem><FormLabel>Intro Section Subtitle</FormLabel><FormControl><Textarea {...field} value={field.value || ""} placeholder="We are a diverse group of companies..." /></FormControl><FormMessage /></FormItem>)} />
+              </div>
             </CardContent>
           </Card>
 
@@ -332,6 +346,24 @@ export default function AdminHomepage() {
                 <FormField control={form.control} name="twitterUrl" render={({ field }) => (<FormItem><FormLabel>Twitter / X URL</FormLabel><FormControl><Input {...field} value={field.value || ""} placeholder="https://x.com/..." /></FormControl><FormMessage /></FormItem>)} />
                 <FormField control={form.control} name="linkedinUrl" render={({ field }) => (<FormItem><FormLabel>LinkedIn URL</FormLabel><FormControl><Input {...field} value={field.value || ""} placeholder="https://linkedin.com/..." /></FormControl><FormMessage /></FormItem>)} />
                 <FormField control={form.control} name="youtubeUrl" render={({ field }) => (<FormItem><FormLabel>YouTube URL</FormLabel><FormControl><Input {...field} value={field.value || ""} placeholder="https://youtube.com/..." /></FormControl><FormMessage /></FormItem>)} />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Frequently Asked Questions (FAQs) */}
+          <Card>
+            <CardHeader><CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5" /> Frequently Asked Questions (FAQs)</CardTitle></CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">Manage the FAQs displayed on the homepage.</p>
+              <div className="space-y-4">
+                {faqFields.map((faq, index) => (
+                  <div key={faq.id} className="p-4 border rounded-md relative flex flex-col gap-4">
+                    <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-destructive" onClick={() => removeFaq(index)}><Trash2 className="h-4 w-4" /></Button>
+                    <FormField control={form.control} name={`faqs.${index}.question`} render={({ field }) => (<FormItem><FormLabel>Question</FormLabel><FormControl><Input {...field} placeholder="Question..." /></FormControl><FormMessage /></FormItem>)} />
+                    <FormField control={form.control} name={`faqs.${index}.answer`} render={({ field }) => (<FormItem><FormLabel>Answer</FormLabel><FormControl><Textarea {...field} placeholder="Answer..." /></FormControl><FormMessage /></FormItem>)} />
+                  </div>
+                ))}
+                <Button type="button" variant="outline" onClick={() => appendFaq({ question: "", answer: "" })}><Plus className="h-4 w-4 mr-2" /> Add FAQ</Button>
               </div>
             </CardContent>
           </Card>

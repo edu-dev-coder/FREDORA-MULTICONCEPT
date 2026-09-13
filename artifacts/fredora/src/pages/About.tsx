@@ -6,11 +6,37 @@ import { Star, TrendingUp, MapPin, Users, Award, ChevronRight } from "lucide-rea
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/lib/seo";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export default function About() {
   const { data: homepage, isLoading: homeLoading } = useGetHomepage();
   const { data: divisions } = useListDivisions();
   const hp = homepage as any;
+
+  const defaultFaqs = [
+    {
+      question: "What is Fredora Multiconcept?",
+      answer: "Fredora Multiconcept is a Nigerian multi-division company based in Enugu, Nigeria, operating across Foods, EduServices, Chems, Scents, and Transport & Logistics.",
+    },
+    {
+      question: "What is Fredora Multiconcept's mission?",
+      answer: hp?.missionStatement || "To consistently deliver high-quality products and services that meet the diverse needs of our customers while contributing positively to the communities we serve.",
+    },
+    {
+      question: "What is Fredora Multiconcept's vision?",
+      answer: hp?.visionStatement || "To be the leading and most trusted multiconcept corporation in Nigeria and beyond, known for excellence, innovation, and integrity.",
+    },
+    {
+      question: "Where is Fredora Multiconcept located?",
+      answer: "Fredora Multiconcept is based in Enugu, Enugu State, Nigeria.",
+    },
+    {
+      question: "What divisions does Fredora Multiconcept have?",
+      answer: "Fredora Multiconcept has five divisions: Fredora Foods (natural honey, zobo drinks, smoothies), Fredora EduServices (tutoring and coaching), Fredora Chems (liquid soap and cleaning products), Fredora Scents (perfumes and custom blends), and Fredora Transport & Logistics.",
+    },
+  ];
+
+  const faqs = Array.isArray(hp?.faqs) && hp.faqs.length > 0 ? hp.faqs : defaultFaqs;
 
   useSEO({
     title: "About Us",
@@ -29,33 +55,11 @@ export default function About() {
       {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What is Fredora Multiconcept?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Fredora Multiconcept is a Nigerian multi-division company based in Enugu, Nigeria, operating across Foods, EduServices, Chems, Scents, and Transport & Logistics." },
-          },
-          {
-            "@type": "Question",
-            "name": "What is Fredora Multiconcept's mission?",
-            "acceptedAnswer": { "@type": "Answer", "text": homepage?.missionStatement || "To consistently deliver high-quality products and services that meet the diverse needs of our customers while contributing positively to the communities we serve." },
-          },
-          {
-            "@type": "Question",
-            "name": "What is Fredora Multiconcept's vision?",
-            "acceptedAnswer": { "@type": "Answer", "text": homepage?.visionStatement || "To be the leading and most trusted multiconcept corporation in Nigeria and beyond, known for excellence, innovation, and integrity." },
-          },
-          {
-            "@type": "Question",
-            "name": "Where is Fredora Multiconcept located?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Fredora Multiconcept is based in Enugu, Enugu State, Nigeria." },
-          },
-          {
-            "@type": "Question",
-            "name": "What divisions does Fredora Multiconcept have?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Fredora Multiconcept has five divisions: Fredora Foods (natural honey, zobo drinks, smoothies), Fredora EduServices (tutoring and coaching), Fredora Chems (liquid soap and cleaning products), Fredora Scents (perfumes and custom blends), and Fredora Transport & Logistics." },
-          },
-        ],
+        "mainEntity": faqs.map((faq: any) => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": { "@type": "Answer", "text": faq.answer },
+        })),
       },
     ],
   });
@@ -222,7 +226,7 @@ export default function About() {
               >
                 <h2 className="text-2xl font-serif font-bold text-center mb-10 text-foreground">Our Core Values</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-                  {homepage.coreValues.map((value, i) => {
+                  {homepage.coreValues.map((value: any, i: number) => {
                     const colors = [
                       "from-blue-600 to-blue-800",
                       "from-amber-500 to-orange-600",
@@ -248,6 +252,30 @@ export default function About() {
                 </div>
               </motion.div>
             )}
+          </div>
+        </section>
+
+        {/* FAQs Section */}
+        <section className="py-20">
+          <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+            <div className="text-center mb-12">
+              <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary bg-primary/10 px-4 py-1.5 rounded-full mb-5">
+                Questions?
+              </span>
+              <h2 className="text-3xl font-serif font-bold text-foreground">Frequently Asked Questions</h2>
+            </div>
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((faq: any, i: number) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="border-b border-border/50">
+                  <AccordionTrigger className="text-left font-semibold text-foreground hover:text-primary">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground leading-relaxed">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         </section>
       </main>

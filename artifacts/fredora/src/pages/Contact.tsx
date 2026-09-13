@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { MapPin, Mail, Phone, Clock, MessageCircle, Send } from "lucide-react";
 import { motion } from "framer-motion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -25,6 +26,28 @@ export default function Contact() {
   const { toast } = useToast();
   const createMessage = useCreateMessage();
   const { data: homepage } = useGetHomepage();
+
+  const hp = homepage as any;
+  const defaultFaqs = [
+    {
+      question: "How can I contact Fredora Multiconcept?",
+      answer: "You can contact Fredora Multiconcept by filling the contact form on this page, by WhatsApp, or by visiting our office in Enugu, Nigeria.",
+    },
+    {
+      question: "Where is Fredora Multiconcept located?",
+      answer: "Fredora Multiconcept is based in Enugu, Enugu State, Nigeria.",
+    },
+    {
+      question: "What services does Fredora Multiconcept offer?",
+      answer: "Fredora Multiconcept offers products and services across 5 divisions: Foods (natural honey, zobo, smoothies), EduServices (tutoring and coaching), Chems (soaps and detergents), Scents (perfumes and custom blends), and Transport & Logistics.",
+    },
+    {
+      question: "How do I place an order from Fredora Multiconcept?",
+      answer: "You can place an order by visiting the relevant division page and clicking the WhatsApp order button, or by contacting us directly through the contact form.",
+    },
+  ];
+
+  const faqs = Array.isArray(hp?.faqs) && hp.faqs.length > 0 ? hp.faqs : defaultFaqs;
 
   useSEO({
     title: "Contact Us",
@@ -41,28 +64,11 @@ export default function Contact() {
       {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How can I contact Fredora Multiconcept?",
-            "acceptedAnswer": { "@type": "Answer", "text": "You can contact Fredora Multiconcept by filling the contact form on this page, by WhatsApp, or by visiting our office in Enugu, Nigeria." },
-          },
-          {
-            "@type": "Question",
-            "name": "Where is Fredora Multiconcept located?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Fredora Multiconcept is based in Enugu, Enugu State, Nigeria." },
-          },
-          {
-            "@type": "Question",
-            "name": "What services does Fredora Multiconcept offer?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Fredora Multiconcept offers products and services across 5 divisions: Foods (natural honey, zobo, smoothies), EduServices (tutoring and coaching), Chems (soaps and detergents), Scents (perfumes and custom blends), and Transport & Logistics." },
-          },
-          {
-            "@type": "Question",
-            "name": "How do I place an order from Fredora Multiconcept?",
-            "acceptedAnswer": { "@type": "Answer", "text": "You can place an order by visiting the relevant division page and clicking the WhatsApp order button, or by contacting us directly through the contact form." },
-          },
-        ],
+        "mainEntity": faqs.map((faq: any) => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": { "@type": "Answer", "text": faq.answer },
+        })),
       },
     ],
   });
@@ -91,9 +97,8 @@ export default function Contact() {
     });
   }
 
-  const hp = homepage as any;
   const contactEmails = [hp?.contactEmail || "info@fredoramulticoncept.com", hp?.supportEmail || "support@fredoramulticoncept.com"].filter(Boolean);
-  const contactPhone = hp?.phoneNumber || homepage?.whatsappNumber || "+234 806 670 5224";
+  const contactPhone = hp?.phoneNumber || hp?.whatsappNumber || "+234 806 670 5224";
   const contactAddress = hp?.headquartersAddress || "Enugu, Nigeria";
 
   const contactItems = [
@@ -286,6 +291,30 @@ export default function Contact() {
                 )}
               </motion.div>
             </div>
+          </div>
+        </section>
+
+        {/* FAQs Section */}
+        <section className="py-16 md:py-20 bg-muted/30">
+          <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+            <div className="text-center mb-12">
+              <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary bg-primary/10 px-4 py-1.5 rounded-full mb-5">
+                Questions?
+              </span>
+              <h2 className="text-3xl font-serif font-bold text-foreground">Frequently Asked Questions</h2>
+            </div>
+            <Accordion type="single" collapsible className="w-full bg-white/60 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-border/50">
+              {faqs.map((faq: any, i: number) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="border-b border-border/50 last:border-0">
+                  <AccordionTrigger className="text-left font-semibold text-foreground hover:text-primary">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground leading-relaxed">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         </section>
       </main>

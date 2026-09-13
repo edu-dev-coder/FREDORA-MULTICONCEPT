@@ -20,10 +20,12 @@ import { ArrowLeft, Trash2, Plus, Layers, Edit2 } from "lucide-react";
 import { ImageUploadInput } from "@/components/admin/ImageUploadInput";
 
 const formSchema = z.object({
+  name: z.string().min(1, "Name is required"),
   tagline: z.string().nullable(),
   description: z.string().min(1),
   comingSoon: z.boolean(),
   imageUrl: z.string().nullable(),
+  bannerColor: z.string().optional().nullable(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -58,7 +60,7 @@ export default function AdminDivisionEdit() {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { tagline: "", description: "", comingSoon: false, imageUrl: null },
+    defaultValues: { name: "", tagline: "", description: "", comingSoon: false, imageUrl: null, bannerColor: null },
   });
 
   const initialized = useRef(false);
@@ -66,17 +68,19 @@ export default function AdminDivisionEdit() {
   useEffect(() => {
     if (division && !initialized.current) {
       form.reset({
+        name: division.name || "",
         tagline: division.tagline || "",
         description: division.description,
         comingSoon: division.comingSoon,
         imageUrl: division.imageUrl ?? null,
+        bannerColor: division.bannerColor ?? null,
       });
       initialized.current = true;
     }
   }, [division, form]);
 
   function onSubmit(values: FormValues) {
-    updateDivision.mutate({ slug, data: values }, {
+    updateDivision.mutate({ slug, data: { ...values, bannerColor: values.bannerColor ?? undefined } }, {
       onSuccess: (data) => {
         toast({ title: "Division updated successfully" });
         queryClient.setQueryData(getGetDivisionQueryKey(slug), data);
@@ -182,10 +186,36 @@ export default function AdminDivisionEdit() {
                   }}
                 />
 
+                <FormField control={form.control} name="name" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Division Display Name</FormLabel>
+                    <FormControl><Input {...field} value={field.value || ""} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+
                 <FormField control={form.control} name="tagline" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Tagline (Optional)</FormLabel>
                     <FormControl><Input {...field} value={field.value || ""} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+
+                <FormField control={form.control} name="bannerColor" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Banner / Theme Accent Gradient</FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value || ""} list="gradient-presets" placeholder="e.g. from-blue-600 to-blue-800" />
+                    </FormControl>
+                    <datalist id="gradient-presets">
+                      <option value="from-blue-600 to-blue-800">Blue Gradient</option>
+                      <option value="from-emerald-600 to-teal-800">Green Gradient</option>
+                      <option value="from-amber-500 to-orange-600">Amber Gradient</option>
+                      <option value="from-violet-500 to-purple-700">Purple Gradient</option>
+                      <option value="from-rose-500 to-pink-700">Rose Gradient</option>
+                      <option value="from-[#001847] to-[#1565C0]">Navy Gradient</option>
+                    </datalist>
                     <FormMessage />
                   </FormItem>
                 )} />

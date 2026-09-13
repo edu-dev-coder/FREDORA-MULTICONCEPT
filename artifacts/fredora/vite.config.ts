@@ -230,6 +230,14 @@ function mockApiPlugin(): Plugin {
     heroSlides: [
       { id: 1, imageUrl: "/images/hero-bg.png", sortOrder: 0, createdAt: now },
     ],
+    introSectionTitle: "A Nigerian Conglomerate Rooted in Excellence",
+    introSectionSubtitle: "We are a diverse group of companies dedicated to providing premium quality products and services across various sectors, improving lives and communities across Nigeria and beyond.",
+    faqs: [
+      { question: "How can I contact Fredora Multiconcept?", answer: "You can contact Fredora Multiconcept by filling the contact form, by WhatsApp, or by visiting our office in Enugu, Nigeria." },
+      { question: "Where is Fredora Multiconcept located?", answer: "Fredora Multiconcept is based in Enugu, Enugu State, Nigeria." },
+      { question: "What services does Fredora Multiconcept offer?", answer: "Fredora Multiconcept offers products and services across 5 divisions: Foods, EduServices, Chems, Scents, and Transport & Logistics." },
+      { question: "How do I place an order?", answer: "You can place an order by visiting any division page, browsing our online Catalogue, or clicking the WhatsApp button." }
+    ],
     whatsappNumber: "+2348066705224",
     phoneNumber: "+234 806 670 5224",
     contactEmail: "info@fredoramulticoncept.com",
@@ -505,8 +513,10 @@ function mockApiPlugin(): Plugin {
           for (const savedDiv of parsed.divisions) {
             const existing = divisions.find((d) => d.slug === savedDiv.slug);
             if (existing) {
+              if (savedDiv.name !== undefined) existing.name = savedDiv.name;
               if (savedDiv.tagline !== undefined) existing.tagline = savedDiv.tagline;
               if (savedDiv.description !== undefined) existing.description = savedDiv.description;
+              if (savedDiv.bannerColor !== undefined) existing.bannerColor = savedDiv.bannerColor;
               if (savedDiv.comingSoon !== undefined) existing.comingSoon = savedDiv.comingSoon;
               if (savedDiv.imageUrl !== undefined) existing.imageUrl = savedDiv.imageUrl;
               if (Array.isArray(savedDiv.services)) existing.services = savedDiv.services;
@@ -812,7 +822,7 @@ function mockApiPlugin(): Plugin {
           return res.end(JSON.stringify(div ?? null));
         }
 
-        if (req.method === "PUT" && divMatch) {
+        if ((req.method === "PUT" || req.method === "PATCH") && divMatch) {
           const slug = divMatch[1];
           const body = await readBody(req);
           const div = divisionMap[slug];
@@ -821,6 +831,8 @@ function mockApiPlugin(): Plugin {
             return res.end(JSON.stringify({ error: "Division not found" }));
           }
           Object.assign(div, body, { updatedAt: new Date().toISOString() });
+          refreshDivisionMap();
+          saveLocalState();
           return res.end(JSON.stringify(div));
         }
 

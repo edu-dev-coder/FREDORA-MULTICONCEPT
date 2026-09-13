@@ -113,7 +113,7 @@ export default function DivisionDetail() {
     ? rawImageUrl.startsWith("/objects/") ? `/api/storage${rawImageUrl}` : rawImageUrl
     : defaultBgImageMap[slug] || "/images/hero-bg.png";
 
-  const accent = divisionAccents[slug] || "from-emerald-500 to-teal-600";
+  const accent = (division as any)?.bannerColor || divisionAccents[slug] || "from-blue-600 to-blue-800";
 
   return (
     <div className="min-h-screen flex flex-col">

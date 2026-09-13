@@ -209,7 +209,7 @@ export default function Home() {
         <section className="relative -mt-1 bg-white/90 backdrop-blur-sm border-b shadow-md z-20">
           <div className="container mx-auto px-4 md:px-6">
             <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 border-x">
-              {stats.map((stat, i) => (
+              {stats.map((stat: any, i: number) => (
                 <motion.div
                   key={stat.label}
                   initial={{ opacity: 0, y: 10 }}
@@ -235,11 +235,11 @@ export default function Home() {
               <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary bg-primary/10 px-4 py-1.5 rounded-full mb-6">
                 About Us
               </span>
-              <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-6 leading-tight">
-                A Nigerian Conglomerate<br />Rooted in Excellence
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-6 leading-tight whitespace-pre-line">
+                {(homepage as any)?.introSectionTitle || "A Nigerian Conglomerate\nRooted in Excellence"}
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                {homepage?.heroSubtitle || "We are a diverse group of companies dedicated to providing premium quality products and services across various sectors, improving lives and communities across Nigeria and beyond."}
+                {(homepage as any)?.introSectionSubtitle || "We are a diverse group of companies dedicated to providing premium quality products and services across various sectors, improving lives and communities across Nigeria and beyond."}
               </p>
               <div className="mt-8">
                 <Button asChild variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white rounded-full px-8">
@@ -282,7 +282,7 @@ export default function Home() {
                             className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-600"
                           />
                         ) : (
-                          <div className={`absolute inset-0 bg-gradient-to-br ${divisionColors[index % divisionColors.length]}`} />
+                          <div className={`absolute inset-0 bg-gradient-to-br ${(div as any)?.bannerColor || divisionColors[index % divisionColors.length]}`} />
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                         {div.comingSoon && (

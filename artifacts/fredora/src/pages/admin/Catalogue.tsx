@@ -86,7 +86,7 @@ export default function AdminCatalogue() {
     );
   };
 
-  const activeDivisions = divisions?.filter((d) => !d.comingSoon) ?? [];
+  const activeDivisions = Array.isArray(divisions) ? divisions.filter((d) => !d.comingSoon) : [];
   const totalProducts = 0;
   const totalServices = divisions?.reduce((s, d) => s + (d.services?.length ?? 0), 0) ?? 0;
 

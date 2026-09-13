@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, Star, Check, ArrowRight } from "lucide-react";
 import { useSEO } from "@/lib/seo";
 
-const APP_URL = "/temperamap/";
+const APP_URL = import.meta.env.VITE_TEMPERAMAP_URL ?? "http://localhost:5001/";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -49,22 +49,22 @@ const features = [
 
 const pricing = [
   {
-    name: "Individual Test", price: "₦3,000", popular: false,
+    name: "Individual Test", popular: false,
     desc: "Full 60-question assessment + detailed PDF report",
     perks: ["60-question test", "Detailed PDF report", "Instant results", "Lifetime access"],
   },
   {
-    name: "Couples Test", price: "₦10,000", popular: true,
+    name: "Couples Test", popular: true,
     desc: "Two assessments + compatibility report",
     perks: ["Two full assessments", "Compatibility report", "Relationship insights", "Conflict resolution tips"],
   },
   {
-    name: "School License", price: "₦50,000", popular: false,
+    name: "School License", popular: false,
     desc: "Up to 20 students + class summary report",
     perks: ["Up to 20 students", "Class summary report", "Teacher dashboard", "6-month access"],
   },
   {
-    name: "Corporate Team", price: "₦150,000", popular: false,
+    name: "Corporate Team", popular: false,
     desc: "Up to 15 members + leadership & team dynamics report",
     perks: ["Up to 15 members", "Team dynamics report", "Leadership profile", "HR integration support"],
   },
@@ -73,13 +73,13 @@ const pricing = [
 const testimonials = [
   { name: "Adaeze Okonkwo", role: "HR Manager, Lagos", rating: 5, quote: "TemperaMap transformed how we build teams. Understanding each member's temperament has reduced conflicts and improved output dramatically." },
   { name: "Emmanuel Uche", role: "Secondary School Principal, Enugu", rating: 5, quote: "We licensed it for our graduating students. The self-awareness it gave them is something no textbook could provide. Truly remarkable." },
-  { name: "Chidinma & Tobenna", role: "Newlyweds, Abuja", rating: 5, quote: "We took the couples test before our wedding. The compatibility report sparked the deepest conversations we've ever had. Worth every naira." },
+  { name: "Chidinma & Tobenna", role: "Newlyweds, Abuja", rating: 5, quote: "We took the couples test before our wedding. The compatibility report sparked the deepest conversations we've ever had." },
 ];
 
 const faqs = [
   { q: "How long does the test take?", a: "The assessment typically takes 15–20 minutes to complete. You can pause and resume at any time within your session window." },
   { q: "Is this test scientifically accurate?", a: "Yes. TemperaMap is built on the classical four-temperament model (Sanguine, Choleric, Melancholic, Phlegmatic), refined with modern psychometric principles for depth and reliability." },
-  { q: "Can I retake the test?", a: "Each purchase grants one test attempt. If you'd like to retake — for example after significant life changes — you can purchase a new test at the standard price." },
+  { q: "Can I retake the test?", a: "If you'd like to retake the test — for example after significant life changes — you can start a new assessment." },
   { q: "What do I get after completing the test?", a: "You receive a detailed PDF report covering your temperament blend, core strengths, growth areas, relationship tendencies, and career insights — all personalized to your answers." },
   { q: "Is the Couples Test done together or separately?", a: "Each partner completes the assessment independently on their own device. The results are then combined to generate a compatibility report that highlights your dynamic as a couple." },
 ];
@@ -242,11 +242,11 @@ export default function TemperaMap() {
       <section id="pricing" className="py-24 bg-gradient-to-br from-[#0d1f3c] to-[#1B3A6B]">
         <div className="container px-4 max-w-6xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-14">
-            <span className="inline-block text-xs font-bold tracking-widest uppercase text-[#C8961E] bg-[#C8961E]/15 px-4 py-1.5 rounded-full mb-4">
-              Pricing
-            </span>
-            <h2 className="text-3xl md:text-4xl font-black text-white">Simple, Transparent Pricing</h2>
-            <p className="text-white/60 mt-3">No subscriptions. Pay once, download forever.</p>
+              <span className="inline-block text-xs font-bold tracking-widest uppercase text-[#C8961E] bg-[#C8961E]/15 px-4 py-1.5 rounded-full mb-4">
+                Plans
+              </span>
+              <h2 className="text-3xl md:text-4xl font-black text-white">Choose Your Path</h2>
+              <p className="text-white/60 mt-3">Pick the plan that fits your needs.</p>
           </motion.div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -263,7 +263,6 @@ export default function TemperaMap() {
                   </div>
                 )}
                 <h3 className="font-bold text-base mb-1">{p.name}</h3>
-                <div className="text-3xl font-black mb-1">{p.price}</div>
                 <p className={`text-xs mb-5 leading-relaxed ${p.popular ? "text-white/80" : "text-white/60"}`}>{p.desc}</p>
                 <ul className="space-y-2 mb-6 flex-1">
                   {p.perks.map((perk) => (
@@ -349,7 +348,7 @@ export default function TemperaMap() {
             <p className="text-white/60 mb-8 text-lg">Join thousands of Nigerians who've discovered their temperament blueprint.</p>
             <a href={APP_URL} target="_blank" rel="noopener noreferrer">
               <Button size="lg" className="bg-[#C8961E] hover:bg-[#b07f16] text-white font-black rounded-full px-10 py-7 text-lg shadow-2xl shadow-[#C8961E]/30 gap-2">
-                Start Your Assessment — From ₦3,000 <ArrowRight className="h-5 w-5" />
+                Start Your Assessment <ArrowRight className="h-5 w-5" />
               </Button>
             </a>
           </motion.div>

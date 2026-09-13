@@ -26,6 +26,7 @@ const PRICES: Record<string, number> = {
   teen_13_17: 500000,
   school_license: 5000000,
   corporate_team: 15000000,
+  individual_student: 500000,
 };
 
 const PRICE_LABELS: Record<string, string> = {
@@ -37,6 +38,7 @@ const PRICE_LABELS: Record<string, string> = {
   teen_13_17: "Ages 13–17 Assessment",
   school_license: "School License",
   corporate_team: "Corporate Team",
+  individual_student: "Individual Student",
 };
 
 async function sendPaymentConfirmationEmail(to: string, product: string, amount: number) {

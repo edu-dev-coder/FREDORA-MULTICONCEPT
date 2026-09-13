@@ -83,7 +83,6 @@ export function Footer() {
               <li><Link href="/news" className="hover:text-blue-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />News</Link></li>
               <li><Link href="/catalogue" className="hover:text-blue-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />Catalogue</Link></li>
               <li><Link href="/contact" className="hover:text-blue-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />Contact</Link></li>
-              <li><Link href="/admin/login" className="hover:text-blue-400 transition-colors flex items-center gap-1.5 group"><ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />Admin Login</Link></li>
             </ul>
           </div>
 
@@ -91,9 +90,9 @@ export function Footer() {
           <div>
             <h4 className="text-sm font-bold tracking-wide text-white mb-5 uppercase">Divisions</h4>
             <ul className="space-y-3 text-sm text-slate-400">
-              {divisions?.map((div) => (
+              {Array.isArray(divisions) && divisions.map((div) => (
                 <li key={div.slug}>
-                  <Link href={`/divisions/${div.slug}`} className="hover:text-blue-400 transition-colors flex items-center gap-1.5 group">
+                  <Link href={div.slug === "temperamap" ? "/temperamap" : `/divisions/${div.slug}`} className="hover:text-blue-400 transition-colors flex items-center gap-1.5 group">
                     <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {div.name}
                     {div.comingSoon && <span className="text-[9px] uppercase font-bold text-amber-400/70 ml-1">Soon</span>}
@@ -144,7 +143,13 @@ export function Footer() {
 
         <div className="mt-14 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-slate-600">
           <p>&copy; {new Date().getFullYear()} Fredora Multiconcept. All rights reserved.</p>
-          <p className="mt-2 md:mt-0 text-slate-700">Enugu, Nigeria 🇳🇬</p>
+          <div className="flex items-center gap-4 mt-3 md:mt-0 text-xs">
+            <span className="text-slate-600">Enugu, Nigeria 🇳🇬</span>
+            <span>·</span>
+            <Link href="/admin/login" className="text-slate-500 hover:text-slate-300 transition-colors">
+              Admin Login
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

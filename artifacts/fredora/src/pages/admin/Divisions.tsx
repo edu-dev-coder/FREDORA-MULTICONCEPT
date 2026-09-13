@@ -30,7 +30,7 @@ export default function AdminDivisions() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {divisions?.map((div) => (
+            {Array.isArray(divisions) && divisions.map((div) => (
               <TableRow key={div.id}>
                 <TableCell className="font-medium">{div.name}</TableCell>
                 <TableCell>

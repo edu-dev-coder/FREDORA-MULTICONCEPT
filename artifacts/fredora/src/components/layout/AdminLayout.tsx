@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, Home, Layers, MessageSquare, LogOut, Quote, Mail, Newspaper, BookOpen } from "lucide-react";
+import { LayoutDashboard, Home, Layers, MessageSquare, LogOut, Quote, Mail, Newspaper, BookOpen, BrainCircuit } from "lucide-react";
 import { useGetAdminMe, useAdminLogout } from "@workspace/api-client-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -26,12 +26,13 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   const handleLogout = () => {
     logout.mutate(undefined, {
       onSuccess: () => {
+        sessionStorage.removeItem("admin_auth");
         setLocation("/admin/login");
       }
     });
   };
 
-  const links = [
+  const corporateLinks = [
     { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/homepage", label: "Homepage Content", icon: Home },
     { href: "/admin/divisions", label: "Divisions", icon: Layers },
@@ -42,32 +43,78 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
   ];
 
+  const temperamapLinks = [
+    { href: "/temperamap/admin/dashboard", label: "TM Analytics", icon: BrainCircuit },
+    { href: "/temperamap/admin/passcodes", label: "Passcodes", icon: Layers },
+    { href: "/temperamap/admin/sessions", label: "Test Sessions", icon: BookOpen },
+    { href: "/temperamap/admin/users", label: "TM Users", icon: Home },
+    { href: "/temperamap/admin/corporate", label: "Corporate Teams", icon: Layers },
+    { href: "/temperamap/admin/testimonials", label: "TM Reviews", icon: Quote },
+    { href: "/temperamap/admin/faqs", label: "TM FAQs", icon: MessageSquare },
+    { href: "/temperamap/admin/features", label: "TM Features", icon: Newspaper },
+    { href: "/temperamap/admin/data", label: "Data Management", icon: Mail },
+    { href: "/temperamap/admin/settings", label: "Settings", icon: LayoutDashboard },
+  ];
+
   return (
     <div className="flex min-h-screen bg-muted/30">
       {/* Sidebar */}
       <aside className="w-64 bg-card border-r flex flex-col">
-        <div className="h-16 flex items-center px-6 border-b">
+        <div className="h-16 flex items-center px-6 border-b shrink-0">
           <span className="font-bold text-lg font-serif text-primary">Fredora Admin</span>
         </div>
-        <nav className="flex-1 py-4 flex flex-col gap-1 px-3">
-          {links.map((link) => {
-            const Icon = link.icon;
-            const isActive = location === link.href || location.startsWith(`${link.href}/`);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium ${
-                  isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
-        <div className="p-4 border-t">
+        <div className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
+          {/* Fredora Corporate section */}
+          <div>
+            <div className="px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/70">
+              Corporate Management
+            </div>
+            <nav className="flex flex-col gap-1">
+              {corporateLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = location === link.href || (link.href !== "/admin/dashboard" && location.startsWith(`${link.href}/`));
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium ${
+                      isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" />
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* TemperaMap Assessment System section */}
+          <div>
+            <div className="px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+              TemperaMap System
+            </div>
+            <nav className="flex flex-col gap-1">
+              {temperamapLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = location === link.href || location.startsWith(`${link.href}/`);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium ${
+                      isActive ? "bg-amber-600 text-white" : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" />
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+        <div className="p-4 border-t shrink-0">
           <Button variant="ghost" className="w-full justify-start gap-3" onClick={handleLogout}>
             <LogOut className="h-4 w-4" />
             Logout

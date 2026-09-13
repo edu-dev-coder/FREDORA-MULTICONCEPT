@@ -15,7 +15,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function AdminLogin() {
+export function AdminLogin() {
   const [, setLocation] = useLocation();
   const login = useAdminLogin();
 
@@ -30,6 +30,8 @@ export default function AdminLogin() {
   function onSubmit(values: FormValues) {
     login.mutate({ data: values }, {
       onSuccess: () => {
+        // Automatically grant TemperaMap admin access as well so user never logs in twice
+        sessionStorage.setItem("admin_auth", "true");
         setLocation("/admin/dashboard");
       },
       onError: (error) => {
@@ -89,3 +91,5 @@ export default function AdminLogin() {
     </div>
   );
 }
+
+export default AdminLogin;

@@ -19,7 +19,7 @@ import type { Division } from "@workspace/api-client-react";
 
 // ----- AllProductsLoader: fetches products for every division -----
 function useAllProducts(divisions: Division[] | undefined) {
-  const slugs = divisions?.map((d) => d.slug) ?? [];
+  const slugs = Array.isArray(divisions) ? divisions.map((d) => d.slug) : [];
   const q0 = useListProducts({ divisionSlug: slugs[0] ?? "__none__" }, { query: { enabled: !!slugs[0], queryKey: getListProductsQueryKey({ divisionSlug: slugs[0] ?? "__none__" }) } });
   const q1 = useListProducts({ divisionSlug: slugs[1] ?? "__none__" }, { query: { enabled: !!slugs[1], queryKey: getListProductsQueryKey({ divisionSlug: slugs[1] ?? "__none__" }) } });
   const q2 = useListProducts({ divisionSlug: slugs[2] ?? "__none__" }, { query: { enabled: !!slugs[2], queryKey: getListProductsQueryKey({ divisionSlug: slugs[2] ?? "__none__" }) } });
@@ -86,7 +86,7 @@ export default function Catalogue() {
     ],
   });
 
-  const activeDivisions = divisions?.filter((d) => !d.comingSoon) ?? [];
+  const activeDivisions = Array.isArray(divisions) ? divisions.filter((d) => !d.comingSoon) : [];
   const productsByDiv = useAllProducts(activeDivisions.length > 0 ? activeDivisions : undefined);
 
   // Build flat product list with division info
@@ -217,13 +217,13 @@ export default function Catalogue() {
 
       {/* Sticky filter bar */}
       <div className="sticky top-[calc(var(--navbar-height,64px)+1px)] z-30 bg-white border-b shadow-sm">
-        <div className="container mx-auto px-4 py-3 flex flex-wrap items-center gap-3">
+        <div className="container mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
 
-          {/* Division filter pills */}
-          <div className="flex items-center gap-1.5 flex-wrap flex-1 min-w-0">
+          {/* Division filter pills — horizontally scrollable without breaking container */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 flex-1 min-w-0">
             <button
               onClick={() => setDivFilter("all")}
-              className={`text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all whitespace-nowrap ${divFilter === "all" ? "bg-primary text-white border-primary" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}
+              className={`text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all whitespace-nowrap shrink-0 ${divFilter === "all" ? "bg-primary text-white border-primary" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}
             >
               All
             </button>
@@ -231,64 +231,67 @@ export default function Catalogue() {
               <button
                 key={div.slug}
                 onClick={() => setDivFilter(div.slug === divFilter ? "all" : div.slug)}
-                className={`text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all whitespace-nowrap ${divFilter === div.slug ? "bg-primary text-white border-primary" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}
+                className={`text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all whitespace-nowrap shrink-0 ${divFilter === div.slug ? "bg-primary text-white border-primary" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}
               >
                 {div.name}
               </button>
             ))}
           </div>
 
-          {/* Products / Services toggle */}
-          <div className="flex items-center gap-1 bg-muted/50 rounded-full p-0.5 shrink-0">
-            {(["all", "products", "services"] as ViewTab[]).map((t) => (
+          {/* Controls row on mobile: Products/Services toggle + Sort + Cart */}
+          <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
+            {/* Products / Services toggle */}
+            <div className="flex items-center gap-1 bg-muted/50 rounded-full p-0.5 shrink-0">
+              {(["all", "products", "services"] as ViewTab[]).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={`text-xs font-semibold px-2.5 sm:px-3 py-1.5 rounded-full transition-all capitalize ${tab === t ? "bg-white shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                >
+                  {t === "all" ? "All" : t === "products" ? <span className="flex items-center gap-1"><ShoppingBag className="h-3 w-3" /><span className="hidden xs:inline">Products</span></span> : <span className="flex items-center gap-1"><Wrench className="h-3 w-3" /><span className="hidden xs:inline">Services</span></span>}
+                </button>
+              ))}
+            </div>
+
+            {/* Sort */}
+            <div className="relative shrink-0">
               <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-all capitalize ${tab === t ? "bg-white shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                onClick={() => setSortOpen(!sortOpen)}
+                className="flex items-center gap-1 text-xs font-semibold px-2.5 sm:px-3.5 py-1.5 rounded-full border border-border hover:border-primary hover:text-primary transition-all"
               >
-                {t === "all" ? "All" : t === "products" ? <span className="flex items-center gap-1"><ShoppingBag className="h-3 w-3" />Products</span> : <span className="flex items-center gap-1"><Wrench className="h-3 w-3" />Services</span>}
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">{SORT_LABELS[sort]}</span>
+                <ChevronDown className="h-3 w-3" />
               </button>
-            ))}
-          </div>
+              {sortOpen && (
+                <div className="absolute right-0 top-full mt-1 bg-white border rounded-xl shadow-lg z-40 overflow-hidden min-w-[160px]">
+                  {(Object.entries(SORT_LABELS) as [SortOption, string][]).map(([val, label]) => (
+                    <button
+                      key={val}
+                      onClick={() => { setSort(val); setSortOpen(false); }}
+                      className={`w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-colors ${sort === val ? "text-primary font-semibold bg-primary/5" : "text-foreground"}`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
-          {/* Sort */}
-          <div className="relative shrink-0">
+            {/* Cart button */}
             <button
-              onClick={() => setSortOpen(!sortOpen)}
-              className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-border hover:border-primary hover:text-primary transition-all"
+              onClick={openCart}
+              className="relative flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-primary text-white hover:bg-primary/90 transition-all shrink-0"
             >
-              <SlidersHorizontal className="h-3.5 w-3.5" />
-              {SORT_LABELS[sort]}
-              <ChevronDown className="h-3 w-3" />
+              <ShoppingCart className="h-3.5 w-3.5" />
+              <span className="hidden xs:inline">Cart</span>
+              {totalItems > 0 && (
+                <span className="bg-white text-primary text-[10px] font-black rounded-full w-4 h-4 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
             </button>
-            {sortOpen && (
-              <div className="absolute right-0 top-full mt-1 bg-white border rounded-xl shadow-lg z-40 overflow-hidden min-w-[160px]">
-                {(Object.entries(SORT_LABELS) as [SortOption, string][]).map(([val, label]) => (
-                  <button
-                    key={val}
-                    onClick={() => { setSort(val); setSortOpen(false); }}
-                    className={`w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-colors ${sort === val ? "text-primary font-semibold bg-primary/5" : "text-foreground"}`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
-
-          {/* Cart button */}
-          <button
-            onClick={openCart}
-            className="relative flex items-center gap-2 text-xs font-semibold px-3.5 py-1.5 rounded-full bg-primary text-white hover:bg-primary/90 transition-all shrink-0"
-          >
-            <ShoppingCart className="h-3.5 w-3.5" />
-            Cart
-            {totalItems > 0 && (
-              <span className="bg-white text-primary text-[10px] font-black rounded-full w-4 h-4 flex items-center justify-center">
-                {totalItems}
-              </span>
-            )}
-          </button>
         </div>
       </div>
 

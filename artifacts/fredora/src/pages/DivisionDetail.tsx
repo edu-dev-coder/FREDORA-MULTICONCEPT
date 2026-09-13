@@ -123,7 +123,7 @@ export default function DivisionDetail() {
 
       <main className="flex-1">
         {/* Hero Banner */}
-        <section className="relative h-[55vh] min-h-[420px] flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[340px] sm:min-h-[420px] md:h-[55vh] flex items-center justify-center overflow-hidden py-14 sm:py-20 md:py-0">
           <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${bgImage}')` }} />
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/80" />
           {/* Colorful bottom accent line */}
@@ -133,14 +133,14 @@ export default function DivisionDetail() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-block text-xs font-bold tracking-widest uppercase text-white/70 bg-white/10 backdrop-blur px-4 py-1.5 rounded-full mb-5 border border-white/15"
+              className="inline-block text-xs font-bold tracking-widest uppercase text-white/70 bg-white/10 backdrop-blur px-4 py-1.5 rounded-full mb-4 sm:mb-5 border border-white/15"
             >
               Fredora Division
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-6xl font-bold font-serif mb-4 leading-tight"
+              className="text-3xl sm:text-4xl md:text-6xl font-bold font-serif mb-3 sm:mb-4 leading-tight max-w-3xl mx-auto"
             >
               {division.name}
             </motion.h1>
@@ -149,7 +149,7 @@ export default function DivisionDetail() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="text-xl md:text-2xl font-light text-amber-200"
+                className="text-base sm:text-xl md:text-2xl font-light text-amber-200 max-w-xl mx-auto"
               >
                 {division.tagline}
               </motion.p>
@@ -158,7 +158,7 @@ export default function DivisionDetail() {
         </section>
 
         {/* About section */}
-        <section className="py-20">
+        <section className="py-12 sm:py-16 md:py-20">
           <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-4xl mx-auto">
 
@@ -166,12 +166,12 @@ export default function DivisionDetail() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mb-10 bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-2xl flex items-start gap-4 shadow-sm"
+                  className="mb-8 sm:mb-10 bg-amber-50 border-l-4 border-amber-500 p-5 sm:p-6 rounded-r-2xl flex items-start gap-4 shadow-sm"
                 >
                   <AlertCircle className="h-6 w-6 text-amber-500 shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="text-lg font-bold text-foreground mb-1">Coming Soon</h3>
-                    <p className="text-muted-foreground">This division is currently under development. Stay tuned for our launch.</p>
+                    <h3 className="text-base sm:text-lg font-bold text-foreground mb-1">Coming Soon</h3>
+                    <p className="text-sm sm:text-base text-muted-foreground">This division is currently under development. Stay tuned for our launch.</p>
                   </div>
                 </motion.div>
               )}
@@ -180,22 +180,22 @@ export default function DivisionDetail() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-sm border mb-10"
+                className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border mb-8 sm:mb-10"
               >
                 <div className={`inline-flex items-center gap-2 bg-gradient-to-r ${accent} text-white text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-5 shadow-sm`}>
                   About This Division
                 </div>
-                <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line mb-8">
+                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed whitespace-pre-line mb-8">
                   {division.description}
                 </p>
-                <div className="flex flex-wrap gap-3 pt-4 border-t">
-                  <Button asChild className="rounded-full px-6 shadow-sm shadow-primary/20">
+                <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
+                  <Button asChild className="w-full sm:w-auto rounded-full px-6 shadow-sm shadow-primary/20">
                     <Link href="/contact">
                       <MessageCircle className="mr-2 h-4 w-4" />
                       Request a Quote
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" className="rounded-full px-6 border-primary text-primary hover:bg-primary hover:text-white">
+                  <Button asChild variant="outline" className="w-full sm:w-auto rounded-full px-6 border-primary text-primary hover:bg-primary hover:text-white">
                     <Link href="/contact">
                       <Phone className="mr-2 h-4 w-4" />
                       Pay / Order

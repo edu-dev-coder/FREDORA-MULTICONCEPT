@@ -14,7 +14,7 @@ const cardGradients = [
 export function TestimonialsSection() {
   const { data: testimonials } = useListTestimonials();
 
-  if (!testimonials || testimonials.length === 0) return null;
+  if (!Array.isArray(testimonials) || testimonials.length === 0) return null;
 
   return (
     <section className="py-24 relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">

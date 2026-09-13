@@ -15,13 +15,15 @@ function HeroSlideshow({ slides, fallbackUrl }: { slides: { id: number; imageUrl
 
   const goTo = useCallback((i: number) => setCurrent(i), []);
 
-  useEffect(() => {
-    if (slides.length <= 1) return;
-    const id = setInterval(() => setCurrent((c) => (c + 1) % slides.length), 5000);
-    return () => clearInterval(id);
-  }, [slides.length]);
+  const safeSlides = Array.isArray(slides) ? slides : [];
 
-  const images = slides.length > 0 ? slides : [{ id: 0, imageUrl: fallbackUrl }];
+  useEffect(() => {
+    if (safeSlides.length <= 1) return;
+    const id = setInterval(() => setCurrent((c) => (c + 1) % safeSlides.length), 5000);
+    return () => clearInterval(id);
+  }, [safeSlides.length]);
+
+  const images = safeSlides.length > 0 ? safeSlides : [{ id: 0, imageUrl: fallbackUrl }];
   const all = images.length > 0 ? images : [{ id: 0, imageUrl: "/images/hero-bg.png" }];
 
   return (
@@ -143,20 +145,20 @@ export default function Home() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative h-[88vh] min-h-[620px] flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[500px] sm:min-h-[580px] md:h-[88vh] md:min-h-[620px] flex items-center justify-center overflow-hidden py-16 sm:py-20 md:py-0">
           <HeroSlideshow slides={heroSlides} fallbackUrl={fallbackUrl} />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70 z-10" />
           
           {/* Decorative circles */}
-          <div className="absolute top-20 right-10 w-64 h-64 rounded-full bg-blue-500/10 blur-3xl z-10" />
-          <div className="absolute bottom-20 left-10 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl z-10" />
+          <div className="absolute top-20 right-10 w-64 h-64 rounded-full bg-blue-500/10 blur-3xl z-10 pointer-events-none" />
+          <div className="absolute bottom-20 left-10 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl z-10 pointer-events-none" />
           
           <div className="container relative z-20 text-center text-white px-4">
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 mb-8 text-sm font-medium"
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 sm:px-5 py-1.5 sm:py-2 mb-6 sm:mb-8 text-xs sm:text-sm font-medium"
             >
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
               Nigeria's Premier Multiconcept Corporation
@@ -165,7 +167,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-5xl md:text-7xl font-bold font-serif mb-6 leading-tight"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-serif mb-4 sm:mb-6 leading-tight max-w-4xl mx-auto"
             >
               {homepage?.heroTitle || "Fredora Multiconcept"}
             </motion.h1>
@@ -173,7 +175,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.25 }}
-              className="text-xl md:text-2xl font-light italic text-amber-200 mb-10"
+              className="text-base sm:text-xl md:text-2xl font-light italic text-amber-200 mb-8 sm:mb-10 max-w-2xl mx-auto"
             >
               {homepage?.motto || "Giving you the best of your needs."}
             </motion.p>
@@ -181,12 +183,12 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex items-center justify-center gap-4 flex-wrap"
+              className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-md sm:max-w-none mx-auto"
             >
-              <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 text-base px-8 h-13 rounded-full shadow-lg shadow-amber-500/30 font-semibold">
+              <Button asChild size="lg" className="w-full sm:w-auto bg-accent text-accent-foreground hover:bg-accent/90 text-sm sm:text-base px-6 sm:px-8 h-12 sm:h-13 rounded-full shadow-lg shadow-amber-500/30 font-semibold">
                 <Link href="/about">Discover Our Story</Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="bg-white/10 backdrop-blur border-white/30 text-white hover:bg-white/20 text-base px-8 h-13 rounded-full">
+              <Button asChild size="lg" variant="outline" className="w-full sm:w-auto bg-white/10 backdrop-blur border-white/30 text-white hover:bg-white/20 text-sm sm:text-base px-6 sm:px-8 h-12 sm:h-13 rounded-full">
                 <Link href="/contact">Get in Touch <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
             </motion.div>
@@ -194,20 +196,20 @@ export default function Home() {
         </section>
 
         {/* Stats Strip */}
-        <section className="relative -mt-1 bg-white/80 backdrop-blur-sm border-b shadow-md z-20">
+        <section className="relative -mt-1 bg-white/90 backdrop-blur-sm border-b shadow-md z-20">
           <div className="container mx-auto px-4 md:px-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0">
+            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 border-x">
               {stats.map((stat, i) => (
                 <motion.div
                   key={stat.label}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 + i * 0.1 }}
-                  className="flex flex-col items-center py-6 px-4 text-center"
+                  className="flex flex-col items-center py-5 sm:py-6 px-3 sm:px-4 text-center"
                 >
-                  <stat.icon className={`h-6 w-6 ${stat.color} mb-2`} />
-                  <span className="text-3xl font-bold text-foreground">{stat.value}</span>
-                  <span className="text-sm text-muted-foreground mt-1">{stat.label}</span>
+                  <stat.icon className={`h-5 sm:h-6 w-5 sm:w-6 ${stat.color} mb-1.5 sm:mb-2`} />
+                  <span className="text-2xl sm:text-3xl font-bold text-foreground">{stat.value}</span>
+                  <span className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</span>
                 </motion.div>
               ))}
             </div>
@@ -252,7 +254,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {divisions?.map((div, index) => (
+              {Array.isArray(divisions) && divisions.map((div, index) => (
                 <motion.div
                   key={div.slug}
                   initial={{ opacity: 0, y: 24 }}
@@ -260,7 +262,7 @@ export default function Home() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <Link href={`/divisions/${div.slug}`}>
+                  <Link href={div.slug === "temperamap" ? "/temperamap" : `/divisions/${div.slug}`}>
                     <Card className="h-full overflow-hidden hover:shadow-2xl transition-all duration-400 border border-border hover:-translate-y-1 bg-white/85 backdrop-blur-sm group cursor-pointer">
                       <div className="h-52 overflow-hidden relative">
                         {div.imageUrl ? (
@@ -311,18 +313,18 @@ export default function Home() {
               <h2 className="text-4xl font-serif font-bold text-white">Mission & Vision</h2>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-white/10 backdrop-blur-md rounded-3xl p-10 border border-white/20"
+                className="bg-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-8 md:p-10 border border-white/20"
               >
                 <div className="w-12 h-12 rounded-2xl bg-amber-400/20 flex items-center justify-center mb-6">
                   <TrendingUp className="h-6 w-6 text-amber-300" />
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-white mb-4">Our Mission</h3>
-                <p className="text-lg leading-relaxed text-white/85">
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-white mb-3 sm:mb-4">Our Mission</h3>
+                <p className="text-base sm:text-lg leading-relaxed text-white/85">
                   {homepage?.missionStatement || "To consistently deliver high-quality products and services that meet the diverse needs of our customers while contributing positively to the communities we serve."}
                 </p>
               </motion.div>
@@ -330,13 +332,13 @@ export default function Home() {
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-white/10 backdrop-blur-md rounded-3xl p-10 border border-white/20"
+                className="bg-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-8 md:p-10 border border-white/20"
               >
                 <div className="w-12 h-12 rounded-2xl bg-blue-400/20 flex items-center justify-center mb-6">
                   <Star className="h-6 w-6 text-blue-300" />
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-white mb-4">Our Vision</h3>
-                <p className="text-lg leading-relaxed text-white/85">
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-white mb-3 sm:mb-4">Our Vision</h3>
+                <p className="text-base sm:text-lg leading-relaxed text-white/85">
                   {homepage?.visionStatement || "To be the leading and most trusted multiconcept corporation in Nigeria and beyond, known for excellence, innovation, and integrity."}
                 </p>
               </motion.div>

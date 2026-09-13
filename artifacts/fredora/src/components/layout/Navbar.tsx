@@ -22,6 +22,7 @@ export function Navbar() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/about", label: "About Us" },
+    { href: "/temperamap", label: "TemperaMap" },
     { href: "/news", label: "News" },
     { href: "/catalogue", label: "Catalogue" },
     { href: "/contact", label: "Contact" },
@@ -43,14 +44,14 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-1 lg:gap-1.5">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium px-4 py-2 rounded-full transition-all ${
+              className={`text-sm font-medium px-3 lg:px-4 py-2 rounded-full transition-all ${
                 location === link.href
-                  ? "text-primary bg-primary/10"
+                  ? "text-primary bg-primary/10 font-semibold"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
               }`}
             >
@@ -59,7 +60,7 @@ export function Navbar() {
           ))}
           <button
             onClick={openCart}
-            className="relative ml-2 p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+            className="relative ml-1 lg:ml-2 p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
             aria-label="Open cart"
           >
             <ShoppingCart className="h-5 w-5" />
@@ -69,18 +70,33 @@ export function Navbar() {
               </span>
             )}
           </button>
-          <Button asChild size="sm" className="ml-1 rounded-full px-5 shadow-sm shadow-primary/20">
+          <Button asChild size="sm" className="ml-1 rounded-full px-4 lg:px-5 shadow-sm shadow-primary/20">
             <Link href="/contact">Get in Touch</Link>
           </Button>
         </nav>
 
-        {/* Mobile toggle */}
-        <button
-          className="md:hidden flex items-center justify-center w-9 h-9 rounded-full text-foreground bg-muted/50 hover:bg-muted transition-colors"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        {/* Mobile controls (Cart + Menu Toggle) */}
+        <div className="flex md:hidden items-center gap-2">
+          <button
+            onClick={openCart}
+            className="relative flex items-center justify-center w-9 h-9 rounded-full text-foreground bg-muted/50 hover:bg-muted transition-colors"
+            aria-label="Open cart"
+          >
+            <ShoppingCart className="h-4 w-4" />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 bg-[#C8003C] text-white text-[8px] font-black rounded-full w-4 h-4 flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+          </button>
+          <button
+            className="flex items-center justify-center w-9 h-9 rounded-full text-foreground bg-muted/50 hover:bg-muted transition-colors"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Divisions strip — desktop */}
@@ -91,10 +107,10 @@ export function Navbar() {
               Divisions
             </span>
             <div className="flex items-center flex-wrap gap-1.5">
-              {divisions.map((div, i) => (
+              {Array.isArray(divisions) && divisions.map((div, i) => (
                 <Link
                   key={div.slug}
-                  href={`/divisions/${div.slug}`}
+                  href={div.slug === "temperamap" ? "/temperamap" : `/divisions/${div.slug}`}
                   className={`text-xs font-semibold px-3.5 py-1 rounded-full border transition-all
                     ${location === `/divisions/${div.slug}`
                       ? "bg-primary text-white border-primary shadow-sm"
@@ -136,10 +152,10 @@ export function Navbar() {
                 Divisions
               </p>
               <div className="flex flex-wrap gap-2">
-                {divisions?.map((div, i) => (
+                {Array.isArray(divisions) && divisions.map((div, i) => (
                   <Link
                     key={div.slug}
-                    href={`/divisions/${div.slug}`}
+                    href={div.slug === "temperamap" ? "/temperamap" : `/divisions/${div.slug}`}
                     onClick={() => setIsOpen(false)}
                     className={`text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all
                       ${location === `/divisions/${div.slug}`

@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { useGetAdminStats, getGetAdminStatsQueryKey } from "@workspace/api-client-react";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,6 +48,28 @@ export default function AdminDashboard() {
             </Card>
           );
         })}
+      </div>
+
+      {/* TemperaMap Assessment Subsystem Banner */}
+      <div className="mt-8">
+        <Card className="border-[#1B3A6B]/20 bg-gradient-to-r from-[#1B3A6B]/5 to-amber-500/5">
+          <CardContent className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h3 className="font-bold text-lg text-primary flex items-center gap-2">
+                🧠 TemperaMap Assessment System
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Manage personality assessments, passcodes, test sessions, users, testimonials, and corporate teams.
+              </p>
+            </div>
+            <Link
+              href="/temperamap/admin/dashboard"
+              className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold text-sm px-5 py-2.5 rounded-full transition-colors shrink-0"
+            >
+              Open TemperaMap Admin ↗
+            </Link>
+          </CardContent>
+        </Card>
       </div>
     </AdminLayout>
   );

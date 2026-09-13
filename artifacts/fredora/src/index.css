@@ -216,6 +216,129 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
 }
 
+/* ==========================================================================
+   TEMPERAMAP SCOPED THEME: Original Navy Blue (#1B3A6B) & Gold (#C8961E)
+   ========================================================================== */
+[data-theme="temperamap"],
+.temperamap-theme {
+  --background: 40 20% 98%;
+  --foreground: 220 45% 18%;
+
+  --border: 220 20% 85%;
+  --input: 220 20% 88%;
+  --ring: 38 78% 45%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 220 45% 18%;
+  --card-border: 220 20% 88%;
+
+  --sidebar: 220 45% 14%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-border: 220 40% 22%;
+  --sidebar-primary: 38 78% 45%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 220 40% 22%;
+  --sidebar-accent-foreground: 0 0% 90%;
+  --sidebar-ring: 38 78% 45%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 45% 18%;
+  --popover-border: 220 20% 88%;
+
+  /* Primary: brandBlue #1B3A6B */
+  --primary: 220 60% 26%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Secondary: muted navy */
+  --secondary: 220 30% 92%;
+  --secondary-foreground: 220 45% 18%;
+
+  /* Muted */
+  --muted: 220 20% 94%;
+  --muted-foreground: 220 20% 45%;
+
+  /* Accent: brandGold #C8961E */
+  --accent: 38 78% 45%;
+  --accent-foreground: 0 0% 100%;
+
+  /* Destructive */
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* Charts */
+  --chart-1: 220 60% 26%;
+  --chart-2: 38 78% 45%;
+  --chart-3: 160 50% 40%;
+  --chart-4: 280 45% 50%;
+  --chart-5: 20 70% 50%;
+
+  --primary-border: hsl(var(--primary));
+  --accent-border: hsl(var(--accent));
+  --secondary-border: hsl(var(--secondary));
+  --muted-border: hsl(var(--muted));
+  --destructive-border: hsl(var(--destructive));
+}
+
+[data-theme="temperamap"].dark,
+.temperamap-theme.dark,
+.dark .temperamap-theme,
+.dark [data-theme="temperamap"] {
+  --background: 220 45% 8%;
+  --foreground: 220 15% 95%;
+  --border: 220 30% 22%;
+  --input: 220 30% 20%;
+  --ring: 38 78% 45%;
+
+  --card: 220 40% 12%;
+  --card-foreground: 220 15% 95%;
+  --card-border: 220 30% 22%;
+
+  --sidebar: 220 50% 6%;
+  --sidebar-foreground: 0 0% 95%;
+  --sidebar-border: 220 40% 15%;
+  --sidebar-primary: 38 78% 45%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 220 40% 15%;
+  --sidebar-accent-foreground: 0 0% 90%;
+  --sidebar-ring: 38 78% 45%;
+
+  --popover: 220 40% 12%;
+  --popover-foreground: 220 15% 95%;
+  --popover-border: 220 30% 22%;
+
+  --primary: 220 60% 55%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 220 30% 18%;
+  --secondary-foreground: 220 15% 90%;
+
+  --muted: 220 30% 16%;
+  --muted-foreground: 220 15% 55%;
+
+  --accent: 38 78% 45%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 65% 50%;
+  --destructive-foreground: 0 0% 100%;
+
+  --chart-1: 220 60% 55%;
+  --chart-2: 38 78% 50%;
+  --chart-3: 160 50% 50%;
+  --chart-4: 280 45% 60%;
+  --chart-5: 20 70% 55%;
+}
+
+body.temperamap-theme,
+[data-theme="temperamap"] body {
+  background: hsl(40 20% 98%) !important;
+  background-attachment: scroll !important;
+}
+
+.dark body.temperamap-theme,
+[data-theme="temperamap"].dark body {
+  background: hsl(220 45% 8%) !important;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -254,6 +377,15 @@
 
   .toggle-elevate.toggle-elevated::before {
     background-color: var(--elevate-2);
+  }
+
+  /* Utility for smooth touch scrolling tabs & pills without ugly horizontal scrollbars */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   .border.toggle-elevate::before {

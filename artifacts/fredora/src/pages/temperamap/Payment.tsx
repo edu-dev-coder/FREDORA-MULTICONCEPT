@@ -32,12 +32,14 @@ export default function Payment() {
 
               <div className="text-left space-y-4 bg-muted/30 rounded-xl p-5 mb-6">
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Call Us</p>
-                  <p className="text-primary font-semibold">+234 800 000 0000</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Call / WhatsApp</p>
+                  <a href="https://wa.me/2348066705224" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">
+                    +234 806 670 5224
+                  </a>
                 </div>
                 <div>
                   <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Email Us</p>
-                  <p className="text-primary font-semibold">support@fredora.com</p>
+                  <p className="text-primary font-semibold">contact@fredora.com.ng</p>
                 </div>
                 <div>
                   <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Bank Transfer</p>

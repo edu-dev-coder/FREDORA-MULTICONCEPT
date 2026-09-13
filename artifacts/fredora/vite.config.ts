@@ -666,6 +666,101 @@ function mockApiPlugin(): Plugin {
         }
       }
 
+      // Sync TemperaMap tables if created in Supabase
+      try {
+        const [passRes, sessRes, teamRes, userRes] = await Promise.all([
+          fetch(`${SUPABASE_REST_URL}/rest/v1/passcodes?select=*`, {
+            headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
+          }),
+          fetch(`${SUPABASE_REST_URL}/rest/v1/test_sessions?select=*`, {
+            headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
+          }),
+          fetch(`${SUPABASE_REST_URL}/rest/v1/corporate_teams?select=*`, {
+            headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
+          }),
+          fetch(`${SUPABASE_REST_URL}/rest/v1/users?select=*`, {
+            headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
+          }),
+        ]);
+
+        if (passRes.ok) {
+          const passRows = await passRes.json();
+          if (Array.isArray(passRows) && passRows.length > 0) {
+            passcodes = passRows.map((r: any) => ({
+              id: r.id,
+              code: r.code,
+              testType: r.test_type,
+              status: r.status,
+              maxUses: r.max_uses ?? 1,
+              currentUses: r.current_uses ?? 0,
+              expiresAt: r.expires_at,
+              createdAt: r.created_at,
+              usedAt: r.used_at,
+              usedBy: r.used_by,
+            }));
+            passcodeCounter = Math.max(passcodeCounter, ...passcodes.map((p) => (typeof p.id === "number" ? p.id + 1 : 1)));
+          }
+        }
+
+        if (sessRes.ok) {
+          const sessRows = await sessRes.json();
+          if (Array.isArray(sessRows) && sessRows.length > 0) {
+            testSessions = sessRows.map((r: any) => ({
+              id: r.id,
+              userId: r.user_id,
+              userEmail: r.user_email,
+              userName: r.user_name,
+              testType: r.test_type,
+              status: r.status,
+              paid: r.paid,
+              answers: r.answers,
+              results: r.results,
+              primaryTemp: r.primary_temp,
+              secondaryTemp: r.secondary_temp,
+              blend: r.blend,
+              passcodeUsed: r.passcode_used,
+              partnerSessionId: r.partner_session_id,
+              workplace: r.workplace,
+              createdAt: r.created_at,
+              completedAt: r.completed_at,
+            }));
+          }
+        }
+
+        if (teamRes.ok) {
+          const teamRows = await teamRes.json();
+          if (Array.isArray(teamRows) && teamRows.length > 0) {
+            corporateTeams = teamRows.map((r: any) => ({
+              id: r.id,
+              adminId: r.admin_id,
+              name: r.name,
+              memberSessionIds: r.member_session_ids || [],
+              report: r.report,
+              createdAt: r.created_at,
+              updatedAt: r.updated_at,
+            }));
+          }
+        }
+
+        if (userRes.ok) {
+          const userRows = await userRes.json();
+          if (Array.isArray(userRows) && userRows.length > 0) {
+            users = userRows.map((r: any) => ({
+              id: r.id,
+              email: r.email,
+              password: r.password_hash || "",
+              firstName: r.first_name,
+              lastName: r.last_name,
+              role: r.role || "user",
+              createdAt: r.created_at,
+              lastLogin: r.last_login,
+            }));
+          }
+        }
+      } catch (tmErr) {
+        // TemperaMap sync error or tables not yet created in Supabase
+      }
+
       saveLocalState();
     } catch (e) {
       // Supabase fetch error; use local state
@@ -1283,6 +1378,13 @@ function mockApiPlugin(): Plugin {
 
         if (req.method === "GET" && url === "/api/admin/stats") {
           return res.end(JSON.stringify({ visitors: 0, totalDivisions: 6, totalProducts: 0, totalMessages: 0 }));
+        }
+
+        if (url?.startsWith("/api/auth/google")) {
+          // Google OAuth is not configured with client credentials yet; redirect gracefully to sign-in with a helpful query param
+          res.statusCode = 302;
+          res.setHeader("Location", "/temperamap/sign-in?notice=google_auth_pending");
+          return res.end();
         }
 
         // ── TemperaMap Auth ───────────────────────────────────────────────

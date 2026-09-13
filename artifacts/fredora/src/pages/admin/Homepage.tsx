@@ -101,13 +101,17 @@ export default function AdminHomepage() {
 
   useEffect(() => {
     if (homepage && !initialized.current) {
+      const safeCoreValues = Array.isArray(homepage.coreValues) && homepage.coreValues.length
+        ? homepage.coreValues
+        : (Array.isArray((homepage as any).values) && (homepage as any).values.length ? (homepage as any).values : ["Integrity", "Excellence", "Innovation"]);
+
       form.reset({
-        heroTitle: homepage.heroTitle,
-        heroSubtitle: homepage.heroSubtitle,
-        motto: homepage.motto,
-        missionStatement: homepage.missionStatement,
-        visionStatement: homepage.visionStatement,
-        coreValues: homepage.coreValues.length ? homepage.coreValues : [""],
+        heroTitle: homepage.heroTitle || "Fredora Multiconcept",
+        heroSubtitle: homepage.heroSubtitle || "",
+        motto: homepage.motto || "",
+        missionStatement: homepage.missionStatement || "",
+        visionStatement: homepage.visionStatement || "",
+        coreValues: safeCoreValues,
         heroImageUrl: homepage.heroImageUrl ?? null,
         whatsappNumber: homepage.whatsappNumber ?? null,
         facebookUrl: homepage.facebookUrl ?? null,
@@ -274,7 +278,7 @@ export default function AdminHomepage() {
               <div>
                 <label className="block mb-4 text-sm font-medium leading-none">Core Values</label>
                 <div className="space-y-3">
-                  {form.watch("coreValues").map((_, index) => (
+                  {(form.watch("coreValues") || []).map((_, index) => (
                     <FormField key={index} control={form.control} name={`coreValues.${index}`} render={({ field }) => (
                       <FormItem className="flex items-center gap-2 space-y-0">
                         <FormControl>

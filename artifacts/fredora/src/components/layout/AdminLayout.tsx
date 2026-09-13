@@ -8,18 +8,19 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
   const { data: adminMe, isLoading, error } = useGetAdminMe();
   const logout = useAdminLogout();
+  const isSessionAuth = typeof window !== "undefined" && sessionStorage.getItem("admin_auth") === "true";
 
   useEffect(() => {
-    if (!isLoading && (!adminMe || !adminMe.loggedIn || error)) {
+    if (!isLoading && !adminMe?.loggedIn && !isSessionAuth) {
       setLocation("/admin/login");
     }
-  }, [adminMe, isLoading, error, setLocation]);
+  }, [adminMe, isLoading, isSessionAuth, setLocation]);
 
-  if (isLoading) {
+  if (isLoading && !isSessionAuth) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
-  if (!adminMe?.loggedIn) {
+  if (!adminMe?.loggedIn && !isSessionAuth) {
     return null; // Will redirect via useEffect
   }
 

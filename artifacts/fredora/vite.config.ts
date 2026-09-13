@@ -215,19 +215,27 @@ function mockApiPlugin(): Plugin {
   let productIdCounter = 10;
 
   let homepageData = {
+    id: 1,
+    heroTitle: "Fredora Multiconcept",
+    heroSubtitle: "A Nigerian company dedicated to excellence across multiple sectors",
+    motto: "Giving you the best of your needs.",
+    missionStatement: "To deliver exceptional products and services that improve lives across Nigeria and beyond, through innovation, integrity, and commitment to quality.",
+    visionStatement: "To be Africa's most trusted multi-sector company, recognized for excellence, sustainability, and positive community impact.",
+    coreValues: ["Integrity", "Excellence", "Innovation", "Customer Focus", "Community"],
+    heroImageUrl: "/images/hero-bg.png",
     heroSlides: [
       { id: 1, imageUrl: "/images/hero-bg.png", sortOrder: 0, createdAt: now },
     ],
-    aboutTitle: "Welcome to Fredora Multiconcept",
-    aboutText: "We are a diversified conglomerate with a passion for excellence across food manufacturing, educational consulting, specialty chemistry, artisan fragrance, and logistics.",
-    aboutImageUrl: null,
-    missionTitle: "Our Mission",
-    missionText: "To deliver exceptional value through innovative products and services.",
-    visionTitle: "Our Vision",
-    visionText: "To be a globally recognized leader in every sector we operate.",
-    values: ["Integrity", "Excellence", "Innovation", "Customer Focus"],
-    catalogueNotes: "Orders can be placed directly or through our WhatsApp hotline.",
+    whatsappNumber: "+2348000000000",
+    facebookUrl: null,
+    instagramUrl: null,
+    twitterUrl: null,
+    linkedinUrl: null,
+    youtubeUrl: null,
+    metaDescription: "Fredora Multiconcept — a Nigerian multi-division company in Foods, EduServices, Chems, Scents, and Transport & Logistics.",
     googleAnalyticsId: null,
+    catalogueNotes: "Orders can be placed directly or through our WhatsApp hotline.",
+    updatedAt: now,
   };
   let slideIdCounter = 10;
 

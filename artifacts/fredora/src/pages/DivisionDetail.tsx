@@ -6,8 +6,6 @@ import { motion } from "framer-motion";
 import { CheckCircle2, AlertCircle, Phone, MessageCircle, ShoppingCart, Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { GallerySection } from "@/components/sections/GallerySection";
-import { ProductsSection } from "@/components/sections/ProductsSection";
 import { Link } from "wouter";
 import { useSEO } from "@/lib/seo";
 import { useCart } from "@/contexts/CartContext";
@@ -289,9 +287,6 @@ export default function DivisionDetail() {
             </div>
           </div>
         </section>
-
-        <ProductsSection divisionSlug={slug} />
-        <GallerySection divisionSlug={slug} />
       </main>
 
       <Footer />

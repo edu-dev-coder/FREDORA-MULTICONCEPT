@@ -5,7 +5,6 @@ import * as z from "zod";
 import { useEffect, useRef, useState } from "react";
 import {
   useGetDivision, useUpdateDivision, getGetDivisionQueryKey,
-  useListGalleryItems, useCreateGalleryItem, useDeleteGalleryItem, getListGalleryItemsQueryKey,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AdminLayout } from "@/components/layout/AdminLayout";
@@ -17,7 +16,7 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Trash2, Plus, Images, Layers, Edit2, Check } from "lucide-react";
+import { ArrowLeft, Trash2, Plus, Layers, Edit2 } from "lucide-react";
 import { ImageUploadInput } from "@/components/admin/ImageUploadInput";
 
 const formSchema = z.object({
@@ -47,13 +46,6 @@ export default function AdminDivisionEdit() {
   const updateDivision = useUpdateDivision();
   const queryClient = useQueryClient();
   const { toast } = useToast();
-
-  const { data: galleryItems } = useListGalleryItems({ divisionSlug: slug }, { query: { enabled: !!slug, queryKey: getListGalleryItemsQueryKey({ divisionSlug: slug }) } });
-  const createGalleryItem = useCreateGalleryItem();
-  const deleteGalleryItem = useDeleteGalleryItem();
-
-  const [newGalleryCaption, setNewGalleryCaption] = useState("");
-  const [pendingGalleryImage, setPendingGalleryImage] = useState<string | null>(null);
 
   // Service / Offering Create Form
   const [serviceForm, setServiceForm] = useState({ name: "", description: "", price: "", imageUrl: "" });
@@ -91,34 +83,6 @@ export default function AdminDivisionEdit() {
         setLocation("/admin/divisions");
       },
       onError: () => toast({ variant: "destructive", title: "Failed to update division" })
-    });
-  }
-
-  function addGalleryItem() {
-    if (!pendingGalleryImage) {
-      toast({ variant: "destructive", title: "Please upload an image first" });
-      return;
-    }
-    createGalleryItem.mutate({
-      data: { imageUrl: pendingGalleryImage, caption: newGalleryCaption || null, divisionSlug: slug, sortOrder: galleryItems?.length ?? 0 }
-    }, {
-      onSuccess: () => {
-        toast({ title: "Image added to gallery" });
-        setPendingGalleryImage(null);
-        setNewGalleryCaption("");
-        queryClient.invalidateQueries({ queryKey: getListGalleryItemsQueryKey({ divisionSlug: slug }) });
-      },
-      onError: () => toast({ variant: "destructive", title: "Failed to add gallery image" })
-    });
-  }
-
-  function removeGalleryItem(id: number) {
-    deleteGalleryItem.mutate({ id }, {
-      onSuccess: () => {
-        toast({ title: "Image removed" });
-        queryClient.invalidateQueries({ queryKey: getListGalleryItemsQueryKey({ divisionSlug: slug }) });
-      },
-      onError: () => toast({ variant: "destructive", title: "Failed to remove image" })
     });
   }
 
@@ -428,64 +392,6 @@ export default function AdminDivisionEdit() {
             )}
           </DialogContent>
         </Dialog>
-
-        {/* Gallery */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Images className="h-5 w-5" /> Gallery Photos</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="mb-6 p-4 bg-muted/30 rounded-xl space-y-3">
-              <ImageUploadInput
-                currentImageUrl={pendingGalleryImage}
-                label="Upload New Photo"
-                onUploadComplete={(path) => setPendingGalleryImage(path)}
-              />
-              <Input
-                value={newGalleryCaption}
-                onChange={(e) => setNewGalleryCaption(e.target.value)}
-                placeholder="Caption (optional)"
-              />
-              <Button
-                type="button"
-                onClick={addGalleryItem}
-                disabled={!pendingGalleryImage || createGalleryItem.isPending}
-                className="w-full"
-              >
-                {createGalleryItem.isPending ? "Adding..." : "Add to Gallery"}
-              </Button>
-            </div>
-
-            {!galleryItems?.length ? (
-              <div className="text-center py-8 text-muted-foreground text-sm">
-                No gallery images yet. Upload photos to build this division's gallery.
-              </div>
-            ) : (
-              <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
-                {galleryItems.map((item) => (
-                  <div key={item.id} className="relative group aspect-square">
-                    <img
-                      src={item.imageUrl.startsWith("/objects/") ? `/api/storage${item.imageUrl}` : item.imageUrl}
-                      alt={item.caption || "Gallery"}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
-                    {item.caption && (
-                      <div className="absolute bottom-0 inset-x-0 bg-black/60 text-white text-xs p-1 rounded-b-lg truncate">
-                        {item.caption}
-                      </div>
-                    )}
-                    <button
-                      onClick={() => removeGalleryItem(item.id)}
-                      className="absolute top-1 right-1 h-6 w-6 bg-destructive text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
       </div>
     </AdminLayout>
   );

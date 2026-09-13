@@ -10,3 +10,5 @@ services:
         value: 20
       - key: PORT
         value: 10000
+      - key: DATABASE_URL
+        value: postgresql://postgres:zicmercy94260@db.mzhfenzuxrnwocfpolgq.supabase.co:5432/postgres

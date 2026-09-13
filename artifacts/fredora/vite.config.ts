@@ -438,6 +438,151 @@ function mockApiPlugin(): Plugin {
 
   const sessions = new Map<string, string>();
 
+  // ── Database & Disk Persistence ──────────────────────────────────────────
+  const SUPABASE_REST_URL = process.env.VITE_SUPABASE_URL || "https://mzhfenzuxrnwocfpolgq.supabase.co";
+  const SUPABASE_REST_KEY = process.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16aGZlbnp1eHJud29jZnBvbGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkzMDIxMTYsImV4cCI6MjEwNDg3ODExNn0.HBHpbaQn3Y-PSJ1LqAqcGLtPa_zWyfOWf5r1da7J03c";
+  const STATE_FILE_PATH = path.resolve(import.meta.dirname, ".db_state.json");
+
+  function saveLocalState() {
+    try {
+      const data = {
+        products,
+        productIdCounter,
+        galleryItems,
+        galleryIdCounter,
+        homepageData,
+        slideIdCounter,
+        posts,
+        postIdCounter,
+        passcodes,
+        passcodeCounter,
+        testimonials,
+        faqs,
+        features,
+        testSessions,
+        corporateTeams,
+        users,
+      };
+      fs.writeFileSync(STATE_FILE_PATH, JSON.stringify(data, null, 2), "utf-8");
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  function loadLocalState() {
+    try {
+      if (fs.existsSync(STATE_FILE_PATH)) {
+        const raw = fs.readFileSync(STATE_FILE_PATH, "utf-8");
+        const parsed = JSON.parse(raw);
+        if (parsed.products) products = parsed.products;
+        if (parsed.productIdCounter) productIdCounter = parsed.productIdCounter;
+        if (parsed.galleryItems) galleryItems = parsed.galleryItems;
+        if (parsed.galleryIdCounter) galleryIdCounter = parsed.galleryIdCounter;
+        if (parsed.homepageData) homepageData = parsed.homepageData;
+        if (parsed.slideIdCounter) slideIdCounter = parsed.slideIdCounter;
+        if (parsed.posts) posts = parsed.posts;
+        if (parsed.postIdCounter) postIdCounter = parsed.postIdCounter;
+        if (parsed.passcodes) passcodes = parsed.passcodes;
+        if (parsed.passcodeCounter) passcodeCounter = parsed.passcodeCounter;
+        if (parsed.testimonials) testimonials = parsed.testimonials;
+        if (parsed.faqs) faqs = parsed.faqs;
+        if (parsed.features) features = parsed.features;
+        if (parsed.testSessions) testSessions = parsed.testSessions;
+        if (parsed.corporateTeams) corporateTeams = parsed.corporateTeams;
+        if (parsed.users) users = parsed.users;
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  // Load from local file first
+  loadLocalState();
+
+  // Also sync with Supabase PostgreSQL in the background
+  async function syncFromSupabase() {
+    try {
+      const [hpRes, prodRes, postRes] = await Promise.all([
+        fetch(`${SUPABASE_REST_URL}/rest/v1/homepage?id=eq.1&select=*`, {
+          headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
+        }),
+        fetch(`${SUPABASE_REST_URL}/rest/v1/products?select=*`, {
+          headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
+        }),
+        fetch(`${SUPABASE_REST_URL}/rest/v1/posts?select=*`, {
+          headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
+        }),
+      ]);
+
+      if (hpRes.ok) {
+        const hpRows = await hpRes.json();
+        if (Array.isArray(hpRows) && hpRows.length > 0) {
+          const row = hpRows[0];
+          homepageData = {
+            ...homepageData,
+            heroTitle: row.hero_title || homepageData.heroTitle,
+            heroSubtitle: row.hero_subtitle || homepageData.heroSubtitle,
+            motto: row.motto || homepageData.motto,
+            missionStatement: row.mission_statement || homepageData.missionStatement,
+            visionStatement: row.vision_statement || homepageData.visionStatement,
+            coreValues: row.core_values || homepageData.coreValues,
+            heroImageUrl: row.hero_image_url || homepageData.heroImageUrl,
+            whatsappNumber: row.whatsapp_number || homepageData.whatsappNumber,
+            facebookUrl: row.facebook_url || homepageData.facebookUrl,
+            instagramUrl: row.instagram_url || homepageData.instagramUrl,
+            twitterUrl: row.twitter_url || homepageData.twitterUrl,
+            linkedinUrl: row.linkedin_url || homepageData.linkedinUrl,
+            youtubeUrl: row.youtube_url || homepageData.youtubeUrl,
+            metaDescription: row.meta_description || homepageData.metaDescription,
+            googleAnalyticsId: row.google_analytics_id || homepageData.googleAnalyticsId,
+            catalogueNotes: row.catalogue_notes || homepageData.catalogueNotes,
+          };
+        }
+      }
+
+      if (prodRes.ok) {
+        const prodRows = await prodRes.json();
+        if (Array.isArray(prodRows) && prodRows.length > 0) {
+          products = prodRows.map((r: any) => ({
+            id: r.id,
+            divisionSlug: r.division_slug,
+            name: r.name,
+            description: r.description,
+            imageUrl: r.image_url,
+            price: r.price,
+            sortOrder: r.sort_order,
+            createdAt: r.created_at,
+          }));
+          productIdCounter = Math.max(productIdCounter, ...products.map((p) => p.id + 1));
+        }
+      }
+
+      if (postRes.ok) {
+        const postRows = await postRes.json();
+        if (Array.isArray(postRows) && postRows.length > 0) {
+          posts = postRows.map((r: any) => ({
+            id: r.id,
+            title: r.title,
+            slug: r.slug,
+            summary: r.excerpt || "",
+            content: r.content || "",
+            imageUrl: r.image_url,
+            published: r.published,
+            publishedAt: r.created_at,
+            createdAt: r.created_at,
+            updatedAt: r.updated_at,
+          }));
+          postIdCounter = Math.max(postIdCounter, ...posts.map((p) => p.id + 1));
+        }
+      }
+
+      saveLocalState();
+    } catch (e) {
+      // Supabase fetch error; use local state
+    }
+  }
+  syncFromSupabase();
+
   function parseCookies(header: string | undefined): Record<string, string> {
     const cookies: Record<string, string> = {};
     if (!header) return cookies;
@@ -486,13 +631,23 @@ function mockApiPlugin(): Plugin {
   const apiMiddleware = async (req: any, res: any, next: any) => {
     const url = (req.url ?? "").split("?")[0];
     if (!url.startsWith("/api")) return next();
-        res.setHeader("Content-Type", "application/json");
-        const cookies = parseCookies(req.headers.cookie);
+    res.setHeader("Content-Type", "application/json");
 
-        // ── Health Check ──
-        if (url === "/api/healthz" || url === "/api/health") {
-          return res.end(JSON.stringify({ status: "ok" }));
-        }
+    // Auto-persist whenever an API mutation succeeds
+    const origEnd = res.end.bind(res);
+    res.end = (...args: any[]) => {
+      if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method || "") && (!res.statusCode || res.statusCode < 400)) {
+        saveLocalState();
+      }
+      return origEnd(...args);
+    };
+
+    const cookies = parseCookies(req.headers.cookie);
+
+    // ── Health Check ──
+    if (url === "/api/healthz" || url === "/api/health") {
+      return res.end(JSON.stringify({ status: "ok" }));
+    }
 
         // ── Storage: Uploads & Object Serving ──
         if (req.method === "POST" && url === "/api/storage/uploads/request-url") {
@@ -696,6 +851,25 @@ function mockApiPlugin(): Plugin {
             createdAt: new Date().toISOString(),
           };
           products.push(prod);
+
+          // Asynchronously sync to Supabase PostgreSQL
+          fetch(`${SUPABASE_REST_URL}/rest/v1/products`, {
+            method: "POST",
+            headers: {
+              apikey: SUPABASE_REST_KEY,
+              Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              division_slug: prod.divisionSlug,
+              name: prod.name,
+              description: prod.description,
+              image_url: prod.imageUrl,
+              price: prod.price,
+              sort_order: prod.sortOrder,
+            }),
+          }).catch(() => {});
+
           res.statusCode = 201;
           return res.end(JSON.stringify(prod));
         }
@@ -704,6 +878,16 @@ function mockApiPlugin(): Plugin {
         if (req.method === "DELETE" && delProductMatch) {
           const id = Number(delProductMatch[1]);
           products = products.filter((p) => p.id !== id);
+
+          // Asynchronously delete from Supabase PostgreSQL
+          fetch(`${SUPABASE_REST_URL}/rest/v1/products?id=eq.${id}`, {
+            method: "DELETE",
+            headers: {
+              apikey: SUPABASE_REST_KEY,
+              Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+            },
+          }).catch(() => {});
+
           return res.end(JSON.stringify({ success: true }));
         }
 
@@ -715,6 +899,35 @@ function mockApiPlugin(): Plugin {
         if (req.method === "PUT" && url === "/api/homepage") {
           const body = await readBody(req);
           Object.assign(homepageData, body);
+
+          // Asynchronously sync to Supabase PostgreSQL
+          fetch(`${SUPABASE_REST_URL}/rest/v1/homepage?id=eq.1`, {
+            method: "PATCH",
+            headers: {
+              apikey: SUPABASE_REST_KEY,
+              Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              hero_title: homepageData.heroTitle,
+              hero_subtitle: homepageData.heroSubtitle,
+              motto: homepageData.motto,
+              mission_statement: homepageData.missionStatement,
+              vision_statement: homepageData.visionStatement,
+              core_values: homepageData.coreValues,
+              hero_image_url: homepageData.heroImageUrl,
+              whatsapp_number: homepageData.whatsappNumber,
+              facebook_url: homepageData.facebookUrl,
+              instagram_url: homepageData.instagramUrl,
+              twitter_url: homepageData.twitterUrl,
+              linkedin_url: homepageData.linkedinUrl,
+              youtube_url: homepageData.youtubeUrl,
+              meta_description: homepageData.metaDescription,
+              google_analytics_id: homepageData.googleAnalyticsId,
+              catalogue_notes: homepageData.catalogueNotes,
+            }),
+          }).catch(() => {});
+
           return res.end(JSON.stringify(homepageData));
         }
 
@@ -768,6 +981,25 @@ function mockApiPlugin(): Plugin {
             updatedAt: new Date().toISOString(),
           };
           posts.unshift(newPost);
+
+          // Asynchronously sync to Supabase PostgreSQL
+          fetch(`${SUPABASE_REST_URL}/rest/v1/posts`, {
+            method: "POST",
+            headers: {
+              apikey: SUPABASE_REST_KEY,
+              Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              title: newPost.title,
+              slug: newPost.slug,
+              excerpt: newPost.summary,
+              content: newPost.content,
+              image_url: newPost.imageUrl,
+              published: newPost.published,
+            }),
+          }).catch(() => {});
+
           res.statusCode = 201;
           return res.end(JSON.stringify(newPost));
         }
@@ -776,6 +1008,16 @@ function mockApiPlugin(): Plugin {
         if (req.method === "DELETE" && delPostMatch) {
           const id = Number(delPostMatch[1]);
           posts = posts.filter((p) => p.id !== id);
+
+          // Asynchronously delete from Supabase PostgreSQL
+          fetch(`${SUPABASE_REST_URL}/rest/v1/posts?id=eq.${id}`, {
+            method: "DELETE",
+            headers: {
+              apikey: SUPABASE_REST_KEY,
+              Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+            },
+          }).catch(() => {});
+
           return res.end(JSON.stringify({ success: true }));
         }
 

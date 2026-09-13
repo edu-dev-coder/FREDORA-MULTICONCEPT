@@ -7,7 +7,7 @@ import { Lock } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAdminMe } from "@workspace/api-client-react";
 
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "changeme";
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "ogbajiisaac";
 
 export function AdminGate({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -27,7 +27,7 @@ export function AdminGate({ children }: { children: ReactNode }) {
   }
 
   const handleLogin = () => {
-    if (passwordInput === ADMIN_PASSWORD || passwordInput === "isaac" || passwordInput === "changeme") {
+    if (passwordInput === ADMIN_PASSWORD || passwordInput === "ogbajiisaac") {
       sessionStorage.setItem("admin_auth", "true");
       setAuthenticated(true);
       setError(false);

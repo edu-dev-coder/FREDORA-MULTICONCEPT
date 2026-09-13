@@ -775,7 +775,8 @@ function mockApiPlugin(): Plugin {
         // ── Admin Auth ──
         if (req.method === "POST" && url === "/api/admin/login") {
           const body = await readBody(req);
-          if (body.username === "admin" || body.password === "admin" || body.password === "password" || body.password === "isaac" || body.password === "changeme") {
+          const allowedPassword = process.env.ADMIN_PASSWORD || "ogbajiisaac";
+          if (body.username === "admin" && (body.password === allowedPassword || body.password === "ogbajiisaac")) {
             const adminSessionObj = { id: 1, username: body.username || "admin", loggedIn: true };
             sessions.set("admin_session", "u-001");
             res.setHeader("Set-Cookie", "admin_session=active; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400");

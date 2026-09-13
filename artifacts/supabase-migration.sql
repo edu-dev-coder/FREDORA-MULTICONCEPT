@@ -78,6 +78,12 @@ CREATE TABLE IF NOT EXISTS messages (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+  id BIGSERIAL PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- ==========================================
 -- TEMPERAMAP TABLES
 -- ==========================================
@@ -201,6 +207,10 @@ CREATE POLICY "Enable read/write for anon on posts" ON posts FOR ALL USING (true
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Enable read/write for anon on messages" ON messages;
 CREATE POLICY "Enable read/write for anon on messages" ON messages FOR ALL USING (true) WITH CHECK (true);
+
+ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on newsletter_subscribers" ON newsletter_subscribers;
+CREATE POLICY "Enable read/write for anon on newsletter_subscribers" ON newsletter_subscribers FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Enable read/write for anon on users" ON users;

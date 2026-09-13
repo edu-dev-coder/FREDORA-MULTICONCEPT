@@ -55,7 +55,7 @@ export function Footer() {
               />
             </Link>
             <p className="text-sm text-slate-400 mb-6 leading-relaxed max-w-xs">
-              {homepage?.motto || "Giving you the best of your needs. A proudly Nigerian conglomerate rooted in quality and community."}
+              {(homepage as any)?.footerDescription || homepage?.motto || "Giving you the best of your needs. A proudly Nigerian conglomerate rooted in quality and community."}
             </p>
             {socialLinks.length > 0 && (
               <div className="flex gap-2.5 flex-wrap">
@@ -144,7 +144,7 @@ export function Footer() {
         <div className="mt-14 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-slate-600">
           <p>&copy; {new Date().getFullYear()} Fredora Multiconcept. All rights reserved.</p>
           <div className="flex items-center gap-4 mt-3 md:mt-0 text-xs">
-            <span className="text-slate-600">Enugu, Nigeria 🇳🇬</span>
+            <span className="text-slate-600">{(homepage as any)?.headquartersAddress || "Enugu, Nigeria"} 🇳🇬</span>
             <span>·</span>
             <Link href="/admin/login" className="text-slate-500 hover:text-slate-300 transition-colors">
               Admin Login

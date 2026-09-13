@@ -91,11 +91,16 @@ export default function Contact() {
     });
   }
 
+  const hp = homepage as any;
+  const contactEmails = [hp?.contactEmail || "info@fredoramulticoncept.com", hp?.supportEmail || "support@fredoramulticoncept.com"].filter(Boolean);
+  const contactPhone = hp?.phoneNumber || homepage?.whatsappNumber || "+234 806 670 5224";
+  const contactAddress = hp?.headquartersAddress || "Enugu, Nigeria";
+
   const contactItems = [
     {
       icon: MapPin,
       title: "Our Headquarters",
-      lines: ["Enugu, Nigeria"],
+      lines: [contactAddress],
       color: "from-blue-600 to-blue-800",
       bg: "from-blue-50 to-slate-50",
       border: "border-blue-100",
@@ -103,7 +108,7 @@ export default function Contact() {
     {
       icon: Mail,
       title: "Email Us",
-      lines: ["info@fredoramulticoncept.com", "support@fredoramulticoncept.com"],
+      lines: contactEmails,
       color: "from-violet-500 to-purple-700",
       bg: "from-violet-50 to-purple-50",
       border: "border-violet-100",
@@ -111,7 +116,7 @@ export default function Contact() {
     {
       icon: Phone,
       title: "Call Us",
-      lines: [homepage?.whatsappNumber || "+234 (0) 800 000 0000"],
+      lines: [contactPhone],
       color: "from-amber-500 to-orange-600",
       bg: "from-amber-50 to-orange-50",
       border: "border-amber-100",
@@ -246,11 +251,14 @@ export default function Contact() {
                       <h3 className="text-xl font-serif font-bold">Business Hours</h3>
                     </div>
                     <ul className="space-y-3.5 text-sm">
-                      {[
-                        { day: "Monday — Friday", hours: "8:00 AM – 5:00 PM" },
-                        { day: "Saturday", hours: "9:00 AM – 2:00 PM" },
-                        { day: "Sunday", hours: "Closed" },
-                      ].map((row) => (
+                      {(Array.isArray(hp?.businessHours) && hp.businessHours.length > 0
+                        ? hp.businessHours
+                        : [
+                            { day: "Monday — Friday", hours: "8:00 AM – 5:00 PM" },
+                            { day: "Saturday", hours: "9:00 AM – 2:00 PM" },
+                            { day: "Sunday", hours: "Closed" },
+                          ]
+                      ).map((row: any) => (
                         <li key={row.day} className="flex justify-between border-b border-white/10 pb-3.5 last:border-0 last:pb-0">
                           <span className="text-slate-300">{row.day}</span>
                           <span className={`font-semibold ${row.hours === "Closed" ? "text-slate-500" : "text-amber-400"}`}>{row.hours}</span>

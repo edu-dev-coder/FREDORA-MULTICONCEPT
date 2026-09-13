@@ -231,6 +231,27 @@ function mockApiPlugin(): Plugin {
       { id: 1, imageUrl: "/images/hero-bg.png", sortOrder: 0, createdAt: now },
     ],
     whatsappNumber: "+2348066705224",
+    phoneNumber: "+234 806 670 5224",
+    contactEmail: "info@fredoramulticoncept.com",
+    supportEmail: "support@fredoramulticoncept.com",
+    headquartersAddress: "Enugu, Nigeria",
+    businessHours: [
+      { day: "Monday — Friday", hours: "8:00 AM – 5:00 PM" },
+      { day: "Saturday", hours: "9:00 AM – 2:00 PM" },
+      { day: "Sunday", hours: "Closed" },
+    ],
+    founderName: "Freda Ada Okoro",
+    aboutUsText: "Fredora Multiconcept is a growing Nigerian conglomerate based in Enugu, Nigeria, founded by Freda Ada Okoro. We are dedicated to providing premium quality products and services across various sectors.\n\nOur journey began with a simple vision: to be the leading and most trusted multiconcept corporation in Nigeria and beyond, known for excellence, innovation, and integrity. Today, we span five major divisions, each committed to our core philosophy of giving you the best of your needs.",
+    yearFounded: "2015",
+    stats: [
+      { label: "Divisions", value: "5+" },
+      { label: "Happy Clients", value: "500+" },
+      { label: "Years of Excellence", value: "10+" },
+      { label: "Awards Won", value: "20+" },
+    ],
+    ctaBannerTitle: "Ready to Work With Us?",
+    ctaBannerText: "Whether you want to place an order, ask about our services, or explore a partnership — we're here for you.",
+    footerDescription: null,
     facebookUrl: null,
     instagramUrl: null,
     twitterUrl: null,
@@ -497,7 +518,7 @@ function mockApiPlugin(): Plugin {
         if (parsed.productIdCounter) productIdCounter = parsed.productIdCounter;
         if (parsed.galleryItems) galleryItems = parsed.galleryItems;
         if (parsed.galleryIdCounter) galleryIdCounter = parsed.galleryIdCounter;
-        if (parsed.homepageData) homepageData = parsed.homepageData;
+        if (parsed.homepageData) homepageData = Object.assign({}, homepageData, parsed.homepageData);
         if (parsed.slideIdCounter) slideIdCounter = parsed.slideIdCounter;
         if (parsed.posts) posts = parsed.posts;
         if (parsed.postIdCounter) postIdCounter = parsed.postIdCounter;
@@ -1060,6 +1081,7 @@ function mockApiPlugin(): Plugin {
         if ((req.method === "PUT" || req.method === "PATCH") && url === "/api/homepage") {
           const body = await readBody(req);
           Object.assign(homepageData, body);
+          saveLocalState();
 
           // Asynchronously sync to Supabase PostgreSQL
           fetch(`${SUPABASE_REST_URL}/rest/v1/homepage?id=eq.1`, {

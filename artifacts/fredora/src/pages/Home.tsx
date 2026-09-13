@@ -132,12 +132,22 @@ export default function Home() {
     ? (homepage.heroImageUrl.startsWith("/objects/") ? `/api/storage${homepage.heroImageUrl}` : homepage.heroImageUrl)
     : "/images/hero-bg.png";
 
-  const stats = [
-    { label: "Divisions", value: "5+", icon: TrendingUp, color: "text-blue-600" },
-    { label: "Happy Clients", value: "500+", icon: Users, color: "text-amber-600" },
-    { label: "Years of Excellence", value: "10+", icon: Star, color: "text-violet-600" },
-    { label: "Awards Won", value: "20+", icon: Award, color: "text-rose-600" },
-  ];
+  const statIcons = [TrendingUp, Users, Star, Award];
+  const statColors = ["text-blue-600", "text-amber-600", "text-violet-600", "text-rose-600"];
+  const hp = homepage as any;
+  const rawStats = Array.isArray(hp?.stats) && hp.stats.length > 0
+    ? hp.stats
+    : [
+        { label: "Divisions", value: "5+" },
+        { label: "Happy Clients", value: "500+" },
+        { label: "Years of Excellence", value: "10+" },
+        { label: "Awards Won", value: "20+" },
+      ];
+  const stats = rawStats.map((stat: any, i: number) => ({
+    ...stat,
+    icon: statIcons[i % statIcons.length],
+    color: statColors[i % statColors.length],
+  }));
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -377,9 +387,11 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl font-serif font-bold text-foreground mb-4">Ready to Work With Us?</h2>
+              <h2 className="text-3xl font-serif font-bold text-foreground mb-4">
+                {hp?.ctaBannerTitle || "Ready to Work With Us?"}
+              </h2>
               <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-                Whether you want to place an order, ask about our services, or explore a partnership — we're here for you.
+                {hp?.ctaBannerText || "Whether you want to place an order, ask about our services, or explore a partnership — we're here for you."}
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
                 <Button asChild size="lg" className="rounded-full px-8 shadow-lg shadow-primary/20">

@@ -9,6 +9,8 @@ import { useSEO } from "@/lib/seo";
 
 export default function About() {
   const { data: homepage, isLoading: homeLoading } = useGetHomepage();
+  const { data: divisions } = useListDivisions();
+  const hp = homepage as any;
 
   useSEO({
     title: "About Us",
@@ -116,12 +118,20 @@ export default function About() {
                 </span>
                 <h2 className="text-3xl font-serif font-bold text-foreground mb-6">Our Story</h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
-                  <p>
-                    Fredora Multiconcept is a growing Nigerian conglomerate based in Enugu, Nigeria, founded by Freda Ada Okoro. We are dedicated to providing premium quality products and services across various sectors.
-                  </p>
-                  <p>
-                    Our journey began with a simple vision: to be the leading and most trusted multiconcept corporation in Nigeria and beyond, known for excellence, innovation, and integrity. Today, we span five major divisions, each committed to our core philosophy of giving you the best of your needs.
-                  </p>
+                  {hp?.aboutUsText ? (
+                    hp.aboutUsText.split("\n\n").map((p: string, idx: number) => (
+                      <p key={idx}>{p}</p>
+                    ))
+                  ) : (
+                    <>
+                      <p>
+                        Fredora Multiconcept is a growing Nigerian conglomerate based in Enugu, Nigeria, founded by {hp?.founderName || "Freda Ada Okoro"}. We are dedicated to providing premium quality products and services across various sectors.
+                      </p>
+                      <p>
+                        Our journey began with a simple vision: to be the leading and most trusted multiconcept corporation in Nigeria and beyond, known for excellence, innovation, and integrity. Today, we span five major divisions, each committed to our core philosophy of giving you the best of your needs.
+                      </p>
+                    </>
+                  )}
                 </div>
                 <Button asChild className="mt-8 rounded-full px-8">
                   <Link href="/contact">Work With Us <ChevronRight className="ml-1 h-4 w-4" /></Link>
@@ -138,10 +148,11 @@ export default function About() {
                   <h3 className="text-xl font-serif font-bold mb-6">Company Profile</h3>
                   <ul className="space-y-4 text-sm">
                     {[
-                      { label: "Founder & CEO", value: "Freda Ada Okoro", icon: Users },
-                      { label: "Headquarters", value: "Enugu, Nigeria", icon: MapPin },
-                      { label: "Divisions", value: "5 Operating Divisions", icon: TrendingUp },
-                      { label: "Motto", value: "Giving you the best of your needs.", icon: Star, italic: true },
+                      { label: "Founder & CEO", value: hp?.founderName || "Freda Ada Okoro", icon: Users },
+                      { label: "Headquarters", value: hp?.headquartersAddress || "Enugu, Nigeria", icon: MapPin },
+                      { label: "Divisions", value: Array.isArray(divisions) && divisions.length > 0 ? `${divisions.length} Operating Divisions` : "5 Operating Divisions", icon: TrendingUp },
+                      ...(hp?.yearFounded ? [{ label: "Year Founded", value: hp.yearFounded, icon: Award }] : []),
+                      { label: "Motto", value: homepage?.motto || "Giving you the best of your needs.", icon: Star, italic: true },
                     ].map((item, i) => (
                       <li key={i} className="flex items-start gap-3 border-b border-white/20 pb-4 last:border-0 last:pb-0">
                         <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center shrink-0 mt-0.5">

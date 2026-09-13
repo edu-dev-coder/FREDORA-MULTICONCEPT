@@ -46,6 +46,21 @@ export function ImageUploadInput({
     setPreviewUrl(localPreview);
 
     try {
+      // 1. First priority: Upload directly to Supabase Storage (permanent cloud CDN)
+      let publicImageUrl: string | null = null;
+      try {
+        const { uploadToSupabase } = await import("@/lib/supabase");
+        publicImageUrl = await uploadToSupabase(file);
+      } catch (supabaseErr) {
+        console.warn("Supabase upload attempted, falling back to local storage handler:", supabaseErr);
+      }
+
+      if (publicImageUrl) {
+        onUploadComplete(publicImageUrl);
+        return;
+      }
+
+      // 2. Secondary fallback: Use standard backend storage endpoint
       const urlRes = await fetch("/api/storage/uploads/request-url", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

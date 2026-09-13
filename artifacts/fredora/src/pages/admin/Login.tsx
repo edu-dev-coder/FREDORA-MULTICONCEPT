@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useAdminLogin } from "@workspace/api-client-react";
+import { useAdminLogin, getGetAdminMeQueryKey } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -18,6 +19,7 @@ type FormValues = z.infer<typeof formSchema>;
 export function AdminLogin() {
   const [, setLocation] = useLocation();
   const login = useAdminLogin();
+  const queryClient = useQueryClient();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -32,6 +34,7 @@ export function AdminLogin() {
       onSuccess: () => {
         // Automatically grant TemperaMap admin access as well so user never logs in twice
         sessionStorage.setItem("admin_auth", "true");
+        queryClient.setQueryData(getGetAdminMeQueryKey(), { id: 1, username: values.username || "admin", loggedIn: true });
         setLocation("/admin/dashboard");
       },
       onError: (error) => {

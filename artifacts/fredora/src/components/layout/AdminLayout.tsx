@@ -127,7 +127,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 flex flex-col min-w-0">
         <header className="h-16 border-b bg-card flex items-center px-8 justify-between">
           <h1 className="font-semibold text-lg">Admin Control Panel</h1>
-          <div className="text-sm text-muted-foreground">Logged in as {adminMe.username}</div>
+          <div className="text-sm text-muted-foreground">Logged in as {adminMe?.username || "admin"}</div>
         </header>
         <div className="flex-1 p-8 overflow-auto">
           {children}

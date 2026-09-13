@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: fredora-multiconcept
+    runtime: node
+    plan: free
+    buildCommand: pnpm install --frozen-lockfile=false && pnpm run build
+    startCommand: pnpm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 10000

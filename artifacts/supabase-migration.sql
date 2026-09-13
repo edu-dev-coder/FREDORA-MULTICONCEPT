@@ -183,39 +183,51 @@ CREATE INDEX IF NOT EXISTS idx_test_sessions_user_id ON test_sessions(user_id);
 -- you should restrict these policies to authenticated users using (select auth.uid()).
 
 ALTER TABLE homepage ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on homepage" ON homepage;
 CREATE POLICY "Enable read/write for anon on homepage" ON homepage FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on products" ON products;
 CREATE POLICY "Enable read/write for anon on products" ON products FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE services ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on services" ON services;
 CREATE POLICY "Enable read/write for anon on services" ON services FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on posts" ON posts;
 CREATE POLICY "Enable read/write for anon on posts" ON posts FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on messages" ON messages;
 CREATE POLICY "Enable read/write for anon on messages" ON messages FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on users" ON users;
 CREATE POLICY "Enable read/write for anon on users" ON users FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE passcodes ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on passcodes" ON passcodes;
 CREATE POLICY "Enable read/write for anon on passcodes" ON passcodes FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE testimonials ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on testimonials" ON testimonials;
 CREATE POLICY "Enable read/write for anon on testimonials" ON testimonials FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on faqs" ON faqs;
 CREATE POLICY "Enable read/write for anon on faqs" ON faqs FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE features ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on features" ON features;
 CREATE POLICY "Enable read/write for anon on features" ON features FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE test_sessions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on test_sessions" ON test_sessions;
 CREATE POLICY "Enable read/write for anon on test_sessions" ON test_sessions FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE corporate_teams ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read/write for anon on corporate_teams" ON corporate_teams;
 CREATE POLICY "Enable read/write for anon on corporate_teams" ON corporate_teams FOR ALL USING (true) WITH CHECK (true);
 
 -- ==========================================

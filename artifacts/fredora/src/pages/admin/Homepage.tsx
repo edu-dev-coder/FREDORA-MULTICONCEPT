@@ -17,22 +17,26 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus, Trash2, Images } from "lucide-react";
 import { ImageUploadInput } from "@/components/admin/ImageUploadInput";
 
+const optionalString = z
+  .union([z.string(), z.null(), z.undefined()])
+  .transform((val) => (val === undefined || val === "" ? null : val));
+
 const formSchema = z.object({
-  heroTitle: z.string().min(1),
-  heroSubtitle: z.string().min(1),
-  motto: z.string().min(1),
-  missionStatement: z.string().min(1),
-  visionStatement: z.string().min(1),
+  heroTitle: z.string().min(1, "Hero title is required"),
+  heroSubtitle: z.string().min(1, "Hero subtitle is required"),
+  motto: z.string().min(1, "Motto is required"),
+  missionStatement: z.string().min(1, "Mission statement is required"),
+  visionStatement: z.string().min(1, "Vision statement is required"),
   coreValues: z.array(z.string()).min(1),
-  heroImageUrl: z.string().nullable(),
-  whatsappNumber: z.string().nullable(),
-  facebookUrl: z.string().nullable(),
-  instagramUrl: z.string().nullable(),
-  twitterUrl: z.string().nullable(),
-  linkedinUrl: z.string().nullable(),
-  youtubeUrl: z.string().nullable(),
-  metaDescription: z.string().nullable(),
-  googleAnalyticsId: z.string().nullable(),
+  heroImageUrl: optionalString,
+  whatsappNumber: optionalString,
+  facebookUrl: optionalString,
+  instagramUrl: optionalString,
+  twitterUrl: optionalString,
+  linkedinUrl: optionalString,
+  youtubeUrl: optionalString,
+  metaDescription: optionalString,
+  googleAnalyticsId: optionalString,
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -128,12 +132,18 @@ export default function AdminHomepage() {
 
   function onSubmit(values: FormValues) {
     updateHomepage.mutate({ data: values }, {
-      onSuccess: (data) => {
-        toast({ title: "Homepage updated successfully" });
+      onSuccess: async (data) => {
+        toast({
+          title: "Homepage updated successfully",
+          description: "All contact details and WhatsApp button are now updated across the site.",
+        });
         queryClient.setQueryData(getGetHomepageQueryKey(), data);
+        await queryClient.invalidateQueries({ queryKey: getGetHomepageQueryKey() });
+        queryClient.refetchQueries({ queryKey: getGetHomepageQueryKey() });
       },
-      onError: () => {
-        toast({ variant: "destructive", title: "Failed to update homepage" });
+      onError: (err: any) => {
+        const errorMsg = err?.response?.data?.message || err?.message || "Failed to update homepage";
+        toast({ variant: "destructive", title: "Error saving homepage", description: errorMsg });
       }
     });
   }

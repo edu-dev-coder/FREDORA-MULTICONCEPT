@@ -88,6 +88,22 @@ interface UserRecord {
   lastLogin: string | null;
 }
 
+interface MessageRecord {
+  id: number;
+  name: string;
+  email: string;
+  message: string;
+  read: boolean;
+  status: "pending" | "in_progress" | "resolved";
+  createdAt: string;
+}
+
+interface NewsletterSubscriberRecord {
+  id: number;
+  email: string;
+  createdAt: string;
+}
+
 // ── Mock Plugin ───────────────────────────────────────────────────────────────
 
 function mockApiPlugin(): Plugin {
@@ -289,6 +305,34 @@ function mockApiPlugin(): Plugin {
     },
   ];
   let postIdCounter = 10;
+
+  let messages: MessageRecord[] = [
+    {
+      id: 1,
+      name: "Chinedu Okafor",
+      email: "chinedu.okafor@example.com",
+      message: "Hello Fredora team, I would like to make an inquiry regarding bulk orders of your industrial cleaning detergents for our facility in Port Harcourt.",
+      read: false,
+      status: "pending",
+      createdAt: new Date(Date.now() - 3600000 * 24 * 2).toISOString(),
+    },
+    {
+      id: 2,
+      name: "Amara Nwosu",
+      email: "amara.nwosu@example.com",
+      message: "Good day, I am reaching out to ask if your EduServices division offers corporate leadership coaching sessions for remote teams.",
+      read: true,
+      status: "resolved",
+      createdAt: new Date(Date.now() - 3600000 * 24 * 5).toISOString(),
+    },
+  ];
+  let messageIdCounter = 10;
+
+  let newsletterSubscribers: NewsletterSubscriberRecord[] = [
+    { id: 1, email: "chinedu.okafor@example.com", createdAt: new Date(Date.now() - 3600000 * 24 * 10).toISOString() },
+    { id: 2, email: "amara.nwosu@example.com", createdAt: new Date(Date.now() - 3600000 * 24 * 8).toISOString() },
+  ];
+  let newsletterCounter = 10;
 
   const uploadedFiles = new Map<string, { buffer: Buffer; contentType: string; name: string }>();
   const uploadMeta = new Map<string, { name: string; size: number; contentType: string }>();
@@ -500,6 +544,10 @@ function mockApiPlugin(): Plugin {
         testSessions,
         corporateTeams,
         users,
+        messages,
+        messageIdCounter,
+        newsletterSubscribers,
+        newsletterCounter,
       };
       fs.writeFileSync(STATE_FILE_PATH, JSON.stringify(data, null, 2), "utf-8");
     } catch (e) {
@@ -545,6 +593,10 @@ function mockApiPlugin(): Plugin {
         if (parsed.testSessions) testSessions = parsed.testSessions;
         if (parsed.corporateTeams) corporateTeams = parsed.corporateTeams;
         if (parsed.users) users = parsed.users;
+        if (parsed.messages) messages = parsed.messages;
+        if (parsed.messageIdCounter) messageIdCounter = parsed.messageIdCounter;
+        if (parsed.newsletterSubscribers) newsletterSubscribers = parsed.newsletterSubscribers;
+        if (parsed.newsletterCounter) newsletterCounter = parsed.newsletterCounter;
       }
     } catch (e) {
       // ignore
@@ -668,7 +720,7 @@ function mockApiPlugin(): Plugin {
 
       // Sync TemperaMap tables if created in Supabase
       try {
-        const [passRes, sessRes, teamRes, userRes] = await Promise.all([
+        const [passRes, sessRes, teamRes, userRes, msgRes, newsRes] = await Promise.all([
           fetch(`${SUPABASE_REST_URL}/rest/v1/passcodes?select=*`, {
             headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
           }),
@@ -679,6 +731,12 @@ function mockApiPlugin(): Plugin {
             headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
           }),
           fetch(`${SUPABASE_REST_URL}/rest/v1/users?select=*`, {
+            headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
+          }),
+          fetch(`${SUPABASE_REST_URL}/rest/v1/messages?select=*`, {
+            headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
+          }),
+          fetch(`${SUPABASE_REST_URL}/rest/v1/newsletter_subscribers?select=*`, {
             headers: { apikey: SUPABASE_REST_KEY, Authorization: `Bearer ${SUPABASE_REST_KEY}` },
           }),
         ]);
@@ -757,8 +815,36 @@ function mockApiPlugin(): Plugin {
             }));
           }
         }
+
+        if (msgRes.ok) {
+          const msgRows = await msgRes.json();
+          if (Array.isArray(msgRows) && msgRows.length > 0) {
+            messages = msgRows.map((r: any) => ({
+              id: r.id,
+              name: r.name,
+              email: r.email,
+              message: r.message,
+              read: r.read ?? false,
+              status: r.status || "pending",
+              createdAt: r.created_at,
+            }));
+            messageIdCounter = Math.max(messageIdCounter, ...messages.map((m) => m.id + 1));
+          }
+        }
+
+        if (newsRes.ok) {
+          const newsRows = await newsRes.json();
+          if (Array.isArray(newsRows) && newsRows.length > 0) {
+            newsletterSubscribers = newsRows.map((r: any) => ({
+              id: r.id,
+              email: r.email,
+              createdAt: r.created_at,
+            }));
+            newsletterCounter = Math.max(newsletterCounter, ...newsletterSubscribers.map((n) => n.id + 1));
+          }
+        }
       } catch (tmErr) {
-        // TemperaMap sync error or tables not yet created in Supabase
+        // Background sync error or table setup pending
       }
 
       saveLocalState();
@@ -1281,32 +1367,45 @@ function mockApiPlugin(): Plugin {
           return res.end(JSON.stringify({ success: true }));
         }
 
-        // ── News / Posts ──
+        // ── Helper to format post with both summary and excerpt ──
+        const formatPost = (p: any) => ({
+          ...p,
+          summary: p.summary || p.excerpt || "",
+          excerpt: p.excerpt || p.summary || "",
+        });
+
+        // ── News / Posts (Public + Admin) ──
+        if (req.method === "GET" && (url === "/api/admin/posts" || url.startsWith("/api/admin/posts?"))) {
+          return res.end(JSON.stringify(posts.map(formatPost)));
+        }
+
         if (req.method === "GET" && url.startsWith("/api/posts")) {
-          const slugMatch = url.match(/^\/api\/posts\/([^/]+)$/);
+          const slugMatch = url.match(/^\/api\/posts\/([^/?]+)/);
           if (slugMatch) {
             const idOrSlug = slugMatch[1];
             const p = posts.find((x) => x.slug === idOrSlug || String(x.id) === idOrSlug);
-            return res.end(JSON.stringify(p ?? null));
+            return res.end(JSON.stringify(p ? formatPost(p) : null));
           }
-          return res.end(JSON.stringify(posts));
+          return res.end(JSON.stringify(posts.filter((p) => p.published).map(formatPost)));
         }
 
-        if (req.method === "POST" && url === "/api/posts") {
+        if (req.method === "POST" && (url === "/api/posts" || url === "/api/admin/posts")) {
           const body = await readBody(req);
           const newPost = {
             id: postIdCounter++,
-            title: body.title,
-            slug: body.slug || body.title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+            title: body.title || "Untitled Post",
+            slug: body.slug || (body.title || `post-${Date.now()}`).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""),
             summary: body.summary || body.excerpt || "",
+            excerpt: body.excerpt || body.summary || "",
             content: body.content || "",
             imageUrl: body.imageUrl || null,
-            published: body.published ?? true,
+            published: body.published !== undefined ? Boolean(body.published) : true,
             publishedAt: new Date().toISOString(),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           };
           posts.unshift(newPost);
+          saveLocalState();
 
           // Asynchronously sync to Supabase PostgreSQL
           fetch(`${SUPABASE_REST_URL}/rest/v1/posts`, {
@@ -1327,13 +1426,60 @@ function mockApiPlugin(): Plugin {
           }).catch(() => {});
 
           res.statusCode = 201;
-          return res.end(JSON.stringify(newPost));
+          return res.end(JSON.stringify(formatPost(newPost)));
         }
 
-        const delPostMatch = url.match(/^\/api\/posts\/(\d+)$/);
+        const patchPostMatch = url.match(/^\/api\/(?:admin\/)?posts\/(\d+)$/);
+        if (req.method === "PATCH" && patchPostMatch) {
+          const id = Number(patchPostMatch[1]);
+          const body = await readBody(req);
+          const idx = posts.findIndex((p) => p.id === id);
+          if (idx === -1) {
+            res.statusCode = 404;
+            return res.end(JSON.stringify({ error: "Post not found" }));
+          }
+
+          const existing = posts[idx];
+          const updated = {
+            ...existing,
+            title: body.title !== undefined ? body.title : existing.title,
+            slug: body.slug !== undefined ? body.slug : existing.slug,
+            summary: body.summary !== undefined ? body.summary : (body.excerpt !== undefined ? body.excerpt : existing.summary),
+            excerpt: body.excerpt !== undefined ? body.excerpt : (body.summary !== undefined ? body.summary : (existing.excerpt || existing.summary)),
+            content: body.content !== undefined ? body.content : existing.content,
+            imageUrl: body.imageUrl !== undefined ? body.imageUrl : existing.imageUrl,
+            published: body.published !== undefined ? Boolean(body.published) : existing.published,
+            updatedAt: new Date().toISOString(),
+          };
+          posts[idx] = updated;
+          saveLocalState();
+
+          // Asynchronously sync to Supabase PostgreSQL
+          fetch(`${SUPABASE_REST_URL}/rest/v1/posts?id=eq.${id}`, {
+            method: "PATCH",
+            headers: {
+              apikey: SUPABASE_REST_KEY,
+              Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              title: updated.title,
+              slug: updated.slug,
+              excerpt: updated.excerpt || updated.summary,
+              content: updated.content,
+              image_url: updated.imageUrl,
+              published: updated.published,
+            }),
+          }).catch(() => {});
+
+          return res.end(JSON.stringify(formatPost(updated)));
+        }
+
+        const delPostMatch = url.match(/^\/api\/(?:admin\/)?posts\/(\d+)$/);
         if (req.method === "DELETE" && delPostMatch) {
           const id = Number(delPostMatch[1]);
           posts = posts.filter((p) => p.id !== id);
+          saveLocalState();
 
           // Asynchronously delete from Supabase PostgreSQL
           fetch(`${SUPABASE_REST_URL}/rest/v1/posts?id=eq.${id}`, {
@@ -1347,7 +1493,176 @@ function mockApiPlugin(): Plugin {
           return res.end(JSON.stringify({ success: true }));
         }
 
-        if (req.method === "GET" && url === "/api/newsletter-subscribers") return res.end(JSON.stringify([]));
+        // ── Messages (Contact Form + Admin) ──
+        if (req.method === "GET" && (url === "/api/messages" || url.startsWith("/api/messages?"))) {
+          const sorted = [...messages].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          return res.end(JSON.stringify(sorted));
+        }
+
+        const singleMsgMatch = url.match(/^\/api\/messages\/(\d+)$/);
+        if (req.method === "GET" && singleMsgMatch) {
+          const id = Number(singleMsgMatch[1]);
+          const msg = messages.find((m) => m.id === id);
+          if (!msg) {
+            res.statusCode = 404;
+            return res.end(JSON.stringify({ error: "Message not found" }));
+          }
+          return res.end(JSON.stringify(msg));
+        }
+
+        if (req.method === "POST" && url === "/api/messages") {
+          const body = await readBody(req);
+          const name = String(body.name || "").trim();
+          const email = String(body.email || "").trim();
+          const content = String(body.message || "").trim();
+
+          if (!name || !email || !content) {
+            res.statusCode = 400;
+            return res.end(JSON.stringify({ error: "Name, email, and message are required" }));
+          }
+
+          const newMsg: MessageRecord = {
+            id: messageIdCounter++,
+            name,
+            email,
+            message: content,
+            read: false,
+            status: "pending",
+            createdAt: new Date().toISOString(),
+          };
+          messages.unshift(newMsg);
+          saveLocalState();
+
+          // Asynchronously sync to Supabase PostgreSQL
+          fetch(`${SUPABASE_REST_URL}/rest/v1/messages`, {
+            method: "POST",
+            headers: {
+              apikey: SUPABASE_REST_KEY,
+              Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: newMsg.name,
+              email: newMsg.email,
+              message: newMsg.message,
+              read: false,
+              status: "pending",
+            }),
+          }).catch(() => {});
+
+          res.statusCode = 201;
+          return res.end(JSON.stringify(newMsg));
+        }
+
+        if (req.method === "PATCH" && singleMsgMatch) {
+          const id = Number(singleMsgMatch[1]);
+          const body = await readBody(req);
+          const msg = messages.find((m) => m.id === id);
+          if (!msg) {
+            res.statusCode = 404;
+            return res.end(JSON.stringify({ error: "Message not found" }));
+          }
+
+          if (body.status !== undefined) msg.status = body.status;
+          if (body.read !== undefined) msg.read = Boolean(body.read);
+          else if (body.status === "resolved") msg.read = true;
+
+          saveLocalState();
+
+          // Asynchronously update in Supabase PostgreSQL
+          fetch(`${SUPABASE_REST_URL}/rest/v1/messages?id=eq.${id}`, {
+            method: "PATCH",
+            headers: {
+              apikey: SUPABASE_REST_KEY,
+              Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              status: msg.status,
+              read: msg.read,
+            }),
+          }).catch(() => {});
+
+          return res.end(JSON.stringify(msg));
+        }
+
+        if (req.method === "DELETE" && singleMsgMatch) {
+          const id = Number(singleMsgMatch[1]);
+          messages = messages.filter((m) => m.id !== id);
+          saveLocalState();
+
+          // Asynchronously delete from Supabase PostgreSQL
+          fetch(`${SUPABASE_REST_URL}/rest/v1/messages?id=eq.${id}`, {
+            method: "DELETE",
+            headers: {
+              apikey: SUPABASE_REST_KEY,
+              Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+            },
+          }).catch(() => {});
+
+          return res.end(JSON.stringify({ success: true }));
+        }
+
+        // ── Newsletter Subscriptions (Footer + Admin) ──
+        if (req.method === "POST" && url === "/api/newsletter/subscribe") {
+          const body = await readBody(req);
+          const email = String(body.email || "").trim().toLowerCase();
+
+          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            res.statusCode = 400;
+            return res.end(JSON.stringify({ error: "Please enter a valid email address" }));
+          }
+
+          const existing = newsletterSubscribers.find((s) => s.email.toLowerCase() === email);
+          if (existing) {
+            res.statusCode = 409;
+            return res.end(JSON.stringify({ error: "This email is already subscribed" }));
+          }
+
+          const newSub: NewsletterSubscriberRecord = {
+            id: newsletterCounter++,
+            email,
+            createdAt: new Date().toISOString(),
+          };
+          newsletterSubscribers.unshift(newSub);
+          saveLocalState();
+
+          // Asynchronously sync to Supabase PostgreSQL
+          fetch(`${SUPABASE_REST_URL}/rest/v1/newsletter_subscribers`, {
+            method: "POST",
+            headers: {
+              apikey: SUPABASE_REST_KEY,
+              Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+          }).catch(() => {});
+
+          return res.end(JSON.stringify({ success: true }));
+        }
+
+        if (req.method === "GET" && (url === "/api/newsletter/subscribers" || url === "/api/newsletter-subscribers")) {
+          const sorted = [...newsletterSubscribers].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          return res.end(JSON.stringify(sorted));
+        }
+
+        const delNewsletterMatch = url.match(/^\/api\/newsletter\/subscribers\/(\d+)$/);
+        if (req.method === "DELETE" && delNewsletterMatch) {
+          const id = Number(delNewsletterMatch[1]);
+          newsletterSubscribers = newsletterSubscribers.filter((s) => s.id !== id);
+          saveLocalState();
+
+          fetch(`${SUPABASE_REST_URL}/rest/v1/newsletter_subscribers?id=eq.${id}`, {
+            method: "DELETE",
+            headers: {
+              apikey: SUPABASE_REST_KEY,
+              Authorization: `Bearer ${SUPABASE_REST_KEY}`,
+            },
+          }).catch(() => {});
+
+          return res.end(JSON.stringify({ success: true }));
+        }
+
         // ── Admin Auth ──
         if (req.method === "POST" && url === "/api/admin/login") {
           const body = await readBody(req);
@@ -1377,7 +1692,17 @@ function mockApiPlugin(): Plugin {
         }
 
         if (req.method === "GET" && url === "/api/admin/stats") {
-          return res.end(JSON.stringify({ visitors: 0, totalDivisions: 6, totalProducts: 0, totalMessages: 0 }));
+          return res.end(JSON.stringify({
+            visitors: 124,
+            totalDivisions: divisions.length || 6,
+            totalServices: products.length,
+            totalProducts: products.length,
+            totalGalleryItems: galleryItems?.length || 0,
+            totalTestimonials: Array.isArray((homepageData as any)?.testimonials) ? (homepageData as any).testimonials.length : 0,
+            totalSubscribers: newsletterSubscribers.length,
+            totalMessages: messages.length,
+            unreadMessages: messages.filter((m) => !m.read).length,
+          }));
         }
 
         if (url?.startsWith("/api/auth/google")) {

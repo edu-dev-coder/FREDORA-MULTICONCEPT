@@ -283,6 +283,32 @@ export interface CreateHeroSlideBody {
   sortOrder?: number;
 }
 
+export interface Testimonial {
+  id: number;
+  authorName: string;
+  /** @nullable */
+  company?: string | null;
+  content: string;
+  /** @nullable */
+  avatarUrl?: string | null;
+  /** @nullable */
+  divisionSlug?: string | null;
+  rating: number;
+  createdAt: string;
+}
+
+export interface CreateTestimonialBody {
+  authorName: string;
+  /** @nullable */
+  company?: string | null;
+  content: string;
+  /** @nullable */
+  avatarUrl?: string | null;
+  /** @nullable */
+  divisionSlug?: string | null;
+  rating?: number;
+}
+
 export interface AdminLoginBody {
   username: string;
   password: string;

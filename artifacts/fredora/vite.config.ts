@@ -20,10 +20,12 @@ interface PasscodeRecord {
 }
 
 interface TestimonialRecord {
-  id: string;
+  id: number;
   authorName: string;
-  company: string;
-  text: string;
+  company: string | null;
+  content: string;
+  avatarUrl: string | null;
+  divisionSlug: string | null;
   rating: number;
   createdAt: string;
 }
@@ -303,11 +305,12 @@ function mockApiPlugin(): Plugin {
     { id: 7, code: "TM-CORP01", testType: "corporate_team", status: "active", maxUses: 100, currentUses: 0, expiresAt: null, createdAt: now, usedAt: null, usedBy: null },
   ];
 
+  let testimonialIdCounter = 100;
   let testimonials: TestimonialRecord[] = [
-    { id: "t-001", authorName: "Sarah Mitchell", company: "Wellness Co.", text: "TemperaMap gave our team incredible insight into how different temperaments interact. Communication improved dramatically.", rating: 5, createdAt: "2026-06-10T12:00:00.000Z" },
-    { id: "t-002", authorName: "David Chen", company: "GrowthPath Consulting", text: "The couple assessment was eye-opening. My partner and I finally understood why we clash on certain decisions.", rating: 5, createdAt: "2026-06-18T09:30:00.000Z" },
-    { id: "t-003", authorName: "Amara Johnson", company: "Harmony HR", text: "We use TemperaMap for all new hires. It helps managers understand how to motivate each individual from day one.", rating: 4, createdAt: "2026-06-25T15:00:00.000Z" },
-    { id: "t-004", authorName: "Luca Fernández", company: "SelfDev Studio", text: "The blend results were surprisingly accurate. It felt like reading a personalized manual for myself.", rating: 5, createdAt: "2026-07-02T11:20:00.000Z" },
+    { id: 1, authorName: "Sarah Mitchell", company: "Wellness Co.", content: "TemperaMap gave our team incredible insight into how different temperaments interact. Communication improved dramatically.", avatarUrl: null, divisionSlug: null, rating: 5, createdAt: "2026-06-10T12:00:00.000Z" },
+    { id: 2, authorName: "David Chen", company: "GrowthPath Consulting", content: "The couple assessment was eye-opening. My partner and I finally understood why we clash on certain decisions.", avatarUrl: null, divisionSlug: null, rating: 5, createdAt: "2026-06-18T09:30:00.000Z" },
+    { id: 3, authorName: "Amara Johnson", company: "Harmony HR", content: "We use TemperaMap for all new hires. It helps managers understand how to motivate each individual from day one.", avatarUrl: null, divisionSlug: null, rating: 4, createdAt: "2026-06-25T15:00:00.000Z" },
+    { id: 4, authorName: "Luca Fernández", company: "SelfDev Studio", content: "The blend results were surprisingly accurate. It felt like reading a personalized manual for myself.", avatarUrl: null, divisionSlug: null, rating: 5, createdAt: "2026-07-02T11:20:00.000Z" },
   ];
 
   let faqs: FaqRecord[] = [
@@ -491,6 +494,7 @@ function mockApiPlugin(): Plugin {
         passcodes,
         passcodeCounter,
         testimonials,
+        testimonialIdCounter,
         faqs,
         features,
         testSessions,
@@ -535,6 +539,7 @@ function mockApiPlugin(): Plugin {
         if (parsed.passcodes) passcodes = parsed.passcodes;
         if (parsed.passcodeCounter) passcodeCounter = parsed.passcodeCounter;
         if (parsed.testimonials) testimonials = parsed.testimonials;
+        if (parsed.testimonialIdCounter) testimonialIdCounter = parsed.testimonialIdCounter;
         if (parsed.faqs) faqs = parsed.faqs;
         if (parsed.features) features = parsed.features;
         if (parsed.testSessions) testSessions = parsed.testSessions;
@@ -1147,6 +1152,37 @@ function mockApiPlugin(): Plugin {
         if (req.method === "DELETE" && delSlideMatch) {
           const id = Number(delSlideMatch[1]);
           homepageData.heroSlides = homepageData.heroSlides.filter((s: any) => s.id !== id);
+          return res.end(JSON.stringify({ success: true }));
+        }
+
+        // ── Testimonials ──
+        if (req.method === "GET" && url === "/api/testimonials") {
+          return res.end(JSON.stringify(testimonials));
+        }
+
+        if (req.method === "POST" && url === "/api/testimonials") {
+          const body = await readBody(req);
+          const newTestimonial: TestimonialRecord = {
+            id: testimonialIdCounter++,
+            authorName: body.authorName,
+            company: body.company || null,
+            content: body.content,
+            avatarUrl: body.avatarUrl || null,
+            divisionSlug: body.divisionSlug || null,
+            rating: body.rating ?? 5,
+            createdAt: new Date().toISOString(),
+          };
+          testimonials.push(newTestimonial);
+          saveLocalState();
+          res.statusCode = 201;
+          return res.end(JSON.stringify(newTestimonial));
+        }
+
+        const delTestimonialMatch = url.match(/^\/api\/testimonials\/(\d+)$/);
+        if (req.method === "DELETE" && delTestimonialMatch) {
+          const id = Number(delTestimonialMatch[1]);
+          testimonials = testimonials.filter((t) => t.id !== id);
+          saveLocalState();
           return res.end(JSON.stringify({ success: true }));
         }
 

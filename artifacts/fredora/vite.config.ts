@@ -230,7 +230,7 @@ function mockApiPlugin(): Plugin {
     heroSlides: [
       { id: 1, imageUrl: "/images/hero-bg.png", sortOrder: 0, createdAt: now },
     ],
-    whatsappNumber: "+2348000000000",
+    whatsappNumber: "+2348066705224",
     facebookUrl: null,
     instagramUrl: null,
     twitterUrl: null,
@@ -1057,7 +1057,7 @@ function mockApiPlugin(): Plugin {
           return res.end(JSON.stringify(homepageData));
         }
 
-        if (req.method === "PUT" && url === "/api/homepage") {
+        if ((req.method === "PUT" || req.method === "PATCH") && url === "/api/homepage") {
           const body = await readBody(req);
           Object.assign(homepageData, body);
 

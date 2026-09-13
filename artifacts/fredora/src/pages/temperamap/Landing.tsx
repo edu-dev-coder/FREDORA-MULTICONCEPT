@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import FrederaLogo from "@/components/FrederaLogo";
+import { useSEO } from "@/lib/seo";
 
 const FEATURE_ICONS: Record<string, string> = {
   brain: "🧠",
@@ -115,6 +116,46 @@ export default function Landing() {
   const [features, setFeatures] = useState(FEATURES);
   const [testimonials, setTestimonials] = useState(TESTIMONIALS);
   const [faqs, setFaqs] = useState(FAQS);
+
+  useSEO({
+    title: "TemperaMap | The Four Temperaments Assessment & Personality Profiling",
+    description: "Discover your psychological blueprint with TemperaMap. Comprehensive 60-question assessment covering adult careers, early childhood, teen development, and couples compatibility.",
+    imageUrl: "/opengraph.jpg",
+    structuredData: [
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "TemperaMap",
+        "applicationCategory": "HealthApplication, EducationalApplication",
+        "operatingSystem": "All modern web browsers",
+        "description": "Classical 4-temperament psychometric profiling assessment providing personalized relationship, parenting, and workplace insights.",
+        "offers": {
+          "@type": "AggregateOffer",
+          "priceCurrency": "NGN",
+          "lowPrice": "0",
+          "highPrice": "15000",
+          "offerCount": "7",
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "reviewCount": "1250",
+        },
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": FAQS.map((faq) => ({
+          "@type": "Question",
+          "name": faq.q,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.a,
+          },
+        })),
+      },
+    ],
+  });
 
   useEffect(() => {
     let cancelled = false;

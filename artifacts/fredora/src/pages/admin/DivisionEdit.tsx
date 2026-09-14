@@ -180,6 +180,8 @@ export default function AdminDivisionEdit() {
                 <ImageUploadInput
                   currentImageUrl={form.watch("imageUrl")}
                   label="Division Banner Image"
+                  recommendedSize="1920 × 600 px"
+                  aspectRatioHint="3:1 Wide Header"
                   onUploadComplete={(objectPath) => {
                     form.setValue("imageUrl", objectPath);
                     toast({ title: "Image uploaded — click Save Changes to apply." });
@@ -285,6 +287,8 @@ export default function AdminDivisionEdit() {
                 <ImageUploadInput
                   currentImageUrl={serviceForm.imageUrl || null}
                   label="Card Photo"
+                  recommendedSize="800 × 600 px"
+                  aspectRatioHint="4:3 Landscape"
                   onUploadComplete={(path) => setServiceForm(s => ({ ...s, imageUrl: path }))}
                 />
                 <div className="flex justify-end gap-2">
@@ -354,6 +358,8 @@ export default function AdminDivisionEdit() {
                         <ImageUploadInput
                           currentImageUrl={service.imageUrl ?? null}
                           label={imgUrl ? "Change Photo" : "Upload Photo"}
+                          recommendedSize="800 × 600 px"
+                          aspectRatioHint="4:3 Landscape"
                           onUploadComplete={(path) => {
                             // Quick upload photo for this card
                             fetch(`/api/services/${service.id}`, {
@@ -410,6 +416,8 @@ export default function AdminDivisionEdit() {
                 <ImageUploadInput
                   currentImageUrl={editingService.imageUrl}
                   label="Card Photo"
+                  recommendedSize="800 × 600 px"
+                  aspectRatioHint="4:3 Landscape"
                   onUploadComplete={(path) => setEditingService({ ...editingService, imageUrl: path })}
                 />
                 <DialogFooter className="pt-2">

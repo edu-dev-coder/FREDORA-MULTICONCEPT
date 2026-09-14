@@ -114,6 +114,8 @@ export default function AdminTestimonials() {
               <ImageUploadInput
                 currentImageUrl={form.avatarUrl || null}
                 label="Customer Photo (optional)"
+                recommendedSize="400 × 400 px"
+                aspectRatioHint="1:1 Square"
                 onUploadComplete={(path) => setForm(p => ({ ...p, avatarUrl: path }))}
               />
 

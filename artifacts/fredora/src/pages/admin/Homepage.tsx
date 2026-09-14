@@ -187,8 +187,13 @@ export default function AdminHomepage() {
           <Card>
             <CardHeader><CardTitle>Hero & Intro</CardTitle></CardHeader>
             <CardContent className="space-y-6">
-              <ImageUploadInput currentImageUrl={form.watch("heroImageUrl")} label="Hero Background Image"
-                onUploadComplete={(objectPath) => { form.setValue("heroImageUrl", objectPath); toast({ title: "Image uploaded — click Save Changes to apply." }); }} />
+              <ImageUploadInput
+                currentImageUrl={form.watch("heroImageUrl")}
+                label="Hero Background Image"
+                recommendedSize="1920 × 1080 px"
+                aspectRatioHint="16:9 Landscape"
+                onUploadComplete={(objectPath) => { form.setValue("heroImageUrl", objectPath); toast({ title: "Image uploaded — click Save Changes to apply." }); }}
+              />
               <div className="grid gap-6 md:grid-cols-2">
                 <FormField control={form.control} name="heroTitle" render={({ field }) => (<FormItem><FormLabel>Hero Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
                 <FormField control={form.control} name="motto" render={({ field }) => (<FormItem><FormLabel>Motto / Subheading</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
@@ -215,7 +220,13 @@ export default function AdminHomepage() {
               <p className="text-sm text-muted-foreground">Upload up to 10 images. They auto-advance every 5s on the homepage hero.</p>
               {heroSlides.length < 10 && (
                 <div className="p-4 bg-muted/30 rounded-xl space-y-3">
-                  <ImageUploadInput currentImageUrl={pendingSlideImage} label="Upload New Slide Image" onUploadComplete={(path) => setPendingSlideImage(path)} />
+                  <ImageUploadInput
+                    currentImageUrl={pendingSlideImage}
+                    label="Upload New Slide Image"
+                    recommendedSize="1920 × 1080 px"
+                    aspectRatioHint="16:9 Landscape"
+                    onUploadComplete={(path) => setPendingSlideImage(path)}
+                  />
                   <Button type="button" onClick={addHeroSlide} disabled={!pendingSlideImage || createHeroSlide.isPending} className="w-full">
                     <Plus className="h-4 w-4 mr-2" />{createHeroSlide.isPending ? "Adding Slide..." : "Add Slide"}
                   </Button>

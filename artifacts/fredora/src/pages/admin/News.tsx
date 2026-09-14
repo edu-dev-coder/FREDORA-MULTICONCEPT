@@ -524,7 +524,8 @@ export default function AdminNews() {
                   label=""
                   currentImageUrl={form.imageUrl}
                   onUploadComplete={(path) => setForm((f) => ({ ...f, imageUrl: path }))}
-                  recommendedSize="1200×630px"
+                  recommendedSize="1200 × 630 px"
+                  aspectRatioHint="1.91:1 Article Cover"
                   maxSizeMB={8}
                 />
                 {form.imageUrl && (

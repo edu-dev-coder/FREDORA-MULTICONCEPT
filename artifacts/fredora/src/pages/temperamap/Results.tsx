@@ -851,7 +851,7 @@ export default function Results() {
               </Button>
               {isCouplesTest(testType) && (
                 <Button
-                  onClick={() => setLocation(`/compatibility/${sessionId}`)}
+                  onClick={() => setLocation(`/temperamap/compatibility/${sessionId}`)}
                   variant="outline"
                   className="w-full sm:w-auto border-white/40 text-white hover:bg-white/10 font-semibold"
                 >

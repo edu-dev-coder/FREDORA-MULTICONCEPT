@@ -2154,7 +2154,7 @@ function mockApiPlugin(): Plugin {
 
         // ── Corporate Teams ────────────────────────────────────────────────
         if (req.method === "GET" && url === "/api/corporate/sessions") {
-          const corporate = testSessions.filter((s) => s.testType === "corporate_team");
+          const corporate = testSessions.filter((s) => s.testType === "corporate_team" || s.testType === "group_test");
           return res.end(JSON.stringify(corporate));
         }
 
@@ -2178,7 +2178,19 @@ function mockApiPlugin(): Plugin {
             updatedAt: new Date().toISOString(),
           };
           corporateTeams.unshift(team);
+          saveLocalState();
           res.statusCode = 201;
+          return res.end(JSON.stringify(team));
+        }
+
+        const getCorpTeamMatch = url.match(/^\/api\/corporate\/teams\/([^/]+)$/);
+        if (req.method === "GET" && getCorpTeamMatch) {
+          const teamId = getCorpTeamMatch[1];
+          const team = corporateTeams.find((t) => t.id === teamId);
+          if (!team) {
+            res.statusCode = 404;
+            return res.end(JSON.stringify({ error: "Team not found" }));
+          }
           return res.end(JSON.stringify(team));
         }
 
@@ -2210,6 +2222,7 @@ function mockApiPlugin(): Plugin {
             cachedAt: new Date().toISOString(),
           };
           team.report = payload;
+          saveLocalState();
           return res.end(JSON.stringify({ ...payload, cached: false }));
         }
 

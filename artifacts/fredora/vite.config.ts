@@ -115,16 +115,17 @@ function mockApiPlugin(): Plugin {
       id: 1,
       slug: "foods",
       name: "Foods",
-      tagline: "Taste the difference",
-      description: "Quality food products, catering services, bakery confectioneries, and agro-allied supply chains.",
+      tagline: "Quality nourishment & agro-allied solutions",
+      description: "Delivering wholesome food products, premium catering, and specialized agro-nutrition including livestock hormone balancing solutions and agricultural feed optimization.",
       bannerColor: "from-blue-600 to-blue-800",
       comingSoon: false,
       imageUrl: null,
       sortOrder: 0,
       services: [
-        { id: 101, divisionSlug: "foods", name: "Premium Confectioneries & Bakery", description: "Freshly baked artisan pastries, bread, and custom celebration cakes.", price: "From ₦5,000", imageUrl: null, sortOrder: 0 },
-        { id: 102, divisionSlug: "foods", name: "Corporate & Event Catering", description: "Full-service gourmet catering for weddings, executive conferences, and private banquets.", price: "Custom Quote", imageUrl: null, sortOrder: 1 },
-        { id: 103, divisionSlug: "foods", name: "Agro-Commodity Bulk Supply", description: "Hygienically packaged staple food items and wholesale bulk delivery for institutions.", price: "Market Rate", imageUrl: null, sortOrder: 2 },
+        { id: 101, divisionSlug: "foods", name: "Agro-Nutrition & Animal Hormone Solutions", description: "Specialized nutritional formulations, livestock hormone balancing products, and organic growth supplements for healthy animal husbandry.", price: "From ₦15,000", imageUrl: null, sortOrder: 0 },
+        { id: 102, divisionSlug: "foods", name: "Premium Confectioneries & Bakery", description: "Freshly baked artisan pastries, nutrient-rich loaves of bread, and custom celebration cakes.", price: "From ₦5,000", imageUrl: null, sortOrder: 1 },
+        { id: 103, divisionSlug: "foods", name: "Corporate & Event Gourmet Catering", description: "Full-service hygienic gourmet catering for weddings, executive conferences, and private banquets.", price: "Custom Quote", imageUrl: null, sortOrder: 2 },
+        { id: 104, divisionSlug: "foods", name: "Agro-Commodity Bulk Supply", description: "Hygienically packaged staple food items and wholesale bulk delivery for families and institutions.", price: "Market Rate", imageUrl: null, sortOrder: 3 },
       ],
       createdAt: now,
       updatedAt: now,
@@ -133,16 +134,17 @@ function mockApiPlugin(): Plugin {
       id: 2,
       slug: "eduservices",
       name: "EduServices",
-      tagline: "Learn without limits",
-      description: "Educational consulting, teacher development, school curriculum design, and youth mentorship.",
+      tagline: "Empowering educators, students & institutions",
+      description: "Premier educational support providing vetted teacher recruitment, rigorous professional teacher training, and dedicated private home tutoring.",
       bannerColor: "from-sky-500 to-blue-700",
       comingSoon: false,
       imageUrl: null,
       sortOrder: 1,
       services: [
-        { id: 201, divisionSlug: "eduservices", name: "Institutional Curriculum Advisory", description: "Modern curriculum design aligned with global best practices.", price: "Custom Quote", imageUrl: null, sortOrder: 0 },
-        { id: 202, divisionSlug: "eduservices", name: "Teacher Mastery Workshops", description: "Professional development and modern pedagogy training for educators.", price: "From ₦25,000 / seat", imageUrl: null, sortOrder: 1 },
-        { id: 203, divisionSlug: "eduservices", name: "Academic & Career Counseling", description: "Individualized student guidance, personality-guided career mapping, and admissions consulting.", price: "From ₦15,000", imageUrl: null, sortOrder: 2 },
+        { id: 201, divisionSlug: "eduservices", name: "Professional Teachers Recruitment", description: "Rigorous screening, vetting, and placement of qualified, passionate educators for primary, secondary, and tertiary schools.", price: "Institutional Quote", imageUrl: null, sortOrder: 0 },
+        { id: 202, divisionSlug: "eduservices", name: "Teachers Training & Pedagogy Workshops", description: "Modern classroom management, digital teaching tools, effective pedagogical techniques, and continuous professional development.", price: "From ₦25,000 / seat", imageUrl: null, sortOrder: 1 },
+        { id: 203, divisionSlug: "eduservices", name: "Private Home & One-on-One Tutoring", description: "Personalized private tutors for British, American, and Nigerian curricula, exam prep (WAEC, UTME, IGCSE), and remedial tutoring.", price: "From ₦30,000 / month", imageUrl: null, sortOrder: 2 },
+        { id: 204, divisionSlug: "eduservices", name: "Institutional Curriculum & School Advisory", description: "Modern curriculum design, school leadership mentorship, and educational standards auditing.", price: "Custom Quote", imageUrl: null, sortOrder: 3 },
       ],
       createdAt: now,
       updatedAt: now,
@@ -151,16 +153,17 @@ function mockApiPlugin(): Plugin {
       id: 3,
       slug: "chems",
       name: "CHEMS",
-      tagline: "Chemistry solutions",
-      description: "Industrial, agricultural, and laboratory chemical supplies engineered to rigorous purity standards.",
+      tagline: "Purity & formulation excellence",
+      description: "Formulating premium household cleaning chemicals, gentle cosmetics, nourishing toiletries, and high-purity laboratory supplies.",
       bannerColor: "from-violet-500 to-purple-700",
       comingSoon: false,
       imageUrl: null,
       sortOrder: 2,
       services: [
-        { id: 301, divisionSlug: "chems", name: "Industrial Solvents & Detergents", description: "High-grade industrial degreasers, production chemicals, and sanitizers.", price: "Wholesale", imageUrl: null, sortOrder: 0 },
-        { id: 302, divisionSlug: "chems", name: "Analytical & Lab Reagents", description: "High-purity chemical compounds for educational, research, and medical laboratories.", price: "Catalog pricing", imageUrl: null, sortOrder: 1 },
-        { id: 303, divisionSlug: "chems", name: "Water Treatment Formulations", description: "Coagulants, pH balancers, and disinfectants for industrial and residential water systems.", price: "From ₦20,000", imageUrl: null, sortOrder: 2 },
+        { id: 301, divisionSlug: "chems", name: "Household Cleaning Chemicals & Sanitizers", description: "High-performance dishwashing liquids, multipurpose disinfectants, bleach, tile cleaners, and degreasers engineered for pristine hygiene.", price: "Wholesale & Retail", imageUrl: null, sortOrder: 0 },
+        { id: 302, divisionSlug: "chems", name: "Cosmetics & Skincare Formulations", description: "Dermatologically conscious lotions, body creams, gentle cleansers, and organic skincare solutions formulated to rigorous safety standards.", price: "From ₦4,500", imageUrl: null, sortOrder: 1 },
+        { id: 303, divisionSlug: "chems", name: "Toiletries & Personal Hygiene Products", description: "Luxury hand washes, antibacterial shower gels, bar soaps, and daily hygiene essentials for homes, hotels, and healthcare facilities.", price: "From ₦2,000", imageUrl: null, sortOrder: 2 },
+        { id: 304, divisionSlug: "chems", name: "Analytical Reagents & Water Treatment", description: "Pure laboratory chemical compounds, testing reagents, and water treatment coagulants and disinfectants.", price: "Wholesale Catalog", imageUrl: null, sortOrder: 3 },
       ],
       createdAt: now,
       updatedAt: now,
@@ -231,10 +234,16 @@ function mockApiPlugin(): Plugin {
 
   let products = [
     { id: 1, divisionSlug: "foods", name: "Fredora Artisan Pastry Box", description: "Assorted gourmet pastries baked fresh daily.", price: "₦12,500", imageUrl: null, sortOrder: 0, createdAt: now },
-    { id: 2, divisionSlug: "scents", name: "Elegance Extrait De Parfum (50ml)", description: "Long-lasting amber and woody floral extrait.", price: "₦28,000", imageUrl: null, sortOrder: 0, createdAt: now },
-    { id: 3, divisionSlug: "chems", name: "Industrial Degreaser X-10 (20L)", description: "Heavy duty non-corrosive industrial cleaning formula.", price: "₦35,000", imageUrl: null, sortOrder: 0, createdAt: now },
+    { id: 2, divisionSlug: "foods", name: "Agro-Hormone Livestock Balancer (5L)", description: "Premium natural hormone balancer and organic performance booster for healthy poultry and livestock.", price: "₦24,500", imageUrl: null, sortOrder: 1, createdAt: now },
+    { id: 3, divisionSlug: "chems", name: "Sparkle Multipurpose Liquid Detergent (5L)", description: "High-foaming antibacterial household cleaning formula for floors, kitchens, and surfaces.", price: "₦6,500", imageUrl: null, sortOrder: 0, createdAt: now },
+    { id: 4, divisionSlug: "chems", name: "Radiance Nourishing Body Glow Cream (250ml)", description: "Gentle, non-greasy cosmetic skincare cream enriched with shea butter and vitamin E.", price: "₦5,200", imageUrl: null, sortOrder: 1, createdAt: now },
+    { id: 5, divisionSlug: "chems", name: "PureCare Antibacterial Hand Wash (500ml)", description: "Moisturizing hygienic hand wash formulated with skin-soothing aloe vera.", price: "₦2,400", imageUrl: null, sortOrder: 2, createdAt: now },
+    { id: 6, divisionSlug: "chems", name: "Industrial Degreaser X-10 (20L)", description: "Heavy duty non-corrosive industrial cleaning formula.", price: "₦35,000", imageUrl: null, sortOrder: 3, createdAt: now },
+    { id: 7, divisionSlug: "eduservices", name: "One-on-One Private Tutor Placement Pack", description: "Vetted home tutor onboarding package with diagnostic assessment and monthly progress tracking.", price: "₦35,000", imageUrl: null, sortOrder: 0, createdAt: now },
+    { id: 8, divisionSlug: "eduservices", name: "School Teachers Pedagogy Training Course", description: "Comprehensive teacher upskilling on modern student engagement, classroom management, and assessment techniques.", price: "₦50,000", imageUrl: null, sortOrder: 1, createdAt: now },
+    { id: 9, divisionSlug: "scents", name: "Elegance Extrait De Parfum (50ml)", description: "Long-lasting amber and woody floral extrait.", price: "₦28,000", imageUrl: null, sortOrder: 0, createdAt: now },
   ];
-  let productIdCounter = 10;
+  let productIdCounter = 20;
 
   let homepageData = {
     id: 1,
@@ -561,7 +570,7 @@ function mockApiPlugin(): Plugin {
         const raw = fs.readFileSync(STATE_FILE_PATH, "utf-8");
         const parsed = JSON.parse(raw);
         if (parsed.divisions && Array.isArray(parsed.divisions)) {
-          // Merge services while keeping built-in structure
+          // Merge customized division settings while keeping latest built-in services
           for (const savedDiv of parsed.divisions) {
             const existing = divisions.find((d) => d.slug === savedDiv.slug);
             if (existing) {
@@ -571,7 +580,14 @@ function mockApiPlugin(): Plugin {
               if (savedDiv.bannerColor !== undefined) existing.bannerColor = savedDiv.bannerColor;
               if (savedDiv.comingSoon !== undefined) existing.comingSoon = savedDiv.comingSoon;
               if (savedDiv.imageUrl !== undefined) existing.imageUrl = savedDiv.imageUrl;
-              if (Array.isArray(savedDiv.services)) existing.services = savedDiv.services;
+              if (Array.isArray(savedDiv.services) && savedDiv.services.length > 0) {
+                // Keep customized or appended services, ensuring new built-ins are also available
+                const existingMap = new Map(existing.services.map((s) => [s.id, s]));
+                for (const s of savedDiv.services) {
+                  existingMap.set(s.id, s);
+                }
+                existing.services = Array.from(existingMap.values()).sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+              }
             }
           }
           refreshDivisionMap();
